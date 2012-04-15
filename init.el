@@ -59,7 +59,7 @@
                                         "%b")))
 
 ;;; Colour themes
-
+(load-theme 'zenburn t)
 
 ;;; Editing goodies
 (show-paren-mode 1)
