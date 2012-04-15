@@ -1,20 +1,43 @@
 ;;==============================================================================
-;; Emacs initialization file.
+;; Emacs initialization file
+;; (Inspired by emacs-prelude)
 ;;==============================================================================
 
-(defvar config-directory "~/.emacs.d/")
+(defvar config-directory "~/.emacs.d/"
+  "Root directory of the emacs configuration.")
+(defvar config-opt-directory (concat config-directory "opt/")
+  "User-installed emacs packages go here.")
+(add-to-list 'load-path config-opt-directory)
 
-;;; Package installation and management with MELPA
-;; (require 'package)
-;; (require 'melpa)
-;; (add-to-list 'package-archives
-;; 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;; (package-initialize)
+;;; Package management with MELPA
+(require 'package)
+(require 'melpa)
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
 
 ;; (setq url-http-attempt-keepalives nil)
 ;;; MORE TO BE ADDED TO PACKAGE MANAGEMENT
 
-;;; Buffer customizations:
+;;; Install the required packages
+(defvar required-packages-list
+  '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme)
+  "List of packages required to be installed at startup.")
+
+(defun required-packages-installed-p ()
+  (loop for pkg in required-packages-list
+        when (not (package-installed-p pkg)) do (return nil)
+        finally (return t)))
+
+(unless (required-packages-installed-p)
+  (message "%s" "Emacs Prelude is now refreshing its package database...")
+  (package-refresh-contents)
+  (message "%s" " done.")
+  (dolist (pkg required-packages-list)
+    (when (not (package-installed-p pkg))
+      (package-install pkg))))
+
+;;; Buffer customizations
 (setq inhibit-startup-screen t)
 
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -51,7 +74,6 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
-
 (ido-mode 1)
 (setq ido-enable-prefix nil
       ido-enable-flex-matching t
@@ -78,13 +100,14 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+
 (defun delete-old-backup-files ()
   "Delete backup files that have not been accessed in a month."
   (let ((month (* 60 60 24 7 30))
         (current (float-time (current-time))))
     (dolist (file (directory-files temporary-file-directory t))
       (when (and (backup-file-name-p file)
-                 (> (- current (float-time (fifth (file-attributes file))))
+                 (> (- current (float-time (nth 5 (file-attributes file))))
                     month))
         (message "%s" file)
         (delete-file file)))))
