@@ -3,11 +3,15 @@
 ;; (Inspired by emacs-prelude)
 ;;==============================================================================
 
+(require 'cl)
+
 (defvar config-directory "~/.emacs.d/"
   "Root directory of the emacs configuration.")
 (defvar config-opt-directory (concat config-directory "opt/")
   "User-installed emacs packages go here.")
 (add-to-list 'load-path config-opt-directory)
+
+
 
 ;;; Package management with MELPA
 (require 'package)
@@ -65,7 +69,9 @@
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 (global-hl-line-mode 1)
-;;(volatile-highlights-mode 1) ;; THIS MODE REQUIRES INSTALLATION
+
+(require 'volatile-highlights)
+(volatile-highlights-mode 1)
 
 (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
 (setq-default tab-width 8)            ;; but maintain correct appearance
@@ -96,6 +102,11 @@
 (global-set-key [C-end]       'end-of-buffer)
 
 ;;; Backing up files
+(setq backup-by-copying t
+      delete-old-versions t
+      kept-old-versions 2
+      kept-new-versions 2
+      version-control t)
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
