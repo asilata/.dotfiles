@@ -74,3 +74,19 @@
 (global-set-key [C-end]       'end-of-buffer)
 
 ;;; Backing up files
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+(defun delete-old-backup-files ()
+  "Delete backup files that have not been accessed in a month."
+  (let ((month (* 60 60 24 7 30))
+        (current (float-time (current-time))))
+    (dolist (file (directory-files temporary-file-directory t))
+      (when (and (backup-file-name-p file)
+                 (> (- current (float-time (fifth (file-attributes file))))
+                    month))
+        (message "%s" file)
+        (delete-file file)))))
+(delete-old-backup-files)
+
