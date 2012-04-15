@@ -5,13 +5,12 @@
 
 (require 'cl)
 
-(defvar config-directory "~/.emacs.d/"
-  "Root directory of the emacs configuration.")
-(defvar config-opt-directory (concat config-directory "opt/")
+(unless (boundp 'user-emacs-directory)
+  (defvar user-emacs-directory "~/.emacs.d/"
+    "Root directory of the emacs configuration."))
+(defvar user-opt-directory (concat user-emacs-directory "opt/")
   "User-installed emacs packages go here.")
-(add-to-list 'load-path config-opt-directory)
-
-
+(add-to-list 'load-path user-opt-directory)
 
 ;;; Package management with MELPA
 (require 'package)
@@ -43,7 +42,7 @@
 
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
-
+(setq initial-scratch-message nil)
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (blink-cursor-mode -1)
@@ -70,11 +69,15 @@
 (setq show-paren-style 'parenthesis)
 (global-hl-line-mode 1)
 
+(electric-pair-mode 1)
+(electric-indent-mode 1)
+(electric-layout-mode 1)
+
 (require 'volatile-highlights)
 (volatile-highlights-mode 1)
 
-(setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
-(setq-default tab-width 8)            ;; but maintain correct appearance
+(setq-default indent-tabs-mode nil)   ;; Don't use tabs to indent...
+(setq-default tab-width 8)            ;; ...but maintain correct appearance
 
 (setq ispell-program-name "aspell"
       ispell-extra-args '("--sug-mode=ultra"))
@@ -124,3 +127,11 @@
         (delete-file file)))))
 (delete-old-backup-files)
 
+;;; Programming goodies
+(require 'which-func)
+(which-func-mode 1)
+
+;;; Mode-specific hooks
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (subword-mode 1)))
