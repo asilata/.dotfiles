@@ -24,7 +24,8 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme)
+  '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme
+           haskell-mode)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
@@ -43,13 +44,12 @@
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 (blink-cursor-mode -1)
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
-
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (if (fboundp 'fringe-mode) (fringe-mode 4))
@@ -76,8 +76,8 @@
 (require 'volatile-highlights)
 (volatile-highlights-mode 1)
 
-(setq-default indent-tabs-mode nil)   ;; Don't use tabs to indent...
-(setq-default tab-width 8)            ;; ...but maintain correct appearance
+(setq-default indent-tabs-mode nil)     ;Don't use tabs to indent...
+(setq-default tab-width 8)         ;...but maintain correct appearance
 
 (setq ispell-program-name "aspell"
       ispell-extra-args '("--sug-mode=ultra"))
@@ -128,10 +128,16 @@
 (delete-old-backup-files)
 
 ;;; Programming goodies
-(require 'which-func)
-(which-func-mode 1)
 
 ;;; Mode-specific hooks
-(add-hook 'haskell-mode-hook
+(add-hook 'haskell-mode-hook                             
+          (lambda () (subword-mode 1)))
+
+(add-hook 'scheme-mode-hook
+          (lambda () (paredit-mode 1)))
+
+(add-hook 'emacs-lisp-mode-hook
           (lambda ()
-            (subword-mode 1)))
+            (paredit-mode 1)
+            (turn-on-eldoc-mode)
+            (rainbow-mode 1)))
