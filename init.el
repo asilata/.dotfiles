@@ -129,7 +129,13 @@
 
 ;;; Programming goodies
 
+
 ;;; Mode-specific hooks
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (TeX-PDF-mode 1)
+            (turn-on-auto-fill)))
+
 (add-hook 'haskell-mode-hook                             
           (lambda () (subword-mode 1)))
 
