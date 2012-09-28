@@ -1,0 +1,25 @@
+# TeX-generated files and other document files
+*.pdf
+*.dvi
+*.aux
+*.log
+*.doc
+*.xls
+
+# Compressed files
+*.7z
+*.zip
+*.gz
+*.tar
+*.jar
+*.rar
+*.iso
+
+# Media files
+*.mp3
+*.wav
+*.avi
+*.mp4
+*.jpg
+*.jpeg
+*.gif
