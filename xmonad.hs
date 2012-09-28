@@ -11,7 +11,7 @@ import XMonad.Layout.Monitor
 import XMonad.Hooks.ManageDocks -- For managing specific windows
 import XMonad.Layout.Decoration -- For title bars for windows.
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
-import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.FadeInactive -- Make inactive windows transparent
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.DynamicLog
@@ -221,7 +221,7 @@ myManageHook = composeAll . concat $
                  [className =? c --> doIgnore | c <- myIgnores],
                  [resource  =? c --> doIgnore | c <- myIgnores]]
                    where
-                     myFloats = ["SMPlayer", "MPlayer", "Gimp", "Krunner"]
+                     myFloats = ["SMPlayer", "MPlayer", "Krunner"]
                      myIgnores = ["desktop_window", "kdesktop", "trayer"]
 --manageHook kde4Config <+>
 
@@ -253,7 +253,7 @@ myDzenPPConfig h = defaultPP
                    }
 
 ------------------------------------------------------------------------
--- Final loghook, including dzen and fading.
+-- Final loghook, including dzen and fading (transparency of windows).
 myLogHook :: X()
 myLogHook = fadeInactiveLogHook fadeAmount >>
             setWMName "LG3D"
