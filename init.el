@@ -50,6 +50,7 @@
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
+(setq fill-column 90)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (if (fboundp 'fringe-mode) (fringe-mode 4))
@@ -91,7 +92,7 @@
       ido-max-prospects 10
       ido-default-file-method 'selected-window)
 
-(icomplete-mode 1)
+(icomplete-mode 1) ;Show completions in minibuffer
 (set-default 'imenu-auto-rescan t)
 
 ;;; Global keybindings
@@ -132,12 +133,11 @@
 
 ;;; Mode-specific hooks
 (add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (TeX-PDF-mode 1)
-            (turn-on-auto-fill)))
+          (lambda () (TeX-PDF-mode 1)
+            (flyspell-mode 1)))
 
-(add-hook 'haskell-mode-hook                             
-          (lambda () (subword-mode 1)))
+(add-hook 'haskell-mode-hook
+          'turn-on-haskell-indentation)
 
 (add-hook 'scheme-mode-hook
           (lambda () (paredit-mode 1)))
