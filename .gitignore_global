@@ -2,9 +2,24 @@
 *.pdf
 *.dvi
 *.aux
+*.out
 *.log
+*.bbl
+*.blg
+*.thm
+*.toc
+*.nav
+*.snm
 *.doc
+*.docx
 *.xls
+*.ps
+*.ps.imposed
+
+# Compiled source
+*.class
+*.elc
+*.beam
 
 # Compressed files
 *.7z
@@ -20,6 +35,17 @@
 *.wav
 *.avi
 *.mp4
+*.mpeg
 *.jpg
+*.JPG
 *.jpeg
 *.gif
+*.png
+*.xpm
+
+# Directories
+.svn/
+.metadata/
+
+# Other
+*~
