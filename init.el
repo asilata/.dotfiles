@@ -99,6 +99,7 @@
 (global-set-key [f1]          'revert-buffer)
 (global-set-key [f2]          'goto-line)
 (global-set-key [f5]          'query-replace)
+(global-set-key [f6]          'magit-status)
 (global-set-key [f12]         'kill-this-buffer)
 (global-set-key [home]        'beginning-of-line)
 (global-set-key [end]         'end-of-line)
@@ -133,8 +134,10 @@
 
 ;;; Mode-specific hooks
 (add-hook 'LaTeX-mode-hook
-          (lambda () (TeX-PDF-mode 1)
-            (flyspell-mode 1)))
+          (lambda ()
+	    (TeX-PDF-mode 1)
+            (flyspell-mode 1)
+            (auto-fill-mode 0)))
 
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)
