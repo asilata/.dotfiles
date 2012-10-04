@@ -10,6 +10,8 @@
     "Root directory of the emacs configuration."))
 (defvar user-opt-directory (concat user-emacs-directory "opt/")
   "User-installed emacs packages go here.")
+(defvar local-config-directory (concat user-emacs-directory "local/")
+  "Machine-local configuration files go here")
 (add-to-list 'load-path user-opt-directory)
 
 ;;; Package management with MELPA
@@ -150,3 +152,7 @@
             (paredit-mode 1)
             (turn-on-eldoc-mode)
             (rainbow-mode 1)))
+
+;;; Load local settings if they exist.
+(when (file-exists-p local-config-directory)
+  (mapc 'load (directory-files local-config-directory 't "^[^#].*el$")))
