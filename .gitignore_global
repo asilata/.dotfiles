@@ -15,6 +15,9 @@
 *.xls
 *.ps
 *.ps.imposed
+*.gnuplot
+*.table
+*.djvu
 
 # Compiled source
 *.class

@@ -153,6 +153,10 @@
             (turn-on-eldoc-mode)
             (rainbow-mode 1)))
 
-;;; Load local settings if they exist.
+;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
   (mapc 'load (directory-files local-config-directory 't "^[^#].*el$")))
+
+;; Recompile all previously byte-compiled files in the directory.
+(byte-recompile-directory user-emacs-directory)
+
