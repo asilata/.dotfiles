@@ -7,19 +7,25 @@ import XMonad
 import XMonad.Prompt
 import System.Exit
 import XMonad.Config.Kde
+
 import XMonad.Layout.Monitor
-import XMonad.Hooks.ManageDocks -- For managing specific windows
 import XMonad.Layout.Decoration -- For title bars for windows.
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
+import XMonad.Layout.NoBorders
+
+import XMonad.Hooks.ManageDocks -- For managing specific windows
 import XMonad.Hooks.FadeInactive -- Make inactive windows transparent
 import XMonad.Hooks.EwmhDesktops
-import XMonad.Layout.NoBorders
 import XMonad.Hooks.DynamicLog
-import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
+import XMonad.Hooks.SetWMName
+
+
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Themes
+import XMonad.Util.EZConfig -- More intuitive keybinding configuration
+
+import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 import System.IO
-import XMonad.Hooks.SetWMName
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -66,18 +72,11 @@ myFocusedBorderColor = "#ffffff"
 -- Key bindings. Add, modify or remove key bindings here.
 --
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
-
-    -- launch a terminal
-    [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
-
-    -- launch dmenu
-    , ((modMask,               xK_r     ), spawn "dmenu_run")
-    
-    -- close focused window 
-    , ((modMask .|. shiftMask, xK_c     ), kill)
-
-     -- Rotate through the available layout algorithms
-    , ((modMask,               xK_space ), sendMessage NextLayout)
+                                                   -- launch a terminal
+    [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf),
+      ("M-r", spawn "dmenu_run"), -- launch dmenu
+      ("M-S-c", kill), -- close focused window 
+      ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
 
     --  Reset the layouts on the current workspace to default
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
