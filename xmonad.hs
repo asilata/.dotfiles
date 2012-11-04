@@ -71,91 +71,40 @@ myFocusedBorderColor = "#ffffff"
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
-myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
-                                                   -- launch a terminal
-    [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf),
+myKeys = \conf -> mkKeymap conf 
+  $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
       ("M-r", spawn "dmenu_run"), -- launch dmenu
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
+      ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset the layouts on the current workspace to default
+      ("M-n", refresh), -- Resize viewed windows to the correct size
+      ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
+      ("M-S-<Tab>", windows W.focusUp), -- Move focus to the previous window
+      ("M-m", windows W.focusMaster), -- Move focus to the master window
+      ("M-<Return>", windows W.swapMaster), -- Swap the focused window and the master window
+      ("M-S-j", windows W.swapDown), -- Swap the focused window with the next window
+      ("M-S-k", windows W.swapUp), -- Swap the focused window with the previous window
+      ("M-h", sendMessage Shrink), -- Shrink the master area
+      ("M-l", sendMessage Expand), -- Expand the master area
+      ("M-t", withFocused $ windows . W.sink), -- Push window back into tiling
+      ("M-,", sendMessage (IncMasterN 1)), -- Increment the number of windows in the master area
+      ("M-.", sendMessage (IncMasterN (-1))), -- Deincrement the number of windows in the master area
+      ("M-b", sendMessage ToggleStruts), -- Toggle the status bar gap
+      ("M-S-q", io (exitWith ExitSuccess)), -- Quit xmonad
+      ("M-q", restart "xmonad" True), -- Restart xmonad
+      ("M-S-<Backspace>", removeWorkspace), -- Remove workspace
+      ("M-w", selectWorkspace defaultXPConfig), -- Select workspace to navigate to
+      ("M-S-w", withWorkspace defaultXPConfig (windows . W.shift)), -- Move current window to selected workspace
+      ("M-S-r", renameWorkspace defaultXPConfig) -- Rename workspace
+     ]
 
-    --  Reset the layouts on the current workspace to default
-    , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-
-    -- Resize viewed windows to the correct size
-    , ((modMask,               xK_n     ), refresh)
-
-    -- Move focus to the next window
-    , ((modMask,               xK_Tab   ), windows W.focusDown)
-
-    -- Move focus to the next window
-    , ((modMask,               xK_j     ), windows W.focusDown)
-
-    -- Move focus to the previous window
-    , ((modMask,               xK_k     ), windows W.focusUp  )
-
-    -- Move focus to the master window
-    , ((modMask,               xK_m     ), windows W.focusMaster  )
-
-    -- Swap the focused window and the master window
-    , ((modMask,               xK_Return), windows W.swapMaster)
-
-    -- Swap the focused window with the next window
-    , ((modMask .|. shiftMask, xK_j     ), windows W.swapDown  )
-
-    -- Swap the focused window with the previous window
-    , ((modMask .|. shiftMask, xK_k     ), windows W.swapUp    )
-
-    -- Shrink the master area
-    , ((modMask,               xK_h     ), sendMessage Shrink)
-
-    -- Expand the master area
-    , ((modMask,               xK_l     ), sendMessage Expand)
-
-    -- Push window back into tiling
-    , ((modMask,               xK_t     ), withFocused $ windows . W.sink)
-
-    -- Increment the number of windows in the master area
-    , ((modMask              , xK_comma ), sendMessage (IncMasterN 1))
-
-    -- Deincrement the number of windows in the master area
-    , ((modMask              , xK_period), sendMessage (IncMasterN (-1)))
-
-    -- toggle the status bar gap
-    , ((modMask              , xK_b     ), sendMessage ToggleStruts)
-
-    -- Quit xmonad
-    , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
-
-    -- Restart xmonad
-    , ((modMask              , xK_q     ), restart "xmonad" True)
-    ]
-    ++
-    
-    -- Workspace keybindings
-
-    [
-     ((modMask .|. shiftMask, xK_BackSpace), removeWorkspace)
-    , ((modMask, xK_w), selectWorkspace defaultXPConfig)
-    , ((modMask .|. shiftMask, xK_w), withWorkspace defaultXPConfig (windows . W.shift))
-    , ((modMask .|. shiftMask, xK_r      ), renameWorkspace defaultXPConfig)
-    ]
-
-    ++
-    -- mod-[1..9], Switch to workspace N
-    --mod-shift-[1..9], Move client to workspace N
-    [((m .|. modMask, k), windows $ f i)
-         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-    , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    -- -- ++
-
-    --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    --
---     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
---         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
---         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-
+  -- ++
+  --   -- mod-[1..9], Switch to workspace N
+  --   --mod-shift-[1..9], Move client to workspace N
+  -- [((m .|. modMask, k), windows $ f i)
+  --        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+  --   , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+  
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
