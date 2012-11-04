@@ -76,7 +76,7 @@ myKeys = \conf -> mkKeymap conf
       ("M-r", spawn "dmenu_run"), -- launch dmenu
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
-      ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset the layouts on the current workspace to default
+      ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
       ("M-n", refresh), -- Resize viewed windows to the correct size
       ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
       ("M-S-<Tab>", windows W.focusUp), -- Move focus to the previous window
@@ -108,20 +108,12 @@ myKeys = \conf -> mkKeymap conf
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
---
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
-
-    -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
-
-    -- mod-button2, Raise the window to the top of the stack
-    , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
-
-    -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modMask, button3), (\w -> focus w >> mouseResizeWindow w))
-
-    -- you may also bind events to the mouse scroll wheel (button4 and button5)
-    ]
+  [((modMask, button1), (\w -> focus w >> mouseMoveWindow w)), -- mod-button1, Set the window to floating mode and move by dragging
+   ((modMask, button2), (\w -> focus w >> windows W.swapMaster)), -- mod-button2, Raise the window to the top of the stack
+   ((modMask, button3), (\w -> focus w >> mouseResizeWindow w)) -- mod-button3, Set the window to floating mode and resize by dragging
+   -- you may also bind events to the mouse scroll wheel (button4 and button5)
+  ]
 
 ------------------------------------------------------------------------
 -- Layouts:
