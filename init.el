@@ -138,7 +138,8 @@
 (delete-old-backup-files)
 
 ;;; Programming goodies
-
+(require 'yasnippet)
+(yas-global-mode 1)
 
 ;;; Mode-specific hooks
 (add-hook 'LaTeX-mode-hook
