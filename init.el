@@ -64,6 +64,12 @@
                                             (abbreviate-file-name (buffer-file-name)))
                                         "%b")))
 
+(require 'uniquify) ;; For better naming of buffers with the same name.
+(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
 ;;; Colour themes
 (load-theme 'zenburn t)
 
@@ -132,7 +138,8 @@
 (delete-old-backup-files)
 
 ;;; Programming goodies
-
+(require 'yasnippet)
+(yas-global-mode 1)
 
 ;;; Mode-specific hooks
 (add-hook 'LaTeX-mode-hook
