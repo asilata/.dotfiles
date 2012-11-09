@@ -18,6 +18,7 @@
 *.gnuplot
 *.table
 *.djvu
+*.csv
 
 # Compiled source
 *.class
