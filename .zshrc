@@ -21,16 +21,19 @@ autoload colors
 colors
 
 # Make dealing with colours easier
-for COLOR in RED GREEN YELLOW WHITE BLACK CYAN; do
+for COLOR in RED GREEN YELLOW WHITE BLACK CYAN MAGENTA BLUE; do
     eval PR_$COLOR='%{$fg[${(L)COLOR}]%}'        
     eval PR_BRIGHT_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
 done                                                
 PR_RESET="%{${reset_color}%}";
 
+# Git information in the prompt.
+source ~/.zsh-git-prompt/zshrc.sh 
+
 # Left prompt: Green username@hostname: and yellow current path.
 PROMPT="$PR_BRIGHT_GREEN%n@%m:$PR_BRIGHT_YELLOW%~$PR_RESET$ "
 # Right prompt: Red current time.
-RPROMPT="$PR_BRIGHT_RED%t$PR_RESET"
+RPROMPT='$(git_super_status)$PR_BRIGHT_RED%t$PR_RESET'
 
 # Don't put duplicate lines in the history.
 setopt HIST_IGNORE_DUPS
