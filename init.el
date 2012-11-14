@@ -137,6 +137,9 @@
         (delete-file file)))))
 (delete-old-backup-files)
 
+;;; Clean up old buffers.
+(require 'midnight)
+
 ;;; Programming goodies
 (require 'yasnippet)
 (yas-global-mode 1)
@@ -166,4 +169,3 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
-
