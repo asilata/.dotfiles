@@ -27,7 +27,7 @@
 ;;; Install the required packages
 (defvar required-packages-list
   '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme
-           haskell-mode)
+           haskell-mode autopair)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
