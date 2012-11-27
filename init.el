@@ -78,7 +78,8 @@
 (setq show-paren-style 'parenthesis)
 (global-hl-line-mode 1)
 
-(electric-pair-mode 1)
+(require 'autopair)
+(autopair-global-mode)
 (electric-indent-mode 1)
 (electric-layout-mode 1)
 
