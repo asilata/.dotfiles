@@ -32,7 +32,7 @@ source ~/.zsh-git-prompt/zshrc.sh
 
 # Left prompt: Green username@hostname: and yellow current path.
 PROMPT="$PR_BRIGHT_GREEN%n@%m:$PR_BRIGHT_YELLOW%~$PR_RESET$ "
-# Right prompt: Red current time.
+# Right prompt: Git status info if applicable and red current time.
 RPROMPT='$(git_super_status)$PR_BRIGHT_RED%t$PR_RESET'
 
 # Don't put duplicate lines in the history.
