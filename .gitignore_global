@@ -29,6 +29,7 @@
 *.7z
 *.zip
 *.gz
+*.tgz
 *.tar
 *.jar
 *.rar
