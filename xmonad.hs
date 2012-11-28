@@ -73,7 +73,7 @@ myFocusedBorderColor = "#ffffff"
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", spawn "dmenu_run"), -- launch dmenu
+      ("M-r", spawn "dmenu_run -b -l 10 -i"), -- launch dmenu
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
