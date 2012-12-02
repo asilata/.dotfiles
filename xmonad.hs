@@ -179,7 +179,7 @@ myFocusFollowsMouse = True
 -- Dzen configuration
 -- Notice the addition to logHook in the main function.
 dzenSwitchWs :: String -> String
-dzenSwitchWs s = "^ca(1,switch-workspaces.pl " ++ (show s) ++ ")" ++ s ++ "^ca()"
+dzenSwitchWs s = "^ca(1,/usr/bin/wmctrl -s " ++ (show s) ++ ")" ++ s ++ "^ca()"
 
 myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
