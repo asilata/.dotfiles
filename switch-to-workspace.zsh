@@ -2,7 +2,7 @@
 
 if [ $# -eq 1 ]
 then
-    /usr/bin/wmctrl -d | while read line;
+    wmctrl -d | while read line;
     do
         WSNUM=`echo $line | awk '{ print $1 }'`
         WSTAG=`echo $line | awk '{ print $10 }'`
