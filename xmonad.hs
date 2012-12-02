@@ -6,6 +6,7 @@
 import XMonad
 import XMonad.Prompt
 import XMonad.Prompt.Shell
+import XMonad.Prompt.FuzzyShell
 import System.Exit
 import XMonad.Config.Kde
 
@@ -24,6 +25,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Themes
 import XMonad.Util.EZConfig -- More intuitive keybinding configuration
+import XMonad.Util.WorkspaceCompare
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 import System.IO
@@ -56,7 +58,7 @@ myModMask       = mod4Mask
 -- Set numlockMask = 0 if you don't have a numlock key, or want to treat
 -- numlock status separately.
 --
-myNumlockMask   = mod2Mask
+--myNumlockMask   = mod2Mask
 
 -- Workspaces
 
@@ -74,7 +76,7 @@ myFocusedBorderColor = "#ffffff"
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", shellPrompt defaultXPConfig), -- launch shell prompt
+      ("M-r", fuzzyShellPrompt greenXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
@@ -162,7 +164,7 @@ myManageHook = composeAll . concat $
                  [className =? c --> doIgnore | c <- myIgnores],
                  [resource  =? c --> doIgnore | c <- myIgnores]]
                    where
-                     myFloats = ["SMPlayer", "MPlayer", "Krunner"]
+                     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc"]
                      myIgnores = ["desktop_window", "kdesktop", "trayer"]
 --manageHook kde4Config <+>
 
@@ -190,6 +192,7 @@ myDzenPPConfig h = defaultPP
                    , ppLayout   = dzenColor "DarkOrange" "" . wrap "^ca(1,xdotool key Super_L+space)[" "]^ca()"
                    , ppTitle    = dzenColor "#61ce3c" "" . dzenEscape
                    , ppSep      = " "
+                   , ppSort     = getSortByTag
                    , ppWsSep    = "|"
                    }
 
@@ -213,7 +216,7 @@ main = do
       focusFollowsMouse  = myFocusFollowsMouse,
       borderWidth        = myBorderWidth,
       modMask            = myModMask,
-      numlockMask        = myNumlockMask,
+      --numlockMask        = myNumlockMask,
       workspaces         = myWorkspaces,
       normalBorderColor  = myNormalBorderColor,
       focusedBorderColor = myFocusedBorderColor,
@@ -226,5 +229,5 @@ main = do
       layoutHook         = myLayoutHook,
       manageHook         = manageHook kde4Config <+> myManageHook,
       logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
-             }
+      }
          
