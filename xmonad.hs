@@ -184,13 +184,11 @@ dzenSwitchWs s = "^ca(1,/usr/bin/wmctrl -s " ++ (show s) ++ ")" ++ s ++ "^ca()"
 myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
                    { ppOutput   = hPutStrLn h
-                   , ppCurrent  = dzenColor "#f8f8f8" "DodgerBlue4" . pad
-                   , ppVisible  = dzenColor "#f8f8f8" "LightSkyBlue4"
-                                  . pad . dzenSwitchWs
-                   , ppUrgent   = dzenColor "#f8f8f8" "red4" . pad . dzenSwitchWs . dzenStrip
-                   , ppHidden   = pad . dzenSwitchWs
-                   , ppLayout   = dzenColor "DarkOrange" "" . wrap "^ca(1,xdotool key Super_L+space)[" "]^ca()"
-                   , ppTitle    = dzenColor "#61ce3c" "" . dzenEscape
+                   , ppCurrent  = dzenColor "Black" "#94bff3" . pad
+                   , ppHidden   = dzenColor "" "#5f5f5f" . pad . dzenSwitchWs
+                   , ppLayout   = dzenColor "#dca3a3" "#3f3f3f" . pad . wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
+                   , ppOrder    = \(ws:l:t:xs) -> (l:ws:t:xs)
+                   , ppTitle    = dzenColor "#bfebbf" "#3f3f3f" . pad . dzenEscape . shorten 80
                    , ppSep      = " "
                    , ppSort     = getSortByTag
                    , ppWsSep    = "|"
@@ -209,7 +207,7 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do
-  myDzenInstance <- spawnPipe "dzen2 -ta l -fg grey80 -bg grey20 -e 'button3='"
+  myDzenInstance <- spawnPipe "dzen2 -ta l -fg grey80 -bg grey20"
   xmonad $ ewmh defaultConfig {
       -- simple stuff
       terminal           = myTerminal,
