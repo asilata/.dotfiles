@@ -23,6 +23,7 @@ import XMonad.Hooks.SetWMName
 
 
 import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.Loggers
 import XMonad.Util.Themes
 import XMonad.Util.EZConfig -- More intuitive keybinding configuration
 import XMonad.Util.WorkspaceCompare
@@ -181,16 +182,20 @@ myFocusFollowsMouse = True
 dzenSwitchWs :: String -> String
 dzenSwitchWs s = "^ca(1,switch-to-workspace.zsh " ++ (show s) ++ ")" ++ s ++ "^ca()"
 
+myPPExtras :: [X (Maybe String)]
+myPPExtras = []
+
 myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
                    { ppOutput   = hPutStrLn h
                    , ppCurrent  = dzenColor "Black" "#94bff3" . pad
+                   , ppExtras   = myPPExtras
                    , ppHidden   = dzenColor "" "#5f5f5f" . pad . dzenSwitchWs
                    , ppLayout   = dzenColor "#dca3a3" "#3f3f3f" . pad . wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
                    , ppOrder    = \(ws:l:t:xs) -> (l:ws:t:xs)
-                   , ppTitle    = dzenColor "#bfebbf" "#3f3f3f" . pad . dzenEscape . shorten 80
                    , ppSep      = " "
                    , ppSort     = getSortByTag
+                   , ppTitle    = dzenColor "#bfebbf" "#3f3f3f" . pad . dzenEscape . shorten 80
                    , ppWsSep    = "|"
                    }
 
