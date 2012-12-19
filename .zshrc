@@ -58,3 +58,9 @@ export TERM='xterm-256color'
 
 # 10 second wait if you do something that will delete everything.
 setopt RM_STAR_WAIT
+
+# Custom keybindings
+autoload -U select-word-style
+select-word-style bash
+bindkey ";5D" backward-word
+bindkey ";5C" forward-word
