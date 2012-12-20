@@ -3,7 +3,7 @@
 --
 --
 
-import XMonad
+import XMonad hiding ((|||))
 import XMonad.Prompt
 import XMonad.Prompt.FuzzyShell
 import System.Exit
@@ -13,6 +13,7 @@ import XMonad.Layout.Monitor
 import XMonad.Layout.Decoration -- For title bars for windows.
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
 import XMonad.Layout.NoBorders
+import XMonad.Layout.LayoutCombinators
 
 import XMonad.Hooks.ManageDocks -- For managing specific windows
 import XMonad.Hooks.FadeInactive -- Make inactive windows transparent
@@ -82,6 +83,7 @@ myKeys = \conf -> mkKeymap conf
       ("M-r", fuzzyShellPrompt greenXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
+      ("M-f", sendMessage $ JumpToLayout "Full"), -- Full layout
       ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
       ("M-n", refresh), -- Resize viewed windows to the correct size
       ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
@@ -135,9 +137,8 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 myLayoutHook = smartBorders (avoidStruts $ noFrillsDeco shrinkText myDecoTheme (tiled ||| Mirror tiled ||| Full))
     where
-      -- My SimpleDeco theme
+      -- My NoFrillsDeco theme
       myDecoTheme = defaultTheme
-
       -- default tiling algorithm partitions the screen into two panes
       tiled   = Tall nmaster delta ratio
       -- The default number of windows in the master pane
@@ -188,7 +189,7 @@ dzenSwitchWs s = "^ca(1,switch-to-workspace.zsh " ++ (show s) ++ ")" ++ s ++ "^c
 myWorldLocations = [("New York", -300), ("Pune", 330)]
 
 myTimeFormatString :: String
-myTimeFormatString = "%Z: %R"
+myTimeFormatString = "%Z: %R" -- Name of zone: Time
 
 utcToFormattedTime :: UTCTime -> TimeZone -> String
 utcToFormattedTime u = (formatTime defaultTimeLocale myTimeFormatString) . (flip utcToZonedTime u)
