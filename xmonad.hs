@@ -5,7 +5,6 @@
 
 import XMonad
 import XMonad.Prompt
-import XMonad.Prompt.Shell
 import XMonad.Prompt.FuzzyShell
 import System.Exit
 import XMonad.Config.Kde
@@ -30,6 +29,9 @@ import XMonad.Util.WorkspaceCompare
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 import System.IO
+import System.Locale
+import Data.Time
+import Data.List (intercalate)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -182,8 +184,23 @@ myFocusFollowsMouse = True
 dzenSwitchWs :: String -> String
 dzenSwitchWs s = "^ca(1,switch-to-workspace.zsh " ++ (show s) ++ ")" ++ s ++ "^ca()"
 
+-- World clock for display in Dzen. This code is somewhat temporary.
+myWorldLocations = [("New York", -300), ("Pune", 330)]
+
+myTimeFormatString :: String
+myTimeFormatString = "%Z: %R"
+
+utcToFormattedTime :: UTCTime -> TimeZone -> String
+utcToFormattedTime u = (formatTime defaultTimeLocale myTimeFormatString) . (flip utcToZonedTime u)
+
+myWorldClock :: Logger
+myWorldClock = let tzones = map (\(a,b) -> TimeZone b False a) myWorldLocations
+               in io $ 
+                  do currentUTC <- getZonedTime >>= return . zonedTimeToUTC
+                     return $ Just $ intercalate " ∙ " $ map (utcToFormattedTime currentUTC) tzones
+
 myPPExtras :: [X (Maybe String)]
-myPPExtras = []
+myPPExtras = [myWorldClock]
 
 myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
@@ -192,12 +209,15 @@ myDzenPPConfig h = defaultPP
                    , ppExtras   = myPPExtras
                    , ppHidden   = dzenColor "" "#5f5f5f" . pad . dzenSwitchWs
                    , ppLayout   = dzenColor "#dca3a3" "#3f3f3f" . pad . wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
-                   , ppOrder    = \(ws:l:t:xs) -> (l:ws:t:xs)
+                   , ppOrder    = \(ws:l:t:xs) -> (l:ws:xs) ++ [t]
                    , ppSep      = " "
                    , ppSort     = getSortByTag
                    , ppTitle    = dzenColor "#bfebbf" "#3f3f3f" . pad . dzenEscape . shorten 80
                    , ppWsSep    = "|"
                    }
+
+myDzenBar :: String
+myDzenBar = "dzen2 -ta l -fg grey80 -bg grey20"
 
 ------------------------------------------------------------------------
 -- Final loghook, including dzen and fading (transparency of windows).
@@ -212,7 +232,7 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do
-  myDzenInstance <- spawnPipe "dzen2 -ta l -fg grey80 -bg grey20"
+  myDzenInstance <- spawnPipe myDzenBar
   xmonad $ ewmh defaultConfig {
       -- simple stuff
       terminal           = myTerminal,
