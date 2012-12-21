@@ -10,13 +10,16 @@ import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dyna
 import XMonad.Config.Kde -- KDE-specific tweaks.
 
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
+import XMonad.Hooks.Minimize
 import XMonad.Hooks.FadeInactive -- Make inactive windows transparent.
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
 
 import XMonad.Layout.Decoration -- For title bars for windows.
+import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.Minimize
 import XMonad.Layout.Monitor
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
 import XMonad.Layout.NoBorders
@@ -76,8 +79,8 @@ myWorkspaces = ["home", "web", "math"]
 myBorderWidth   = 2
 
 -- Colour configurations
-myNormalBorderColor  = "#000000"
-myFocusedBorderColor = "#ffffff"
+myInactiveBorderColor = "#656555"
+myActiveBorderColor = myInactiveTextColor
 myActiveColor = "#8c5353" --"#94bff3"
 myInactiveColor = "#5f5f5f"
 myActiveTextColor = myInactiveTextColor --"Black"
@@ -143,13 +146,17 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- which denotes layout choice.
 --
 
-myDecoTheme = defaultTheme { activeColor = myActiveColor
+myDecoTheme = defaultThemeWithImageButtons { activeColor = myActiveColor
                            , inactiveColor = myInactiveColor
                            , activeTextColor = myActiveTextColor
-                           , inactiveTextColor = myInactiveTextColor}
+                           , inactiveTextColor = myInactiveTextColor
+                           , activeBorderColor = myActiveBorderColor
+                           , inactiveBorderColor = myInactiveBorderColor
+                           , fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"}
 
 
-myLayoutHook = smartBorders $ (avoidStruts $ noFrillsDeco shrinkText myDecoTheme (tiled ||| Mirror tiled))
+myHandleEventHook = minimizeEventHook
+myLayoutHook = smartBorders $ minimize $ (avoidStruts $ imageButtonDeco shrinkText myDecoTheme (tiled ||| Mirror tiled ||| Full))
     where
       -- default tiling algorithm partitions the screen into two panes
       tiled   = Tall nmaster delta ratio
@@ -254,8 +261,8 @@ main = do
       modMask            = myModMask,
       --numlockMask        = myNumlockMask,
       workspaces         = myWorkspaces,
-      normalBorderColor  = myNormalBorderColor,
-      focusedBorderColor = myFocusedBorderColor,
+      normalBorderColor  = myInactiveBorderColor,
+      focusedBorderColor = myActiveBorderColor,
       
       -- key bindings
       keys               = myKeys,
@@ -263,6 +270,7 @@ main = do
 
       -- hooks, layouts
       layoutHook         = myLayoutHook,
+      handleEventHook    = myHandleEventHook,
       manageHook         = manageHook kde4Config <+> myManageHook,
       logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
       }
