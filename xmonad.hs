@@ -4,38 +4,41 @@
 --
 
 import XMonad hiding ((|||))
-import XMonad.Prompt
-import XMonad.Prompt.FuzzyShell
-import System.Exit
-import XMonad.Config.Kde
 
-import XMonad.Layout.Monitor
-import XMonad.Layout.Decoration -- For title bars for windows.
-import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
-import XMonad.Layout.NoBorders
-import XMonad.Layout.LayoutCombinators
+import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
-import XMonad.Hooks.ManageDocks -- For managing specific windows
-import XMonad.Hooks.FadeInactive -- Make inactive windows transparent
+import XMonad.Config.Kde -- KDE-specific tweaks.
+
+import XMonad.Hooks.ManageDocks -- For managing specific windows.
+import XMonad.Hooks.FadeInactive -- Make inactive windows transparent.
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
 
+import XMonad.Layout.Decoration -- For title bars for windows.
+import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.Monitor
+import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
+import XMonad.Layout.NoBorders
 
-import XMonad.Util.Run (spawnPipe)
-import XMonad.Util.Loggers
-import XMonad.Util.Themes
-import XMonad.Util.EZConfig -- More intuitive keybinding configuration
-import XMonad.Util.WorkspaceCompare
-
-import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
-import System.IO
-import System.Locale
-import Data.Time
-import Data.List (intercalate)
+import XMonad.Prompt
+import XMonad.Prompt.FuzzyShell
 
 import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
+
+import XMonad.Util.EZConfig -- More intuitive keybinding configuration
+import XMonad.Util.Loggers
+import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.Themes
+import XMonad.Util.WorkspaceCompare
+
+import Data.List (intercalate)
+import qualified Data.Map as M
+import Data.Time
+
+import System.Exit
+import System.IO
+import System.Locale
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -71,9 +74,14 @@ myWorkspaces = ["home", "web", "math"]
 
 -- Border configurations
 myBorderWidth   = 2
+
+-- Colour configurations
 myNormalBorderColor  = "#000000"
 myFocusedBorderColor = "#ffffff"
-
+myActiveColor = "#8c5353" --"#94bff3"
+myInactiveColor = "#5f5f5f"
+myActiveTextColor = myInactiveTextColor --"Black"
+myInactiveTextColor = "#dcdccc"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -135,10 +143,14 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- which denotes layout choice.
 --
 
-myLayoutHook = smartBorders (avoidStruts $ noFrillsDeco shrinkText myDecoTheme (tiled ||| Mirror tiled ||| Full))
+myDecoTheme = defaultTheme { activeColor = myActiveColor
+                           , inactiveColor = myInactiveColor
+                           , activeTextColor = myActiveTextColor
+                           , inactiveTextColor = myInactiveTextColor}
+
+
+myLayoutHook = smartBorders $ (avoidStruts $ noFrillsDeco shrinkText myDecoTheme (tiled ||| Mirror tiled))
     where
-      -- My NoFrillsDeco theme
-      myDecoTheme = defaultTheme
       -- default tiling algorithm partitions the screen into two panes
       tiled   = Tall nmaster delta ratio
       -- The default number of windows in the master pane
@@ -206,9 +218,9 @@ myPPExtras = [myWorldClock]
 myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
                    { ppOutput   = hPutStrLn h
-                   , ppCurrent  = dzenColor "Black" "#94bff3" . pad
+                   , ppCurrent  = dzenColor myActiveTextColor myActiveColor . pad
                    , ppExtras   = myPPExtras
-                   , ppHidden   = dzenColor "" "#5f5f5f" . pad . dzenSwitchWs
+                   , ppHidden   = dzenColor myInactiveTextColor myInactiveColor . pad . dzenSwitchWs
                    , ppLayout   = dzenColor "#dca3a3" "#3f3f3f" . pad . wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
                    , ppOrder    = \(ws:l:t:xs) -> (l:ws:xs) ++ [t]
                    , ppSep      = " "
