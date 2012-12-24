@@ -159,7 +159,7 @@ myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
     -- default layout modifiers to be applied everywhere
     myLayoutModifiers = (renamed [CutWordsLeft 2] . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
     -- Default tiling algorithm partitions the screen into two panes.
-    tiled   = Tall 1 (1/2) (3/100)
+    tiled   = Tall 1 (3/100) (1/2)
 
 ------------------------------------------------------------------------
 -- Window rules:
