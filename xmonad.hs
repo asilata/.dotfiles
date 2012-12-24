@@ -23,6 +23,7 @@ import XMonad.Layout.Minimize
 import XMonad.Layout.Monitor
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Renamed
 
 import XMonad.Prompt
 import XMonad.Prompt.FuzzyShell
@@ -81,10 +82,11 @@ myBorderWidth   = 2
 -- Colour configurations
 myInactiveBorderColor = "#656555"
 myActiveBorderColor = myInactiveTextColor
-myActiveColor = "#8c5353" --"#94bff3"
+myActiveColor = "#94bff3"
 myInactiveColor = "#5f5f5f"
-myActiveTextColor = myInactiveTextColor --"Black"
+myActiveTextColor = "Black"
 myInactiveTextColor = "#dcdccc"
+myBackgroundColor = "#3f3f3f"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -146,26 +148,18 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- which denotes layout choice.
 --
 
-myDecoTheme = defaultThemeWithImageButtons { activeColor = myActiveColor
-                           , inactiveColor = myInactiveColor
-                           , activeTextColor = myActiveTextColor
-                           , inactiveTextColor = myInactiveTextColor
-                           , activeBorderColor = myActiveBorderColor
-                           , inactiveBorderColor = myInactiveBorderColor
-                           , fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"}
+myDecoTheme = defaultThemeWithImageButtons { 
+  fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
+  }
 
 
 myHandleEventHook = minimizeEventHook
-myLayoutHook = smartBorders $ minimize $ (avoidStruts $ imageButtonDeco shrinkText myDecoTheme (tiled ||| Mirror tiled ||| Full))
-    where
-      -- default tiling algorithm partitions the screen into two panes
-      tiled   = Tall nmaster delta ratio
-      -- The default number of windows in the master pane
-      nmaster = 1
-      -- Default proportion of screen occupied by master pane
-      ratio   = 1/2
-      -- Percent of screen to increment by when resizing panes
-      delta   = 3/100
+myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
+  where
+    -- default layout modifiers to be applied everywhere
+    myLayoutModifiers = (renamed [CutWordsLeft 2] . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
+    -- Default tiling algorithm partitions the screen into two panes.
+    tiled   = Tall 1 (1/2) (3/100)
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -189,9 +183,6 @@ myManageHook = composeAll . concat $
                    where
                      myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc"]
                      myIgnores = ["desktop_window", "kdesktop", "trayer"]
---manageHook kde4Config <+>
-
-
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -203,6 +194,9 @@ myFocusFollowsMouse = True
 -- Notice the addition to logHook in the main function.
 dzenSwitchWs :: String -> String
 dzenSwitchWs s = "^ca(1,switch-to-workspace.zsh " ++ (show s) ++ ")" ++ s ++ "^ca()"
+
+dzenSwitchLayout :: String -> String
+dzenSwitchLayout = wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
 
 -- World clock for display in Dzen. This code is somewhat temporary.
 myWorldLocations = [("New York", -300), ("Pune", 330)]
@@ -226,13 +220,13 @@ myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
                    { ppOutput   = hPutStrLn h
                    , ppCurrent  = dzenColor myActiveTextColor myActiveColor . pad
-                   , ppExtras   = myPPExtras
+                   , ppExtras   = map (dzenColorL "" myBackgroundColor . padL) myPPExtras
                    , ppHidden   = dzenColor myInactiveTextColor myInactiveColor . pad . dzenSwitchWs
-                   , ppLayout   = dzenColor "#dca3a3" "#3f3f3f" . pad . wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
+                   , ppLayout   = dzenColor "#dca3a3" myBackgroundColor . pad . dzenSwitchLayout
                    , ppOrder    = \(ws:l:t:xs) -> (l:ws:xs) ++ [t]
                    , ppSep      = " "
                    , ppSort     = getSortByTag
-                   , ppTitle    = dzenColor "#bfebbf" "#3f3f3f" . pad . dzenEscape . shorten 80
+                   , ppTitle    = dzenColor "#bfebbf" myBackgroundColor . pad . dzenEscape . shorten 80
                    , ppWsSep    = "|"
                    }
 
