@@ -118,14 +118,9 @@ myKeys = \conf -> mkKeymap conf
       ("M-S-w", withWorkspace defaultXPConfig (windows . W.shift)), -- Move current window to selected workspace
       ("M-S-r", renameWorkspace defaultXPConfig) -- Rename workspace
      ]
-
-  -- ++
-  --   -- mod-[1..9], Switch to workspace N
-  --   --mod-shift-[1..9], Move client to workspace N
-  -- [((m .|. modMask, k), windows $ f i)
-  --        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-  --   , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-  
+  ++
+  -- mod-[1..9] switches to the appropriate workspace.
+  map (\x -> ("M-" ++ show (x+1), withNthWorkspace W.greedyView x)) [0..8]
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
@@ -225,7 +220,6 @@ myDzenPPConfig h = defaultPP
                    , ppLayout   = dzenColor "#dca3a3" myBackgroundColor . pad . dzenSwitchLayout
                    , ppOrder    = \(ws:l:t:xs) -> (l:ws:xs) ++ [t]
                    , ppSep      = " "
-                   , ppSort     = getSortByTag
                    , ppTitle    = dzenColor "#bfebbf" myBackgroundColor . pad . dzenEscape . shorten 80
                    , ppWsSep    = "|"
                    }
@@ -253,7 +247,6 @@ main = do
       focusFollowsMouse  = myFocusFollowsMouse,
       borderWidth        = myBorderWidth,
       modMask            = myModMask,
-      --numlockMask        = myNumlockMask,
       workspaces         = myWorkspaces,
       normalBorderColor  = myInactiveBorderColor,
       focusedBorderColor = myActiveBorderColor,
