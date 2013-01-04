@@ -34,6 +34,7 @@ import XMonad.Util.EZConfig -- More intuitive keybinding configuration
 import XMonad.Util.Loggers
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Themes
+import XMonad.Util.WindowProperties (getProp32s)
 import XMonad.Util.WorkspaceCompare
 
 import Data.List (intercalate)
@@ -174,9 +175,10 @@ myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat | c <- myFloats],
                  [className =? c --> doIgnore | c <- myIgnores],
+                 --[className =? "Plasma-desktop" --> doFloat <+> doF W.focusDown],
                  [resource  =? c --> doIgnore | c <- myIgnores]]
                    where
-                     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc"]
+                     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc", "Plasma-desktop"]
                      myIgnores = ["desktop_window", "kdesktop", "trayer"]
 
 -- Whether focus follows the mouse pointer.
@@ -239,6 +241,13 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
+
+-- kdeOverride :: Query Bool
+-- kdeOverride = ask >>= \w -> liftX $ do
+--     override <- getAtom "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
+--     wt <- getProp32s "_NET_WM_WINDOW_TYPE" w
+--     return $ maybe False (elem $ fromIntegral override) wt
+                      
 main = do
   myDzenInstance <- spawnPipe myDzenBar
   xmonad $ ewmh defaultConfig {
@@ -259,6 +268,9 @@ main = do
       layoutHook         = myLayoutHook,
       handleEventHook    = myHandleEventHook,
       manageHook         = manageHook kde4Config <+> myManageHook,
+      -- manageHook         = ((className =? "krunner" <||> className =? "Plasma-desktop") >>= return .
+      --                       not --> manageHook kde4Config) <+>
+      --                      (kdeOverride --> doFloat) <+> myManageHook,
       logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
       }
          

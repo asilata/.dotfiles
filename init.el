@@ -142,8 +142,8 @@
 (require 'midnight)
 
 ;;; Programming goodies
-(require 'yasnippet)
-(yas-global-mode 1)
+;(require 'yasnippet)
+;(yas-global-mode 1)
 
 ;;; Mode-specific hooks
 (add-hook 'LaTeX-mode-hook
@@ -170,3 +170,4 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
+
