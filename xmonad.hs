@@ -45,41 +45,6 @@ import System.Exit
 import System.IO
 import System.Locale
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
-myTerminal      = "konsole"
-
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
---
-myModMask       = mod4Mask
-
--- The mask for the numlock key. Numlock status is "masked" from the
--- current modifier status, so the keybindings will work with numlock on or
--- off. You may need to change this on some systems.
---
--- You can find the numlock modifier by running "xmodmap" and looking for a
--- modifier with Num_Lock bound to it:
---
--- > $ xmodmap | grep Num
--- > mod2        Num_Lock (0x4d)
---
--- Set numlockMask = 0 if you don't have a numlock key, or want to treat
--- numlock status separately.
---
---myNumlockMask   = mod2Mask
-
--- Workspaces
-
-myWorkspaces = ["home", "web", "math"]
-
-
--- Border configurations
-myBorderWidth   = 2
-
 -- Colour configurations
 myInactiveBorderColor = "#656555"
 myActiveBorderColor = myInactiveTextColor
@@ -90,7 +55,7 @@ myInactiveTextColor = "#dcdccc"
 myBackgroundColor = "#3f3f3f"
 
 ------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
+-- Key bindings. Add, modify or remove key bindings here. Everything is emacs-style.
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
@@ -251,26 +216,26 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 main = do
   myDzenInstance <- spawnPipe myDzenBar
   xmonad $ ewmh defaultConfig {
-      -- simple stuff
-      terminal           = myTerminal,
-      focusFollowsMouse  = myFocusFollowsMouse,
-      borderWidth        = myBorderWidth,
-      modMask            = myModMask,
-      workspaces         = myWorkspaces,
-      normalBorderColor  = myInactiveBorderColor,
-      focusedBorderColor = myActiveBorderColor,
-      
-      -- key bindings
-      keys               = myKeys,
-      mouseBindings      = myMouseBindings,
-
-      -- hooks, layouts
-      layoutHook         = myLayoutHook,
-      handleEventHook    = myHandleEventHook,
-      manageHook         = manageHook kde4Config <+> myManageHook,
-      -- manageHook         = ((className =? "krunner" <||> className =? "Plasma-desktop") >>= return .
-      --                       not --> manageHook kde4Config) <+>
-      --                      (kdeOverride --> doFloat) <+> myManageHook,
-      logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
-      }
-         
+    -- simple stuff
+    terminal           = "konsole", --default terminal
+    focusFollowsMouse  = myFocusFollowsMouse,
+    borderWidth        = 2,
+    modMask            = mod4mask, --default mod key (mod4 is usually the win key)
+    workspaces         = ["home", "math", "web"], --default workspaces that xmonad starts with
+    normalBorderColor  = myInactiveBorderColor,
+    focusedBorderColor = myActiveBorderColor,
+    
+    -- key bindings
+    keys               = myKeys,
+    mouseBindings      = myMouseBindings,
+    
+    -- hooks, layouts
+    layoutHook         = myLayoutHook,
+    handleEventHook    = myHandleEventHook,
+    manageHook         = manageHook kde4Config <+> myManageHook,
+    -- manageHook         = ((className =? "krunner" <||> className =? "Plasma-desktop") >>= return .
+    --                       not --> manageHook kde4Config) <+>
+    --                      (kdeOverride --> doFloat) <+> myManageHook,
+    logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
+    }
+    
