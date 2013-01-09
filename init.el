@@ -150,7 +150,10 @@
           (lambda ()
 	    (TeX-PDF-mode 1)
             (flyspell-mode 1)
-            (auto-fill-mode 0)))
+            (auto-fill-mode 0)
+            (setq TeX-view-program-list '(("Okular" "okular %o")))
+            (setq TeX-view-program-selection '((output-pdf "Okular")))
+            ))
 
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)
@@ -170,4 +173,5 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
+
 
