@@ -142,10 +142,14 @@
 (require 'midnight)
 
 ;;; Programming goodies
-;(require 'yasnippet)
-;(yas-global-mode 1)
+;;(require 'yasnippet)
+;;(yas-global-mode 1)
+
+(require 'php+-mode)
+(php+-mode-setup)
 
 ;;; Mode-specific hooks
+(require 'reftex)
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-PDF-mode 1)
@@ -153,6 +157,7 @@
             (auto-fill-mode 0)
             (setq TeX-view-program-list '(("Okular" "okular %o")))
             (setq TeX-view-program-selection '((output-pdf "Okular")))
+            (reftex-mode 1)
             ))
 
 (add-hook 'haskell-mode-hook
