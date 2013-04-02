@@ -144,6 +144,9 @@
 ;;; Programming goodies
 ;;(require 'yasnippet)
 ;;(yas-global-mode 1)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 (require 'php+-mode)
 (php+-mode-setup)
