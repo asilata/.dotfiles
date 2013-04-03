@@ -2,7 +2,6 @@
 -- My xmonad configuration file.
 --
 --
-
 import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
@@ -21,6 +20,7 @@ import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.Minimize
 import XMonad.Layout.Monitor
+import XMonad.Layout.MultiToggle
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
@@ -113,8 +113,8 @@ myDecoTheme = defaultThemeWithImageButtons {
   fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
   }
 
-
 myHandleEventHook = minimizeEventHook
+--myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
   where
     -- default layout modifiers to be applied everywhere
@@ -140,11 +140,13 @@ myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat | c <- myFloats],
                  [className =? c --> doIgnore | c <- myIgnores],
-                 --[className =? "Plasma-desktop" --> doFloat <+> doF W.focusDown],
+                 [title =? c --> doFloat | c <- plasmaStuff],
                  [resource  =? c --> doIgnore | c <- myIgnores]]
-                   where
-                     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc", "Plasma-desktop"]
-                     myIgnores = ["desktop_window", "kdesktop", "trayer"]
+  where
+    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc"]
+    plasmaStuff = ["Plasma-desktop", "plasma-desktop", "Plasma", "plasma"]
+    --myIgnores = ["desktop_widow", "kdesktop", "trayer"]
+    myIgnores = []
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -202,10 +204,6 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
                 where fadeAmount = 0.90
 
 ------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
---
 
 -- kdeOverride :: Query Bool
 -- kdeOverride = ask >>= \w -> liftX $ do
@@ -220,7 +218,7 @@ main = do
     terminal           = "konsole", --default terminal
     focusFollowsMouse  = myFocusFollowsMouse,
     borderWidth        = 2,
-    modMask            = mod4mask, --default mod key (mod4 is usually the win key)
+    modMask            = mod4Mask, --default mod key (mod4 is usually the win key)
     workspaces         = ["home", "math", "web"], --default workspaces that xmonad starts with
     normalBorderColor  = myInactiveBorderColor,
     focusedBorderColor = myActiveBorderColor,
