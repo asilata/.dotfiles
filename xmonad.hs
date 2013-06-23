@@ -6,7 +6,7 @@ import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
-import XMonad.Config.Kde -- KDE-specific tweaks.
+--import XMonad.Config.Kde -- KDE-specific tweaks.
 
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
 import XMonad.Hooks.Minimize
@@ -18,6 +18,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Layout.Decoration -- For title bars for windows.
 import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.LayoutHints
 import XMonad.Layout.Minimize
 import XMonad.Layout.Monitor
 import XMonad.Layout.MultiToggle
@@ -39,6 +40,7 @@ import XMonad.Util.WorkspaceCompare
 
 import Data.List (intercalate)
 import qualified Data.Map as M
+import Data.Monoid (All(..))
 import Data.Time
 
 import System.Exit
@@ -118,7 +120,7 @@ myHandleEventHook = minimizeEventHook
 myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
   where
     -- default layout modifiers to be applied everywhere
-    myLayoutModifiers = (renamed [CutWordsLeft 2] . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
+    myLayoutModifiers = (layoutHints . renamed [CutWordsLeft 2] . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
     -- Default tiling algorithm partitions the screen into two panes.
     tiled   = Tall 1 (3/100) (1/2)
 
@@ -137,14 +139,39 @@ myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
+kdeOverride :: Query Bool
+kdeOverride = ask >>= \w -> liftX $ do
+    override <- getAtom "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
+    wt <- getProp32s "_NET_WM_WINDOW_TYPE" w
+    return $ maybe False (elem $ fromIntegral override) wt
+
+checkAlwaysTop :: Query Bool
+checkAlwaysTop = ask >>= \w -> liftX $ do
+  top <- getAtom "_NET_WM_STATE_STAYS_ON_TOP"
+  mbr <- getProp32s "_NET_WM_WINDOW_TYPE" w
+  case mbr of
+    Just rs -> return $ any (`elem` [top]) (map fromIntegral rs)
+    _       -> return False
+
+topEventHook :: Event -> X All
+topEventHook (MapNotifyEvent {ev_window = w}) = do
+  whenX ((not `fmap` (isClient w)) <&&> runQuery checkAlwaysTop w) refresh
+  return (All True)
+topEventHook _ = return (All True)
+
+manageAlwaysTop :: ManageHook
+manageAlwaysTop = checkAlwaysTop --> doFloat
+
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat | c <- myFloats],
-                 [className =? c --> doIgnore | c <- myIgnores],
-                 [title =? c --> doFloat | c <- plasmaStuff],
-                 [resource  =? c --> doIgnore | c <- myIgnores]]
+                 --[className =? c --> doFloat | c <- plasmaStuff],
+                 [className =? c --> doIgnore | c <- razorStuff],
+                 [kdeOverride --> doIgnore],
+                 [className =? "Wine" --> doFloat <+> doShift "netflix"]]
   where
-    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Vlc"]
+    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container"]
     plasmaStuff = ["Plasma-desktop", "plasma-desktop", "Plasma", "plasma"]
+    razorStuff = ["razor-notificationd", "razor-panel", "Razor Panel"]
     --myIgnores = ["desktop_widow", "kdesktop", "trayer"]
     myIgnores = []
 
@@ -190,6 +217,7 @@ myDzenPPConfig h = defaultPP
                    , ppOrder    = \(ws:l:t:xs) -> (l:ws:xs) ++ [t]
                    , ppSep      = " "
                    , ppTitle    = dzenColor "#bfebbf" myBackgroundColor . pad . dzenEscape . shorten 80
+                   , ppUrgent   = dzenColor myActiveTextColor myBackgroundColor . pad . dzenEscape . shorten 80 . dzenStrip
                    , ppWsSep    = "|"
                    }
 
@@ -205,12 +233,6 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 
 ------------------------------------------------------------------------
 
--- kdeOverride :: Query Bool
--- kdeOverride = ask >>= \w -> liftX $ do
---     override <- getAtom "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
---     wt <- getProp32s "_NET_WM_WINDOW_TYPE" w
---     return $ maybe False (elem $ fromIntegral override) wt
-                      
 main = do
   myDzenInstance <- spawnPipe myDzenBar
   xmonad $ ewmh defaultConfig {
@@ -230,7 +252,7 @@ main = do
     -- hooks, layouts
     layoutHook         = myLayoutHook,
     handleEventHook    = myHandleEventHook,
-    manageHook         = manageHook kde4Config <+> myManageHook,
+    manageHook         = manageDocks <+> manageAlwaysTop <+>  (className =? "Razor-notificationd" --> doFloat),
     -- manageHook         = ((className =? "krunner" <||> className =? "Plasma-desktop") >>= return .
     --                       not --> manageHook kde4Config) <+>
     --                      (kdeOverride --> doFloat) <+> myManageHook,
