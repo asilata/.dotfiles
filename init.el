@@ -13,6 +13,9 @@
 (defvar local-config-directory (concat user-emacs-directory "local/")
   "Machine-local configuration files go here")
 (add-to-list 'load-path user-opt-directory)
+(let ((default-directory user-opt-directory))
+  (normal-top-level-add-subdirs-to-load-path))
+
 
 ;;; Package management with MELPA
 (require 'package)
@@ -150,6 +153,9 @@
 
 (require 'php+-mode)
 (php+-mode-setup)
+
+;; Hyde mode for writing jekyll stuff.
+(require 'hyde)
 
 ;;; Mode-specific hooks
 (require 'reftex)
