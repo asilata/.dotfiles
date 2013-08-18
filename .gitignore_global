@@ -19,6 +19,7 @@
 *.table
 *.djvu
 *.csv
+*.vrb
 
 # Compiled source
 *.class
