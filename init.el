@@ -21,8 +21,7 @@
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
-;; (setq url-http-attempt-keepalives nil)
-;;; MORE TO BE ADDED TO PACKAGE MANAGEMENT
+(setq url-http-attempt-keepalives nil)
 
 ;;; Install the required packages
 (defvar required-packages-list
@@ -143,8 +142,8 @@
 (require 'midnight)
 
 ;;; Programming goodies
-;;(require 'yasnippet)
-;;(yas-global-mode 1)
+;; (require 'yasnippet)
+;; (yas-global-mode 1)
 (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
