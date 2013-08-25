@@ -14,7 +14,7 @@
   "Machine-local configuration files go here")
 (add-to-list 'load-path user-opt-directory)
 
-;;; Package management with MELPA
+;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
 (require 'melpa)
 (add-to-list 'package-archives
@@ -35,7 +35,7 @@
         finally (return t)))
 
 (unless (required-packages-installed-p)
-  (message "%s" "Emacs Prelude is now refreshing its package database...")
+  (message "%s" "Refreshing package database...")
   (package-refresh-contents)
   (message "%s" " done.")
   (dolist (pkg required-packages-list)
@@ -115,7 +115,8 @@
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
 
-;;; Backing up files
+;;; Backup and cleanup
+;; Back up files
 (setq backup-by-copying t
       delete-old-versions t
       kept-old-versions 2
@@ -126,6 +127,7 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
+;; Delete old backup files
 (defun delete-old-backup-files ()
   "Delete backup files that have not been accessed in a month."
   (let ((month (* 60 60 24 7 30))
@@ -138,7 +140,7 @@
         (delete-file file)))))
 (delete-old-backup-files)
 
-;;; Clean up old buffers.
+;; Clean up old buffers.
 (require 'midnight)
 
 ;;; Programming goodies
