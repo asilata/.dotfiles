@@ -115,7 +115,6 @@ myDecoTheme = defaultThemeWithImageButtons {
   }
 
 myHandleEventHook = minimizeEventHook
---myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
   where
     -- default layout modifiers to be applied everywhere
@@ -126,18 +125,6 @@ myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 ------------------------------------------------------------------------
 -- Window rules:
 
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
 kdeOverride :: Query Bool
 kdeOverride = ask >>= \w -> liftX $ do
     override <- getAtom "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
@@ -160,19 +147,6 @@ topEventHook _ = return (All True)
 
 manageAlwaysTop :: ManageHook
 manageAlwaysTop = checkAlwaysTop --> doFloat
-
--- myManageHook = composeAll . concat $
---                [ [className =? c --> doFloat | c <- myFloats],
---                  --[className =? c --> doFloat | c <- plasmaStuff],
---                  [className =? c --> doIgnore | c <- razorStuff],
---                  [kdeOverride --> doIgnore],
---                  [className =? "Wine" --> doFloat <+> doShift "netflix"]]
---   where
---     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container"]
---     plasmaStuff = ["Plasma-desktop", "plasma-desktop", "Plasma", "plasma"]
---     razorStuff = ["razor-notificationd", "razor-panel", "Razor Panel"]
---     --myIgnores = ["desktop_widow", "kdesktop", "trayer"]
---     myIgnores = []
 
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat <+> doF W.swapDown | c <- myFloats],
