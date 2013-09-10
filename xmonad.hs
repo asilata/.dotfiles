@@ -6,9 +6,8 @@ import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
---import XMonad.Config.Kde -- KDE-specific tweaks.
-
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
 import XMonad.Hooks.FadeInactive -- Make inactive windows transparent.
 import XMonad.Hooks.EwmhDesktops
@@ -102,43 +101,21 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
-
 myDecoTheme = defaultThemeWithImageButtons { 
   fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
   }
 
 myHandleEventHook = minimizeEventHook
---myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
 myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
   where
     -- default layout modifiers to be applied everywhere
-    myLayoutModifiers = (layoutHints . renamed [CutWordsLeft 2] . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
+    myLayoutModifiers = (renamed [CutWordsLeft 3] . layoutHints . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
     -- Default tiling algorithm partitions the screen into two panes.
     tiled   = Tall 1 (3/100) (1/2)
 
 ------------------------------------------------------------------------
 -- Window rules:
 
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
 kdeOverride :: Query Bool
 kdeOverride = ask >>= \w -> liftX $ do
     override <- getAtom "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
@@ -163,17 +140,12 @@ manageAlwaysTop :: ManageHook
 manageAlwaysTop = checkAlwaysTop --> doFloat
 
 myManageHook = composeAll . concat $
-               [ [className =? c --> doFloat | c <- myFloats],
-                 --[className =? c --> doFloat | c <- plasmaStuff],
-                 [className =? c --> doIgnore | c <- razorStuff],
-                 [kdeOverride --> doIgnore],
-                 [className =? "Wine" --> doFloat <+> doShift "netflix"]]
+               [ [className =? c --> doFloat <+> doF W.swapDown | c <- myFloats],
+                 [className =? "Wine" --> doFloat <+> doShift "netflix"],
+                 [kdeOverride --> doFloat <+> doF W.swapDown]
+               ]
   where
-    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container"]
-    plasmaStuff = ["Plasma-desktop", "plasma-desktop", "Plasma", "plasma"]
-    razorStuff = ["razor-notificationd", "razor-panel", "Razor Panel"]
-    --myIgnores = ["desktop_widow", "kdesktop", "trayer"]
-    myIgnores = []
+    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshift GUI"]
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -252,10 +224,7 @@ main = do
     -- hooks, layouts
     layoutHook         = myLayoutHook,
     handleEventHook    = myHandleEventHook,
-    manageHook         = manageDocks <+> manageAlwaysTop <+>  (className =? "Razor-notificationd" --> doFloat),
-    -- manageHook         = ((className =? "krunner" <||> className =? "Plasma-desktop") >>= return .
-    --                       not --> manageHook kde4Config) <+>
-    --                      (kdeOverride --> doFloat) <+> myManageHook,
+    manageHook         = manageDocks <+> myManageHook,
     logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
     }
     

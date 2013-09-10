@@ -17,15 +17,14 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 
-;;; Package management with MELPA
+;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
 (require 'melpa)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
-;; (setq url-http-attempt-keepalives nil)
-;;; MORE TO BE ADDED TO PACKAGE MANAGEMENT
+(setq url-http-attempt-keepalives nil)
 
 ;;; Install the required packages
 (defvar required-packages-list
@@ -39,7 +38,7 @@
         finally (return t)))
 
 (unless (required-packages-installed-p)
-  (message "%s" "Emacs Prelude is now refreshing its package database...")
+  (message "%s" "Refreshing package database...")
   (package-refresh-contents)
   (message "%s" " done.")
   (dolist (pkg required-packages-list)
@@ -119,7 +118,8 @@
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
 
-;;; Backing up files
+;;; Backup and cleanup
+;; Back up files
 (setq backup-by-copying t
       delete-old-versions t
       kept-old-versions 2
@@ -130,6 +130,7 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
+;; Delete old backup files
 (defun delete-old-backup-files ()
   "Delete backup files that have not been accessed in a month."
   (let ((month (* 60 60 24 7 30))
@@ -142,12 +143,12 @@
         (delete-file file)))))
 (delete-old-backup-files)
 
-;;; Clean up old buffers.
+;; Clean up old buffers.
 (require 'midnight)
 
 ;;; Programming goodies
-;;(require 'yasnippet)
-;;(yas-global-mode 1)
+;; (require 'yasnippet)
+;; (yas-global-mode 1)
 (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
