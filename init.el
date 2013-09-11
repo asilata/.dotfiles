@@ -29,7 +29,7 @@
 ;;; Install the required packages
 (defvar required-packages-list
   '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme
-           haskell-mode autopair)
+           haskell-mode autopair org)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
@@ -182,6 +182,9 @@
             (paredit-mode 1)
             (turn-on-eldoc-mode)
             (rainbow-mode 1)))
+
+(add-hook 'markdown-mode-hook
+          'turn-on-orgtbl)
 
 ;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
