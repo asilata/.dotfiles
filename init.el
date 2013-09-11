@@ -157,7 +157,7 @@
 (php+-mode-setup)
 
 ;; Hyde mode for writing jekyll stuff.
-(require 'hyde)
+;;(require 'hyde)
 
 ;;; Mode-specific hooks
 (require 'reftex)
