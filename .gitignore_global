@@ -48,6 +48,7 @@
 *.gif
 *.png
 *.xpm
+*.bmp
 
 # Directories
 .svn/
