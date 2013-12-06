@@ -1,0 +1,56 @@
+set realname = "Asilata Bapat"
+
+# Gmail acct
+# coming soon
+
+# Math acct
+# coming soon
+
+# Edit emails in emacs
+set editor = "emacs -nw"
+
+# Ask yes/no before quitting mutt
+set quit = ask-yes
+
+# Don't group messages just because they have the same subject.
+set strict_threads = yes
+
+# Leave the text wrapping to the pager and remove endline markers
+set text_flowed = yes
+set markers = no
+
+# View inline attachments
+set implicit_autoview = yes
+
+# Local copies in cleartext?
+# set implicit_autoview = yes
+
+# Header customization
+ignore *
+unignore date from to cc subject reply-to
+
+# Keyboard commands
+bind pager j next-line
+bind pager k previous-line
+bind pager p previous-unread
+bind papger n next-unread
+bind pager P previous-undeleted
+bind pager N next-undeleted
+bind pager q noop # Why this?
+bind pager q exit
+bind index R read-subthread
+
+# Format of message index (look up online to edit)
+set index_format = "%4C %Z %{%b %d} %-15.15L ($4c) %s"
+
+# Ask to sign all outbound messages
+set pgp_autosign = yes
+
+# Use pgp
+# Coming soon
+
+# Colours
+# Coming soon
+
+# Sort by threads
+folder-hook . set sort=threads
