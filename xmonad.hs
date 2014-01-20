@@ -161,23 +161,8 @@ dzenSwitchWs s = "^ca(1,switch-to-workspace.zsh " ++ (show s) ++ ")" ++ s ++ "^c
 dzenSwitchLayout :: String -> String
 dzenSwitchLayout = wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
 
--- World clock for display in Dzen. This code is somewhat temporary.
-myWorldLocations = [("New York", -300), ("Pune", 330)]
-
-myTimeFormatString :: String
-myTimeFormatString = "%Z: %R" -- Name of zone: Time
-
-utcToFormattedTime :: UTCTime -> TimeZone -> String
-utcToFormattedTime u = (formatTime defaultTimeLocale myTimeFormatString) . (flip utcToZonedTime u)
-
-myWorldClock :: Logger
-myWorldClock = let tzones = map (\(a,b) -> TimeZone b False a) myWorldLocations
-               in io $ 
-                  do currentUTC <- getZonedTime >>= return . zonedTimeToUTC
-                     return $ Just $ intercalate " ∙ " $ map (utcToFormattedTime currentUTC) tzones
-
 myPPExtras :: [X (Maybe String)]
-myPPExtras = [myWorldClock]
+myPPExtras = []
 
 myDzenPPConfig :: Handle -> PP
 myDzenPPConfig h = defaultPP
