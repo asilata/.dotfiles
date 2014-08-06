@@ -20,6 +20,7 @@
 *.djvu
 *.csv
 *.vrb
+*.xoj
 
 # Compiled source
 *.class
@@ -49,10 +50,12 @@
 *.png
 *.xpm
 *.bmp
+*.eps
 
 # Directories
 .svn/
 .metadata/
+.dropbox
 
 # Other
 *~

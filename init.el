@@ -19,7 +19,7 @@
 
 ;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
-(require 'melpa)
+;(require 'melpa)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
@@ -28,7 +28,7 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme
+  '(auctex magit markdown-mode paredit rainbow-mode volatile-highlights zenburn-theme
            haskell-mode autopair org)
   "List of packages required to be installed at startup.")
 
@@ -153,14 +153,19 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
-(require 'php+-mode)
-(php+-mode-setup)
+;(require 'php+-mode)
+;(php+-mode-setup)
 
 ;; Hyde mode for writing jekyll stuff.
 ;;(require 'hyde)
 
 ;;; Mode-specific hooks
+(load "emacs-Macaulay2.el" t)
+
 (require 'reftex)
+(require 'auto-complete)
+(require 'auto-complete-auctex)
+(ac-flyspell-workaround)
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-PDF-mode 1)
