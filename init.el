@@ -1,3 +1,4 @@
+
 ;;==============================================================================
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
@@ -190,6 +191,18 @@
 
 (add-hook 'markdown-mode-hook
           'turn-on-orgtbl)
+
+;; Macaulay 2 start
+(load "emacs-Macaulay2.el" t)
+;; Macaulay 2 end
+
+;; Singular stuff
+(add-to-list 'load-path "/usr/share/Singular/emacs")
+(autoload 'singular "singular"
+  "Start Singular using default values." t)
+(autoload 'singular-other "singular"
+  "Ask for arguments and start Singular." t)
+(setq auto-mode-alist (cons '("\\.sing\\'" . c++-mode) auto-mode-alist))
 
 ;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
