@@ -6,6 +6,9 @@ import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
+import XMonad.Config.Desktop
+import XMonad.Config.Kde
+
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
@@ -14,6 +17,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
 
+import XMonad.Layout.Grid
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Minimize
@@ -61,6 +65,7 @@ myKeys = \conf -> mkKeymap conf
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
+      ("M-g", sendMessage $ JumpToLayout "Grid"), -- Grid layout
       ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
       ("M-n", refresh), -- Resize viewed windows to the correct size
       ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
@@ -103,7 +108,7 @@ myDecoTheme = defaultTheme {
   }
 
 myHandleEventHook = minimizeEventHook
-myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| simpleTabbed)
+myLayoutHook = myLayoutModifiers (Grid ||| Mirror tiled ||| simpleTabbed)
   where
     -- default layout modifiers to be applied everywhere
     myLayoutModifiers = (layoutHints . smartBorders . minimize . avoidStruts) 

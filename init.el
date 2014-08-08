@@ -154,6 +154,9 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+(require 'textile-mode)
+(add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))
+
 ;(require 'php+-mode)
 ;(php+-mode-setup)
 
@@ -167,6 +170,7 @@
 (require 'auto-complete)
 (require 'auto-complete-auctex)
 (ac-flyspell-workaround)
+
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-PDF-mode 1)
@@ -176,6 +180,9 @@
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
             ))
+;(add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
+
+(load "emacs-Macaulay2.el" t)
 
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)
@@ -190,6 +197,9 @@
             (rainbow-mode 1)))
 
 (add-hook 'markdown-mode-hook
+          'turn-on-orgtbl)
+
+(add-hook 'textile-mode-hook
           'turn-on-orgtbl)
 
 ;; Macaulay 2 start
