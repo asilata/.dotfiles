@@ -1,5 +1,6 @@
 # TeX-generated files and other document files
 *.pdf
+*.bcf
 *.dvi
 *.aux
 *.out
@@ -20,6 +21,8 @@
 *.djvu
 *.csv
 *.vrb
+*.xoj
+*.run.xml
 
 # Compiled source
 *.class
@@ -49,10 +52,12 @@
 *.png
 *.xpm
 *.bmp
+*.eps
 
 # Directories
 .svn/
 .metadata/
+.dropbox
 
 # Other
 *~

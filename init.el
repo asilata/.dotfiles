@@ -1,3 +1,4 @@
+
 ;;==============================================================================
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
@@ -19,7 +20,7 @@
 
 ;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
-(require 'melpa)
+;(require 'melpa)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
@@ -28,7 +29,7 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex magit markdown-mode paredit python rainbow-mode volatile-highlights zenburn-theme
+  '(auctex magit markdown-mode paredit rainbow-mode volatile-highlights zenburn-theme
            haskell-mode autopair org)
   "List of packages required to be installed at startup.")
 
@@ -156,24 +157,19 @@
 (require 'textile-mode)
 (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))
 
-(require 'php+-mode)
-(php+-mode-setup)
+;(require 'php+-mode)
+;(php+-mode-setup)
 
 ;; Hyde mode for writing jekyll stuff.
 ;;(require 'hyde)
 
 ;;; Mode-specific hooks
+(load "emacs-Macaulay2.el" t)
+
 (require 'reftex)
 (require 'auto-complete)
 (require 'auto-complete-auctex)
 (ac-flyspell-workaround)
-
-;(add-to-list 'ac-modes 'LaTeX-mode)
-
-;; (defun ac-latex-mode-setup ()
-;;   (setq ac-sources
-;;         (append '(ac-source-math-unicode ac-source-math-latex ac-source-latex-commands)
-;;                 ac-sources)))
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
@@ -206,6 +202,18 @@
 (add-hook 'textile-mode-hook
           'turn-on-orgtbl)
 
+;; Macaulay 2 start
+(load "emacs-Macaulay2.el" t)
+;; Macaulay 2 end
+
+;; Singular stuff
+(add-to-list 'load-path "/usr/share/Singular/emacs")
+(autoload 'singular "singular"
+  "Start Singular using default values." t)
+(autoload 'singular-other "singular"
+  "Ask for arguments and start Singular." t)
+(setq auto-mode-alist (cons '("\\.sing\\'" . c++-mode) auto-mode-alist))
+>>>>>>> ac78c1ab6fa23c9ecf1870698a5bd8650d615761
 
 ;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
