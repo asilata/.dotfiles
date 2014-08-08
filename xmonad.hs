@@ -6,6 +6,9 @@ import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
+import XMonad.Config.Desktop
+import XMonad.Config.Kde
+
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
@@ -14,8 +17,10 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
 
-import XMonad.Layout.Decoration -- For title bars for windows.
-import XMonad.Layout.ImageButtonDecoration
+--import XMonad.Layout.Decoration -- For title bars for windows.
+--import XMonad.Layout.DraggingVisualizer
+import XMonad.Layout.Grid
+--import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Minimize
@@ -24,6 +29,8 @@ import XMonad.Layout.MultiToggle
 import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
+import XMonad.Layout.Tabbed
+--import XMonad.Layout.WindowSwitcherDecoration
 
 import XMonad.Prompt
 import XMonad.Prompt.FuzzyShell
@@ -63,7 +70,8 @@ myKeys = \conf -> mkKeymap conf
       ("M-r", fuzzyShellPrompt greenXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
-      ("M-f", sendMessage $ JumpToLayout "Full"), -- Full layout
+      ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
+      ("M-g", sendMessage $ JumpToLayout "Grid"), -- Grid layout
       ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
       ("M-n", refresh), -- Resize viewed windows to the correct size
       ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
@@ -101,15 +109,15 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
-myDecoTheme = defaultThemeWithImageButtons { 
+myDecoTheme = defaultTheme { 
   fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
   }
 
 myHandleEventHook = minimizeEventHook
-myLayoutHook = myLayoutModifiers (tiled ||| Mirror tiled ||| Full)
+myLayoutHook = myLayoutModifiers (Grid ||| tiled ||| simpleTabbed)
   where
     -- default layout modifiers to be applied everywhere
-    myLayoutModifiers = (renamed [CutWordsLeft 3] . layoutHints . smartBorders . minimize . avoidStruts . (imageButtonDeco shrinkText myDecoTheme)) 
+    myLayoutModifiers = (renamed [CutWordsLeft 4] . layoutHints . smartBorders . minimize . avoidStruts)
     -- Default tiling algorithm partitions the screen into two panes.
     tiled   = Tall 1 (3/100) (1/2)
 
@@ -142,7 +150,20 @@ manageAlwaysTop = checkAlwaysTop --> doFloat
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat <+> doF W.swapDown | c <- myFloats],
                  [className =? "Wine" --> doFloat <+> doShift "netflix"],
-                 [kdeOverride --> doFloat <+> doF W.swapDown]
+                 -- [kdeOverride --> doFloat <+> doF W.swapDown],
+                 [ className =? "yakuake" --> doFloat  
+                 , className =? "Yakuake" --> doFloat  
+                 , className =? "Kmix" --> doFloat  
+                 , className =? "kmix" --> doFloat  
+                 , className =? "plasma" --> doFloat  
+                 , className =? "Plasma" --> doFloat  
+                 , className =? "plasma-desktop" --> doFloat <+> doF W.swapDown
+                 , className =? "Plasma-desktop" --> doFloat  
+                 , className =? "krunner" --> doFloat  
+                 , className =? "ksplashsimple" --> doFloat  
+                 , className =? "ksplashqml" --> doFloat  
+                 , className =? "ksplashx" --> doFloat  
+                 ]  
                ]
   where
     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshift GUI"]
@@ -192,7 +213,7 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 
 main = do
   myDzenInstance <- spawnPipe myDzenBar
-  xmonad $ ewmh defaultConfig {
+  xmonad $ ewmh desktopConfig {
     -- simple stuff
     terminal           = "konsole", --default terminal
     focusFollowsMouse  = myFocusFollowsMouse,
@@ -209,7 +230,7 @@ main = do
     -- hooks, layouts
     layoutHook         = myLayoutHook,
     handleEventHook    = myHandleEventHook,
-    manageHook         = manageDocks <+> myManageHook,
+    manageHook         = manageDocks <+> ((className =? "Plasma-desktop") >>= return . not --> manageHook kde4Config) <+> myManageHook,
     logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
     }
     
