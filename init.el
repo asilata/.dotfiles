@@ -213,7 +213,6 @@
 (autoload 'singular-other "singular"
   "Ask for arguments and start Singular." t)
 (setq auto-mode-alist (cons '("\\.sing\\'" . c++-mode) auto-mode-alist))
->>>>>>> ac78c1ab6fa23c9ecf1870698a5bd8650d615761
 
 ;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
