@@ -58,7 +58,7 @@ myBackgroundColor = "#3f3f3f"
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", shellPrompt greenXPConfig), -- launch shell prompt
+      ("M-r", shellPrompt defaultXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
