@@ -6,9 +6,6 @@ import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
-import XMonad.Config.Desktop
-import XMonad.Config.Kde
-
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
@@ -17,23 +14,18 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
 
---import XMonad.Layout.Decoration -- For title bars for windows.
---import XMonad.Layout.DraggingVisualizer
 import XMonad.Layout.Grid
---import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Minimize
 import XMonad.Layout.Monitor
 import XMonad.Layout.MultiToggle
-import XMonad.Layout.NoFrillsDecoration -- For title bars for windows.
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
 import XMonad.Layout.Tabbed
---import XMonad.Layout.WindowSwitcherDecoration
 
 import XMonad.Prompt
-import XMonad.Prompt.FuzzyShell
+import XMonad.Prompt.Shell
 
 import qualified XMonad.StackSet as W
 
@@ -41,7 +33,6 @@ import XMonad.Util.EZConfig -- More intuitive keybinding configuration
 import XMonad.Util.Loggers
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Themes
-import XMonad.Util.WindowProperties (getProp32s)
 import XMonad.Util.WorkspaceCompare
 
 import Data.List (intercalate)
@@ -67,7 +58,7 @@ myBackgroundColor = "#3f3f3f"
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", fuzzyShellPrompt greenXPConfig), -- launch shell prompt
+      ("M-r", shellPrompt greenXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
@@ -114,45 +105,23 @@ myDecoTheme = defaultTheme {
   }
 
 myHandleEventHook = minimizeEventHook
-myLayoutHook = myLayoutModifiers (Grid ||| tiled ||| simpleTabbed)
+myLayoutHook = myLayoutModifiers (Grid ||| Mirror tiled ||| simpleTabbed)
   where
     -- default layout modifiers to be applied everywhere
-    myLayoutModifiers = (renamed [CutWordsLeft 4] . layoutHints . smartBorders . minimize . avoidStruts)
+    myLayoutModifiers = (layoutHints . smartBorders . minimize . avoidStruts) 
     -- Default tiling algorithm partitions the screen into two panes.
     tiled   = Tall 1 (3/100) (1/2)
 
 ------------------------------------------------------------------------
 -- Window rules:
 
-kdeOverride :: Query Bool
-kdeOverride = ask >>= \w -> liftX $ do
-    override <- getAtom "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
-    wt <- getProp32s "_NET_WM_WINDOW_TYPE" w
-    return $ maybe False (elem $ fromIntegral override) wt
-
-checkAlwaysTop :: Query Bool
-checkAlwaysTop = ask >>= \w -> liftX $ do
-  top <- getAtom "_NET_WM_STATE_STAYS_ON_TOP"
-  mbr <- getProp32s "_NET_WM_WINDOW_TYPE" w
-  case mbr of
-    Just rs -> return $ any (`elem` [top]) (map fromIntegral rs)
-    _       -> return False
-
-topEventHook :: Event -> X All
-topEventHook (MapNotifyEvent {ev_window = w}) = do
-  whenX ((not `fmap` (isClient w)) <&&> runQuery checkAlwaysTop w) refresh
-  return (All True)
-topEventHook _ = return (All True)
-
-manageAlwaysTop :: ManageHook
-manageAlwaysTop = checkAlwaysTop --> doFloat
-
 myManageHook = composeAll . concat $
-               [ [className =? c --> doFloat <+> doF W.swapDown | c <- myFloats],
-                 [className =? "Wine" --> doFloat <+> doShift "netflix"]
+               [ [className =? c --> doFloat | c <- myFloats],
+                 [className =? c --> doFullFloat | c <- myFullFloats]
                ]
   where
-    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshift GUI", "Plasma", "Plasma-desktop"]
+    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshiftgui", "Plasma", "Plasma-desktop", "Yakuake"]
+    myFullFloats = ["Xournal"]
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -160,36 +129,7 @@ myFocusFollowsMouse = True
 
 
 ------------------------------------------------------------------------
--- Dzen configuration
--- Notice the addition to logHook in the main function.
-dzenSwitchWs :: String -> String
-dzenSwitchWs s = "^ca(1,switch-to-workspace.zsh " ++ (show s) ++ ")" ++ s ++ "^ca()"
-
-dzenSwitchLayout :: String -> String
-dzenSwitchLayout = wrap "^ca(1,xdotool key Super_L+space)" "^ca()"
-
-myPPExtras :: [X (Maybe String)]
-myPPExtras = []
-
-myDzenPPConfig :: Handle -> PP
-myDzenPPConfig h = defaultPP
-                   { ppOutput   = hPutStrLn h
-                   , ppCurrent  = dzenColor myActiveTextColor myActiveColor . pad
-                   , ppExtras   = map (dzenColorL "" myBackgroundColor . padL) myPPExtras
-                   , ppHidden   = dzenColor myInactiveTextColor myInactiveColor . pad . dzenSwitchWs
-                   , ppLayout   = dzenColor "#dca3a3" myBackgroundColor . pad . dzenSwitchLayout
-                   , ppOrder    = \(ws:l:t:xs) -> (l:ws:xs) ++ [t]
-                   , ppSep      = " "
-                   , ppTitle    = dzenColor "#bfebbf" myBackgroundColor . pad . dzenEscape . shorten 80
-                   , ppUrgent   = dzenColor myActiveTextColor myBackgroundColor . pad . dzenEscape . shorten 80 . dzenStrip
-                   , ppWsSep    = "|"
-                   }
-
-myDzenBar :: String
-myDzenBar = "dzen2 -ta l -fg grey80 -bg grey20"
-
-------------------------------------------------------------------------
--- Final loghook, including dzen and fading (transparency of windows).
+-- Final loghook, including fading (transparency of windows).
 myLogHook :: X()
 myLogHook = fadeInactiveLogHook fadeAmount >>
             setWMName "LG3D"
@@ -198,8 +138,7 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 ------------------------------------------------------------------------
 
 main = do
-  myDzenInstance <- spawnPipe myDzenBar
-  xmonad $ ewmh desktopConfig {
+  xmonad $ ewmh defaultConfig {
     -- simple stuff
     terminal           = "konsole", --default terminal
     focusFollowsMouse  = myFocusFollowsMouse,
@@ -216,7 +155,7 @@ main = do
     -- hooks, layouts
     layoutHook         = myLayoutHook,
     handleEventHook    = myHandleEventHook,
-    manageHook         = manageDocks <+> ((className =? "Plasma-desktop") >>= return . not --> manageHook kde4Config) <+> myManageHook,
-    logHook            = myLogHook >> (dynamicLogWithPP $ myDzenPPConfig myDzenInstance)
+    manageHook         = manageDocks <+> myManageHook,
+    logHook            = myLogHook
     }
     
