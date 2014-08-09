@@ -149,24 +149,10 @@ manageAlwaysTop = checkAlwaysTop --> doFloat
 
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat <+> doF W.swapDown | c <- myFloats],
-                 [className =? "Wine" --> doFloat <+> doShift "netflix"],
-                 -- [kdeOverride --> doFloat <+> doF W.swapDown],
-                 [ className =? "yakuake" --> doFloat  
-                 , className =? "Yakuake" --> doFloat  
-                 , className =? "Kmix" --> doFloat  
-                 , className =? "kmix" --> doFloat  
-                 , className =? "plasma" --> doFloat  
-                 , className =? "Plasma" --> doFloat  
-                 , className =? "plasma-desktop" --> doFloat <+> doF W.swapDown
-                 , className =? "Plasma-desktop" --> doFloat  
-                 , className =? "krunner" --> doFloat  
-                 , className =? "ksplashsimple" --> doFloat  
-                 , className =? "ksplashqml" --> doFloat  
-                 , className =? "ksplashx" --> doFloat  
-                 ]  
+                 [className =? "Wine" --> doFloat <+> doShift "netflix"]
                ]
   where
-    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshift GUI"]
+    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshift GUI", "Plasma", "Plasma-desktop"]
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
