@@ -108,7 +108,7 @@ myDecoTheme = defaultTheme {
   }
 
 myHandleEventHook = minimizeEventHook
-myLayoutHook = myLayoutModifiers (Grid ||| Mirror tiled ||| simpleTabbed)
+myLayoutHook = myLayoutModifiers (Grid ||| tiled ||| simpleTabbed)
   where
     -- default layout modifiers to be applied everywhere
     myLayoutModifiers = (layoutHints . smartBorders . minimize . avoidStruts) 
