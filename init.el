@@ -173,7 +173,7 @@
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
-	    (TeX-PDF-mode 1)
+	    (TeX-global-PDF-mode 1)
             (flyspell-mode 1)
             (auto-fill-mode 0)
             (setq TeX-view-program-list '(("Okular" "okular %o")))
