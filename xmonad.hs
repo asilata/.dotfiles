@@ -6,9 +6,6 @@ import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
 
-import XMonad.Config.Desktop
-import XMonad.Config.Kde
-
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
@@ -61,7 +58,7 @@ myBackgroundColor = "#3f3f3f"
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", shellPrompt greenXPConfig), -- launch shell prompt
+      ("M-r", shellPrompt defaultXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
@@ -108,7 +105,7 @@ myDecoTheme = defaultTheme {
   }
 
 myHandleEventHook = minimizeEventHook
-myLayoutHook = myLayoutModifiers (Grid ||| Mirror tiled ||| simpleTabbed)
+myLayoutHook = myLayoutModifiers (Grid ||| tiled ||| simpleTabbed)
   where
     -- default layout modifiers to be applied everywhere
     myLayoutModifiers = (layoutHints . smartBorders . minimize . avoidStruts) 

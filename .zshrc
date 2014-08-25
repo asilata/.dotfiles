@@ -64,3 +64,6 @@ autoload -U select-word-style
 select-word-style bash
 bindkey ";5D" backward-word
 bindkey ";5C" forward-word
+
+# Fixing messed-up locale
+export LANG="en_US.UTF-8"
