@@ -176,11 +176,11 @@
 	    (TeX-PDF-mode 1)
             (flyspell-mode 1)
             (auto-fill-mode 0)
+            (auto-complete-mode 1)
             (setq TeX-view-program-list '(("Okular" "okular %o")))
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
             ))
-;(add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
 
 (load "emacs-Macaulay2.el" t)
 
