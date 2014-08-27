@@ -199,6 +199,10 @@
 (add-hook 'markdown-mode-hook
           'turn-on-orgtbl)
 
+(add-hook 'scss-mode-hook
+          (lambda ()
+            (setq scss-compile-at-save nil)))
+
 (add-hook 'textile-mode-hook
           'turn-on-orgtbl)
 
