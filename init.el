@@ -59,7 +59,7 @@
 (setq fill-column 90)
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(if (fboundp 'fringe-mode) (fringe-mode 4))
+(if (fboundp 'fringe-mode) (fringe-mode 2))
 (setq scroll-margin 0
       scroll-conservatively 100000
       scroll-preserve-screen-position 1)
