@@ -11,6 +11,7 @@
 *.gnuplot
 *.log
 *.nav
+*.nb
 *.out
 *.pdf
 *.ps
