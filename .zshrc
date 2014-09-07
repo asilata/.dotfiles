@@ -28,8 +28,8 @@ done
 PR_RESET="%{${reset_color}%}";
 
 # Git information in the prompt.
-if [[ -a ~/.zsh-git-prompt/zshrc.sh ]]; then
-    source ~/.zsh-git-prompt/zshrc.sh
+if [[ -a ~/.zsh/zsh-git-prompt/zshrc.sh ]]; then
+    source ~/.zsh/zsh-git-prompt/zshrc.sh
 fi
 
 # Left prompt: Green username@hostname: and yellow current path.
@@ -71,6 +71,6 @@ bindkey ";5C" forward-word
 export LANG="en_US.UTF-8"
 
 # Syntax highlighting!
-if [[ -a ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-    source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
