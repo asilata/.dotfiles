@@ -1,63 +1,64 @@
 # TeX-generated files and other document files
-*.pdf
-*.bcf
-*.dvi
 *.aux
-*.out
-*.log
 *.bbl
+*.bcf
 *.blg
-*.thm
-*.toc
-*.nav
-*.snm
+*.csv
+*.djvu
 *.doc
 *.docx
-*.xls
+*.dvi
+*.gnuplot
+*.log
+*.nav
+*.out
+*.pdf
 *.ps
 *.ps.imposed
-*.gnuplot
-*.table
-*.djvu
-*.csv
-*.vrb
-*.xoj
 *.run.xml
+*.snm
+*.table
+*.tdo
+*.thm
+*.toc
+*.vrb
+*.xls
+*.xoj
 
 # Compiled source
+*.beam
 *.class
 *.elc
-*.beam
 
 # Compressed files
 *.7z
-*.zip
 *.gz
-*.tgz
-*.tar
+*.iso
 *.jar
 *.rar
-*.iso
+*.tar
+*.tgz
+*.zip
 
 # Media files
-*.mp3
-*.wav
 *.avi
-*.mp4
-*.mpeg
-*.jpg
-*.JPG
-*.jpeg
-*.gif
-*.png
-*.xpm
 *.bmp
 *.eps
+*.gif
+*.jpeg
+*.jpg
+*.JPG
+*.mp3
+*.mp4
+*.mpeg
+*.png
+*.wav
+*.xpm
 
 # Directories
-.svn/
-.metadata/
 .dropbox
+.metadata/
+.svn/
 
 # Other
 *~

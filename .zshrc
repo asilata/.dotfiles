@@ -28,7 +28,9 @@ done
 PR_RESET="%{${reset_color}%}";
 
 # Git information in the prompt.
-source ~/.zsh-git-prompt/zshrc.sh 
+if [[ -a ~/.zsh-git-prompt/zshrc.sh ]]; then
+    source ~/.zsh-git-prompt/zshrc.sh
+fi
 
 # Left prompt: Green username@hostname: and yellow current path.
 PROMPT="$PR_BRIGHT_GREEN%n@%m:$PR_BRIGHT_YELLOW%~$PR_RESET$ "
@@ -67,3 +69,8 @@ bindkey ";5C" forward-word
 
 # Fixing messed-up locale
 export LANG="en_US.UTF-8"
+
+# Syntax highlighting!
+if [[ -a ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
