@@ -181,6 +181,7 @@
             (setq TeX-view-program-list '(("Okular" "okular %o")))
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
+            (visual-line-mode 1)
             ))
 
 (load "emacs-Macaulay2.el" t)
