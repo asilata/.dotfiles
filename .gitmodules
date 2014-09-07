@@ -1,3 +1,0 @@
-[submodule "zsh-git-prompt"]
-	path = zsh-git-prompt
-        url = git@github.com:ameiva/zsh-git-prompt.git
