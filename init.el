@@ -29,7 +29,7 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex magit markdown-mode paredit rainbow-mode volatile-highlights zenburn-theme
+  '(auctex magit markdown-mode paredit rainbow-mode switch-window volatile-highlights zenburn-theme
            haskell-mode autopair org)
   "List of packages required to be installed at startup.")
 
@@ -118,6 +118,7 @@
 (global-set-key [end]         'end-of-line)
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
+(global-set-key (kbd "C-x o") 'switch-window) ;; Visual window switching
 
 ;;; Backup and cleanup
 ;; Back up files

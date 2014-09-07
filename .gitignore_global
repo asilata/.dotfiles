@@ -23,6 +23,8 @@
 *.vrb
 *.xoj
 *.run.xml
+*.nb
+*.m2
 
 # Compiled source
 *.class
