@@ -30,7 +30,7 @@
 ;;; Install the required packages
 (defvar required-packages-list
   '(auctex magit markdown-mode paredit rainbow-mode switch-window volatile-highlights zenburn-theme
-           haskell-mode autopair org)
+           haskell-mode org smartparens)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
@@ -78,14 +78,16 @@
 (load-theme 'zenburn t)
 
 ;;; Editing goodies
+(require 'smartparens)
+(require 'smartparens-config)
+(require 'smartparens-latex)
+(smartparens-global-mode 1)
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
-(global-hl-line-mode 1)
 
-(require 'autopair)
-(autopair-global-mode)
 (electric-indent-mode 1)
 (electric-layout-mode 1)
+(global-hl-line-mode 1)
 
 (require 'volatile-highlights)
 (volatile-highlights-mode 1)
@@ -189,12 +191,8 @@
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)
 
-(add-hook 'scheme-mode-hook
-          (lambda () (paredit-mode 1)))
-
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
-            (paredit-mode 1)
             (turn-on-eldoc-mode)
             (rainbow-mode 1)))
 
