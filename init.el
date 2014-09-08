@@ -160,8 +160,9 @@
 (require 'textile-mode)
 (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))
 
-;(require 'php+-mode)
-;(php+-mode-setup)
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(setq web-mode-enable-auto-pairing nil)
 
 ;; Hyde mode for writing jekyll stuff.
 ;;(require 'hyde)
