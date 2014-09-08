@@ -202,7 +202,8 @@
 
 (add-hook 'scss-mode-hook
           (lambda ()
-            (setq scss-compile-at-save nil)))
+            (setq scss-compile-at-save nil)
+            (rainbow-mode 1)))
 
 (add-hook 'textile-mode-hook
           'turn-on-orgtbl)
