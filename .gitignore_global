@@ -30,6 +30,7 @@
 *.beam
 *.class
 *.elc
+*.pyc
 
 # Compressed files
 *.7z
