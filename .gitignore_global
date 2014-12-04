@@ -14,6 +14,7 @@
 *.nb
 *.out
 *.pdf
+*.pptx
 *.ps
 *.ps.imposed
 *.run.xml
