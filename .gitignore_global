@@ -8,6 +8,8 @@
 *.doc
 *.docx
 *.dvi
+*.fdb_latexmk
+*.fls
 *.gnuplot
 *.log
 *.nav
