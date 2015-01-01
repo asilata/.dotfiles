@@ -168,8 +168,6 @@
 ;;(require 'hyde)
 
 ;;; Mode-specific hooks
-(load "emacs-Macaulay2.el" t)
-
 (require 'reftex)
 (require 'auto-complete)
 (require 'auto-complete-auctex)
@@ -186,8 +184,6 @@
             (reftex-mode 1)
             (visual-line-mode 1)
             ))
-
-(load "emacs-Macaulay2.el" t)
 
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)
