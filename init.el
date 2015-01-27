@@ -1,4 +1,3 @@
-
 ;;==============================================================================
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
@@ -29,8 +28,8 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex magit markdown-mode paredit rainbow-mode switch-window volatile-highlights zenburn-theme
-           haskell-mode org smartparens web-mode)
+  '(auctex auto-complete auto-complete-auctex magit markdown-mode paredit rainbow-mode switch-window volatile-highlights zenburn-theme
+           haskell-mode org smartparens web-mode textile-mode)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
@@ -173,13 +172,12 @@
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (setq web-mode-enable-auto-pairing nil)
+(setq web-mode-enable-engine-detection t)
 
 ;; Hyde mode for writing jekyll stuff.
 ;;(require 'hyde)
 
 ;;; Mode-specific hooks
-(load "emacs-Macaulay2.el" t)
-
 (require 'reftex)
 (require 'auto-complete)
 (require 'auto-complete-auctex)
@@ -196,8 +194,6 @@
             (reftex-mode 1)
             (visual-line-mode 1)
             ))
-
-(load "emacs-Macaulay2.el" t)
 
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)

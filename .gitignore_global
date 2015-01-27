@@ -8,12 +8,15 @@
 *.doc
 *.docx
 *.dvi
+*.fdb_latexmk
+*.fls
 *.gnuplot
 *.log
 *.nav
 *.nb
 *.out
 *.pdf
+*.pptx
 *.ps
 *.ps.imposed
 *.run.xml
@@ -30,6 +33,7 @@
 *.beam
 *.class
 *.elc
+*.pyc
 
 # Compressed files
 *.7z
