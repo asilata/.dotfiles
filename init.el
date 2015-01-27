@@ -77,7 +77,7 @@
 ;;; Colour themes
 (load-theme 'zenburn t)
 
-;;; Editing goodies
+;;; Editing
 (require 'smartparens)
 (require 'smartparens-config)
 (require 'smartparens-latex)
@@ -121,6 +121,7 @@
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
 (global-set-key (kbd "C-x o") 'switch-window) ;; Visual window switching
+(global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
 
 ;;; Backup and cleanup
 ;; Back up files
@@ -150,9 +151,18 @@
 ;; Clean up old buffers.
 (require 'midnight)
 
-;;; Programming goodies
+;;; Programming
 ;; (require 'yasnippet)
 ;; (yas-global-mode 1)
+
+(defun toggle-comment-line-or-region (&optional arg)
+  "Toggle commenting on current line or region, then go to the next line"
+  (interactive)
+  (if (region-active-p)
+      (comment-or-uncomment-region (region-beginning) (region-end))
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
+  (next-line))
+
 (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
