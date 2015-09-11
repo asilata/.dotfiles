@@ -28,6 +28,7 @@
 *.vrb
 *.xls
 *.xoj
+_minted*
 
 # Compiled source
 *.beam
@@ -60,7 +61,8 @@
 *.wav
 *.xpm
 
-# Directories
+# Directories and metadata
+.directory
 .dropbox
 .metadata/
 .svn/
