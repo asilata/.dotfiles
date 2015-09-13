@@ -3,7 +3,7 @@
 # Rotates the screen clockwise from the current position.
 # This script assumes that the stylus and screen orientation match.
 # (This is a bit of a hack, but I'm letting it be for now.)
-device="Serial Wacom Tablet stylus"
+device="Wacom Serial Penabled 1FG Touchscreen stylus"
 wacomstatus=`xsetwacom get "$device" rotate`
 
 case $wacomstatus in
@@ -12,13 +12,15 @@ case $wacomstatus in
         xrandr -o right ;;
     "cw")
         xsetwacom set "$device" rotate half
-        xrandr -o inverted ;;
+        # Dumb fix for kernel bug
+        xrandr -o right && xrandr -o inverted ;;
     "half")
         xsetwacom set "$device" rotate ccw
         xrandr -o left ;;
     "ccw")
         xsetwacom set "$device" rotate none
-        xrandr -o normal ;;
+        # Dumb fix for kernel bug
+        xrandr -o right && xrandr -o normal ;;
     *)
         ;;
 esac
