@@ -37,8 +37,10 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex auto-complete auto-complete-auctex magit markdown-mode paredit rainbow-mode switch-window volatile-highlights zenburn-theme
-           haskell-mode org smartparens web-mode textile-mode)
+  '(auctex auto-complete auto-complete-auctex
+           haskell-mode magit markdown-mode org paredit rainbow-mode
+           smartparens switch-window textile-mode volatile-highlights
+           web-mode zenburn-theme)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
