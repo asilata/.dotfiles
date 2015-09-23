@@ -28,6 +28,15 @@
 
 (setq url-http-attempt-keepalives nil)
 
+;;; Install use-package if not installed
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package)
+  )
+(font-lock-add-keywords 'emacs-lisp-mode
+			'(("use-package" . font-lock-keyword-face)))
+(require 'use-package)
+
 ;;; Install the required packages
 (defvar required-packages-list
   '(auctex auto-complete auto-complete-auctex
@@ -71,29 +80,36 @@
                                             (abbreviate-file-name (buffer-file-name)))
                                         "%b")))
 
-(require 'uniquify) ;; For better naming of buffers with the same name.
-(setq uniquify-buffer-name-style 'forward)
-(setq uniquify-separator "/")
-(setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
-(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward
+        uniquify-separator "/"
+        uniquify-after-kill-buffer-p t ; rename after killing uniquified
+        uniquify-ignore-buffers-re "^\\*" ; don't muck with special buffers
+        )
+  )
 
 ;;; Colour themes
 (load-theme 'zenburn t)
 
 ;;; Editing
-(require 'smartparens)
-(require 'smartparens-config)
-(require 'smartparens-latex)
-(smartparens-global-mode 1)
-(show-paren-mode 1)
-(setq show-paren-style 'parenthesis)
+(use-package smartparens
+  :ensure t
+  :config
+  (show-paren-mode 1)
+  (setq show-paren-style 'parenthesis)
+  (use-package smartparens-config)
+  (use-package smartparens-latex)
+  (smartparens-global-mode 1)
+  )
+
 
 (electric-indent-mode 1)
 (electric-layout-mode 1)
 (global-hl-line-mode 1)
 
-(require 'volatile-highlights)
-(volatile-highlights-mode 1)
+(use-package volatile-highlights
+  :config (volatile-highlights-mode 1))
 
 (setq-default indent-tabs-mode nil)     ;Don't use tabs to indent...
 (setq-default tab-width 8)         ;...but maintain correct appearance
@@ -102,16 +118,22 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
-(ido-mode 1)
-(setq ido-enable-prefix nil
-      ido-enable-flex-matching t
-      ido-create-new-buffer 'always
-      ido-use-filename-at-point 'guess
-      ido-max-prospects 10
-      ido-default-file-method 'selected-window)
+(use-package ido-mode
+  :config
+  (setq ido-enable-prefix nil
+        ido-enable-flex-matching t
+        ido-create-new-buffer 'always
+        ido-use-filename-at-point 'guess
+        ido-max-prospects 10
+        ido-default-file-method 'selected-window)
+  (ido-mode 1)
+  )
 
-(icomplete-mode 1) ;Show completions in minibuffer
-(set-default 'imenu-auto-rescan t)
+(use-package icomplete-mode
+  :config
+  (set-default 'imenu-auto-rescan t)
+  (icomplete-mode 1) ;Show completions in minibuffer
+  )
 
 ;;; Global keybindings
 (global-set-key [f1]          'revert-buffer)
@@ -152,7 +174,7 @@
 (delete-old-backup-files)
 
 ;; Clean up old buffers.
-(require 'midnight)
+(use-package midnight)
 
 ;;; Programming
 ;; (require 'yasnippet)
@@ -166,26 +188,32 @@
     (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
   (next-line))
 
-(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(use-package markdown-mode
+  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode))
 
-(require 'textile-mode)
-(add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))
+(use-package textile-mode
+  :mode ("\\.textile\\'" . textile-mode))
 
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(setq web-mode-enable-auto-pairing nil)
-(setq web-mode-enable-engine-detection t)
+(use-package web-mode
+  :mode ("\\.html?\\'" . web-mode)
+  :config
+  (setq web-mode-enable-auto-pairing t
+        web-mode-enable-auto-pairing t))
 
 ;; Hyde mode for writing jekyll stuff.
 ;;(require 'hyde)
 
 ;;; Mode-specific hooks
-(require 'reftex)
-(require 'auto-complete)
-(require 'auto-complete-auctex)
-(ac-flyspell-workaround)
+(use-package reftex)
+
+(use-package auto-complete
+  :config
+  (use-package auto-complete-auctex)
+  (ac-flyspell-workaround))
+
+(use-package auctex-latexmk
+  :config
+  (auctex-latexmk-setup))
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
