@@ -210,6 +210,7 @@
   (ac-flyspell-workaround))
 
 (use-package auctex-latexmk
+  :ensure t
   :config
   (auctex-latexmk-setup))
 
