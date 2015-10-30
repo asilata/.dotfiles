@@ -75,7 +75,8 @@
       scroll-preserve-screen-position 1)
 (setq frame-title-format
       '("" invocation-name " - " (:eval (if (buffer-file-name)
-                                            (abbreviate-file-name (buffer-file-name)))
+                                            (abbreviate-file-name (buffer-file-name))
+                                          (buffer-name))
                                         "%b")))
 
 (use-package uniquify
@@ -116,7 +117,7 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
-(use-package ido-mode
+(use-package ido
   :config
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -127,7 +128,7 @@
   (ido-mode 1)
   )
 
-(use-package icomplete-mode
+(use-package icomplete
   :config
   (set-default 'imenu-auto-rescan t)
   (icomplete-mode 1) ;Show completions in minibuffer
