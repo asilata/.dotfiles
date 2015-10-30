@@ -22,6 +22,8 @@
 ;(require 'melpa)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
 
 (setq url-http-attempt-keepalives nil)
@@ -211,6 +213,7 @@
   (ac-flyspell-workaround))
 
 (use-package auctex-latexmk
+  :ensure t
   :config
   (auctex-latexmk-setup))
 
@@ -263,3 +266,17 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (auctex-latexmk use-package auctex zenburn-theme web-mode volatile-highlights textile-mode switch-window smartparens scss-mode rainbow-mode python php+-mode paredit org muttrc-mode markdown-mode magit haskell-mode haml-mode autopair auto-complete-auctex))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
