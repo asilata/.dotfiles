@@ -225,6 +225,7 @@
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
             (visual-line-mode 1)
+            (electric-indent-mode 1)
             ))
 
 (add-hook 'haskell-mode-hook
@@ -271,7 +272,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (auctex-latexmk use-package auctex zenburn-theme web-mode volatile-highlights textile-mode switch-window smartparens scss-mode rainbow-mode python php+-mode paredit org muttrc-mode markdown-mode magit haskell-mode haml-mode autopair auto-complete-auctex))))
+    (git-timemachine auctex-latexmk use-package auctex zenburn-theme web-mode volatile-highlights textile-mode switch-window smartparens scss-mode rainbow-mode python php+-mode paredit org muttrc-mode markdown-mode magit haskell-mode haml-mode autopair auto-complete-auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
