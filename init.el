@@ -16,6 +16,8 @@
 (let ((default-directory user-opt-directory))
   (normal-top-level-add-subdirs-to-load-path))
 
+;; To fix cursor colour bug...
+(setq inhibit-x-resources 't)
 
 ;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
@@ -35,7 +37,8 @@
   )
 (font-lock-add-keywords 'emacs-lisp-mode
 			'(("use-package" . font-lock-keyword-face)))
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 ;;; Install the required packages
 (defvar required-packages-list
