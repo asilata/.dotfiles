@@ -41,7 +41,7 @@
 (defvar required-packages-list
   '(auctex auto-complete auto-complete-auctex
            haskell-mode magit markdown-mode org paredit rainbow-mode
-           smartparens switch-window textile-mode volatile-highlights
+           smartparens textile-mode volatile-highlights
            web-mode zenburn-theme)
   "List of packages required to be installed at startup.")
 
@@ -146,7 +146,6 @@
 (global-set-key [end]         'end-of-line)
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
-(global-set-key (kbd "C-x o") 'switch-window) ;; Visual window switching
 (global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
 
