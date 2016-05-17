@@ -256,7 +256,9 @@
             (rainbow-mode 1)))
 
 (add-hook 'markdown-mode-hook
-          'turn-on-orgtbl)
+          (lambda ()
+            (orgtbl-mode 1)
+            (auto-complete-mode 1)))
 
 (add-hook 'scss-mode-hook
           (lambda ()
@@ -284,3 +286,18 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (aggressive-indent zenburn-theme yaml-mode web-mode volatile-highlights use-package textile-mode switch-window smartparens scss-mode rainbow-mode paredit multiple-cursors matlab-mode material-theme markdown-mode magit json-mode jekyll-modes hyde haskell-mode haml-mode graphviz-dot-mode git-timemachine fuzzy django-mode company-auctex centered-cursor-mode autopair auto-complete-auctex auctex-latexmk ac-math)))
+ '(safe-local-variable-values (quote ((reftex-default-bibliography "bibliography.bib")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
