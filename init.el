@@ -1,3 +1,4 @@
+
 ;;==============================================================================
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
@@ -215,7 +216,6 @@
                                                   (concat (format-time-string "%Y-%m-%d-") (downcase (replace-regexp-in-string " " "-" title)))))))
     (find-file post-file-name)
     (insert "---\n")
-    (insert "layout: post\n")
     (insert (format "title: \"%s\"\n" title))
     (insert (format "date: \"%s\"\n" (format-time-string "%Y-%m-%d %H:%M:%S %z")))
     (insert "---\n\n")
