@@ -12,15 +12,13 @@ case $wacomstatus in
         xrandr -o right ;;
     "cw")
         xsetwacom set "$device" rotate half
-        # Dumb fix for kernel bug
-        xrandr -o right && xrandr -o inverted ;;
+        xrandr -o inverted ;;
     "half")
         xsetwacom set "$device" rotate ccw
         xrandr -o left ;;
     "ccw")
         xsetwacom set "$device" rotate none
-        # Dumb fix for kernel bug
-        xrandr -o right && xrandr -o normal ;;
+        xrandr -o normal ;;
     *)
         ;;
 esac
