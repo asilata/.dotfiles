@@ -5,13 +5,11 @@ istablet=`cat $tabletfile`
 device="Wacom Serial Penabled 1FG Touchscreen stylus"
 
 if [ -a "$tabletfile" -a 1 -eq `echo "$istablet"` ]; then
-    # Dumb fix for kernel bug.
-    xrandr -o left && xrandr -o inverted
+    xrandr -o inverted
     xsetwacom set "$device" rotate half
     xinput set-int-prop "TPPS/2 IBM TrackPoint" "Device Enabled" 8 0 > /dev/null
 else
-    # Dumb fix for kernel bug.
-    xrandr -o left && xrandr -o normal
+    xrandr -o normal
     xsetwacom set "$device" rotate none
     xinput set-int-prop "TPPS/2 IBM TrackPoint" "Device Enabled" 8 1 > /dev/null
 fi
