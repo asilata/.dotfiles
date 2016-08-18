@@ -44,12 +44,11 @@ setopt HIST_IGNORE_DUPS
 spruch -x && echo "\n"
 
 # Aliases
-alias ls='ls -G'
+alias ls='ls --color=auto'
 alias 1234='setxkbmap -layout dvorak -option ctrl:swapcaps'
 alias 2345='setxkbmap -layout us -option'
-alias emacs='~/opt/homebrew/Cellar/emacs/24.5/bin/emacs'
-alias ec='~/opt/homebrew/Cellar/emacs/24.5/bin/emacsclient -c -n'
-alias et='~/opt/homebrew/Cellar/emacs/24.5/bin/emacsclient -t'
+alias ec='emacsclient -c -n'
+alias et='emacsclient -t'
 
 #ibus
 # export XMODIFIERS=@im=ibus    #case matters for this variable!
