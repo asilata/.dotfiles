@@ -45,8 +45,9 @@
 (defvar required-packages-list
   '(auctex auto-complete auto-complete-auctex
            haskell-mode magit markdown-mode org paredit rainbow-mode
+           sass-mode
            smartparens textile-mode volatile-highlights
-           web-mode zenburn-theme)
+           web-mode yaml-mode zenburn-theme)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
