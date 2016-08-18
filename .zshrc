@@ -40,9 +40,6 @@ RPROMPT='$(git_super_status)$PR_BRIGHT_RED%t$PR_RESET'
 # Don't put duplicate lines in the history.
 setopt HIST_IGNORE_DUPS
 
-# Run German fortune
-spruch -x && echo "\n"
-
 # Aliases
 alias ls='ls -G'
 alias 1234='setxkbmap -layout dvorak -option ctrl:swapcaps'
@@ -75,3 +72,5 @@ export LANG="en_US.UTF-8"
 if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin" # Add RVM and brew to PATH for scripting
