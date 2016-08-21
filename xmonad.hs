@@ -120,7 +120,7 @@ myManageHook = composeAll . concat $
                  [className =? c --> doFullFloat | c <- myFullFloats]
                ]
   where
-    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshiftgui", "Plasma", "Plasma-desktop", "Yakuake"]
+    myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshiftgui", "plasma", "Plasma", "plasma-desktop", "Plasma-desktop", "plasmashell", "Yakuake"]
     myFullFloats = ["Xournal"]
 
 -- Whether focus follows the mouse pointer.
