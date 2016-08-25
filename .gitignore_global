@@ -64,6 +64,7 @@ _minted*
 # Directories and metadata
 .directory
 .dropbox
+.DS_Store*
 .metadata/
 .svn/
 
