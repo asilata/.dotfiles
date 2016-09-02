@@ -1,56 +1,113 @@
-set realname = "Asilata Bapat"
+# My name
+set realname='Asilata Bapat'
 
-# Gmail acct
-# coming soon
+# By default, the shortcut "=" means the directory which contains all
+# the mail files. By default it is ~/Mail
 
-# Math acct
-# coming soon
+## Multiple account settings (see other files)
+source "~/.mutt/account.uga"
 
-# Edit emails in emacs
-set editor = "emacs -nw"
+# Write mails in emacs.
+set editor="emacsclient -t %s"
+
+set mail_check=10
+set timeout=15
+set header_cache="~/.mutt/muttcache"
 
 # Ask yes/no before quitting mutt
-set quit = ask-yes
+set quit=ask-yes
+
+set edit_headers=yes
+set move=no
+
+set use_from=yes
+set alias_file="~/.mutt/muttaliases"
 
 # Don't group messages just because they have the same subject.
-set strict_threads = yes
+set strict_threads=yes
 
-# Leave the text wrapping to the pager and remove endline markers
-set text_flowed = yes
-set markers = no
+# Show the plain text first if possible.
+alternative_order text/plain text/html
+
+# Set format to flowed, so that other pagers can smart-wrap in.
+set text_flowed=yes
+
+# I don't want to see + markers when the lines are wrapped.
+set markers=no
+
+# Printing
+set print_command="a2ps -Pfile -o mail.ps"
 
 # View inline attachments
-set implicit_autoview = yes
+set implicit_autoview=yes
 
-# Local copies in cleartext?
-# set implicit_autoview = yes
+# Mailcap path
+set mailcap_path=~/.mutt/mailcap:/usr/local/etc/mailcap:/etc/mailcap
 
-# Header customization
+# Save cleartext local copy
+set fcc_clear=yes
+
+# Headers to ignore
 ignore *
+
+# Headers to unignore
 unignore date from to cc subject reply-to
 
-# Keyboard commands
 bind pager j next-line
 bind pager k previous-line
 bind pager p previous-unread
-bind papger n next-unread
+bind pager n next-unread
 bind pager P previous-undeleted
 bind pager N next-undeleted
-bind pager q noop # Why this?
+bind pager q noop
 bind pager q exit
 bind index R read-subthread
 
-# Format of message index (look up online to edit)
-set index_format = "%4C %Z %{%b %d} %-15.15L ($4c) %s"
+# Custom index format (look this up online)
+set index_format="%4C %Z %{%b %d} %-15.15L (%4c) %s"
 
 # Ask to sign all outbound messages
-set pgp_autosign = yes
+set pgp_autosign
 
-# Use pgp
-# Coming soon
+#Colors
+color hdrdefault yellow default # headers
+color search brightgreen default # highlight search patterns
+color indicator brightwhite blue # current message
+color indicator green color236 # current message
+color status yellow blue # modelines
+color tree magenta default # threads
+color attachment brightred default
 
-# Colours
-# Coming soon
+#Color the index
+color index brightyellow default ~N      # New
+color index yellow default ~O            # Old
+color index magenta default ~F
+color index blue default ~T              # Tagged
+color index red default ~D
+color index magenta default ~p!~F           # To me       
 
-# Sort by threads
+color header brightred default "^(From|Subject):"
+
+color body magenta     default "(ftp|http|https)://[^ ]+"
+color body magenta     default [-a-z_0-9.]+@[-a-z_0-9.]+
+color body brightdefault default "\\*.*\\*"
+color body cyan default "<3|:)|:-)|=)|:-D|;-p|:/|:\\(|:-p|=D"
+color body cyan default "^.*output.*$"
+color body green        default "^(gpg: )?Good signature"
+color body brightgreen default "^(gpg: )?encrypted"
+color body brightred   default "^(gpg: )?Bad signature"
+color body red         default "^(gpg: )?warning:"
+color body red         default "^(gpg: ).*failed:"
+
+color quoted green default
+color quoted1 blue default
+color quoted2 magenta default
+
+#Macros
+bind index "\Cm" noop
+bind index "\Cu" noop
+macro index "\Cm" "<limit>~t asilata | ~f asilata<enter><last-entry>" #Just me; that is, view emails sent directly to me
+macro index "\Cu" "<limit>all<enter><last-entry>" #Full view; that is, view all emails
+
+# Sorting
 folder-hook . set sort=threads
