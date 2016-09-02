@@ -256,6 +256,9 @@
             (turn-on-eldoc-mode)
             (rainbow-mode 1)))
 
+;; Orgtbl hack?
+(use-package org-table)
+
 (add-hook 'markdown-mode-hook
           (lambda ()
             (orgtbl-mode 1)
