@@ -50,9 +50,8 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex auto-complete auto-complete-auctex
-           haskell-mode magit markdown-mode org paredit rainbow-mode
-           sass-mode
+  '(auctex haskell-mode magit markdown-mode org paredit rainbow-mode
+           scss-mode
            smartparens textile-mode volatile-highlights
            web-mode yaml-mode zenburn-theme)
   "List of packages required to be installed at startup.")
@@ -192,8 +191,9 @@
 (use-package midnight)
 
 ;;; Programming
-;; (require 'yasnippet)
-;; (yas-global-mode 1)
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
 
 (defun toggle-comment-line-or-region (&optional arg)
   "Toggle commenting on current line or region, then go to the next line"
@@ -233,8 +233,10 @@
 (use-package reftex)
 
 (use-package auto-complete
+  :ensure t
   :config
-  (use-package auto-complete-auctex)
+  (use-package auto-complete-auctex
+    :ensure t)
   (ac-flyspell-workaround))
 
 (use-package auctex-latexmk
