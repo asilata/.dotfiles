@@ -73,4 +73,4 @@ if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin" # Add RVM and brew to PATH for scripting
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin:$HOME/opt/anaconda/bin" # Add RVM, brew, and anaconda to PATH for scripting
