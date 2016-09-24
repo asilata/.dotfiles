@@ -50,9 +50,9 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex haskell-mode magit markdown-mode org paredit rainbow-mode
+  '(auctex haskell-mode magit org paredit rainbow-mode
            scss-mode
-           smartparens textile-mode volatile-highlights
+           volatile-highlights
            web-mode yaml-mode zenburn-theme)
   "List of packages required to be installed at startup.")
 
@@ -82,7 +82,7 @@
 (setq fill-column 90)
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(if (fboundp 'fringe-mode) (fringe-mode 2))
+(if (fboundp 'fringe-mode) (fringe-mode 4))
 (setq scroll-margin 0
       scroll-conservatively 100000
       scroll-preserve-screen-position 1)
@@ -132,6 +132,12 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
+(use-package icomplete
+  :config
+  (set-default 'imenu-auto-rescan t)
+  (icomplete-mode 1) ;Show completions in minibuffer
+  )
+
 (use-package ido
   :config
   (setq ido-enable-prefix nil
@@ -142,12 +148,17 @@
         ido-default-file-method 'selected-window)
   (ido-mode 1)
   )
-
-(use-package icomplete
+(use-package ido-vertical-mode
   :config
-  (set-default 'imenu-auto-rescan t)
-  (icomplete-mode 1) ;Show completions in minibuffer
-  )
+  (ido-vertical-mode 1)
+  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+  (setq ido-vertical-show-count t))
+
+(use-package smex
+  :ensure t
+  :config
+  (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+
 
 ;;; Global keybindings
 (global-set-key [f1]          'revert-buffer)
@@ -161,6 +172,8 @@
 (global-set-key [C-end]       'end-of-buffer)
 (global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;;; Backup and cleanup
 ;; Back up files
@@ -191,6 +204,16 @@
 (use-package midnight)
 
 ;;; Programming
+(use-package flycheck
+  :ensure t
+  :config
+  (global-flycheck-mode))
+
+(use-package sage-shell-mode
+  :config
+  (setq sage-shell:sage-executable "/usr/bin/sage")
+  (sage-shell:define-alias))
+
 (use-package yasnippet
   :config
   (yas-global-mode 1))
@@ -204,9 +227,11 @@
   (next-line))
 
 (use-package markdown-mode
+  :ensure t
   :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode))
 
 (use-package textile-mode
+  :ensure t
   :mode ("\\.textile\\'" . textile-mode))
 
 (use-package web-mode
