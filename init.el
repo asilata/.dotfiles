@@ -116,9 +116,6 @@
   (smartparens-global-mode 1)
   )
 
-(use-package aggressive-indent
-  :ensure t)
-
 (electric-indent-mode 1)
 (electric-layout-mode 1)
 (global-hl-line-mode 1)
@@ -252,7 +249,6 @@
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
             (visual-line-mode 1)
-            (aggressive-indent-mode 1)
             ))
 
 (add-hook 'haskell-mode-hook
