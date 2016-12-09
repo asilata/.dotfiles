@@ -73,4 +73,8 @@ if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin:$HOME/opt/anaconda/bin" # Add RVM, brew, and anaconda to PATH for scripting
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin:$HOME/anaconda/bin:/Library/TeX/texbin" # Add RVM, brew, anaconda, and TeX to PATH for scripting
+export HOMBREW_CASK_OPTS="--appdir=$HOME/Applications"
+export TEXINPUTS=".:$HOME/Library/texmf:"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
