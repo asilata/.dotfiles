@@ -239,6 +239,10 @@
   :config
   (auctex-latexmk-setup))
 
+(use-package bibretrieve
+  :config
+  (setq bibretrieve-backends '(("mrl" . 10) ("arxiv" . 5))))
+
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-global-PDF-mode 1)
