@@ -249,11 +249,15 @@
             (flyspell-mode 1)
             (auto-fill-mode 0)
             (auto-complete-mode 1)
-            (setq TeX-view-program-list '(("Okular" "okular %o")))
-            (setq TeX-view-program-selection '((output-pdf "Okular")))
+            (setq TeX-view-program-list '(("Skim.app" "open -a Skim.app %o")))
+            (setq TeX-view-program-selection '((output-pdf "Skim.app")))
             (reftex-mode 1)
             (visual-line-mode 1)
             ))
+
+;; Adding LaTeX to exec-path
+(setenv "PATH" (concat (getenv "PATH") ":/Library/TeX/texbin/"))
+
 
 (add-hook 'haskell-mode-hook
           'turn-on-haskell-indentation)
