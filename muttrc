@@ -8,7 +8,7 @@ set realname='Asilata Bapat'
 source "~/.mutt/account.uga"
 
 # Write mails in emacs.
-set editor="~/opt/homebrew/Cellar/emacs/24.5/bin/emacsclient -t %s"
+set editor="~/opt/homebrew/Cellar/emacs/24.5/bin/emacsclient -t"
 
 set mail_check=10
 set timeout=15
