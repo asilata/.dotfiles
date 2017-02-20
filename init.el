@@ -120,6 +120,7 @@
 (global-hl-line-mode 1)
 
 (use-package volatile-highlights
+  :ensure t
   :config (volatile-highlights-mode 1))
 
 (setq-default indent-tabs-mode nil)     ;Don't use tabs to indent...
@@ -130,6 +131,7 @@
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
 (use-package icomplete
+  :ensure t
   :config
   (set-default 'imenu-auto-rescan t)
   (icomplete-mode 1) ;Show completions in minibuffer
@@ -146,6 +148,7 @@
   (ido-mode 1)
   )
 (use-package ido-vertical-mode
+  :ensure t
   :config
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -276,6 +279,7 @@
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
             (visual-line-mode 1)
+            (yas-minor-mode 0)
             ))
 
 (add-hook 'haskell-mode-hook
