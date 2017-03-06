@@ -11,6 +11,7 @@
 *.fdb_latexmk
 *.fls
 *.gnuplot
+*.html
 *.log
 *.nav
 *.nb
@@ -21,6 +22,7 @@
 *.ps.imposed
 *.run.xml
 *.snm
+*.svg
 *.table
 *.tdo
 *.thm
