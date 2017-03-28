@@ -2,7 +2,7 @@
 
 tabletfile="/sys/devices/platform/thinkpad_acpi/hotkey_tablet_mode"
 istablet=`cat $tabletfile`
-devices="Wacom Serial Penabled 1FG Touchscreen Pen stylus"
+device="Wacom Serial Penabled 1FG Touchscreen Pen stylus"
 
 if [ -a "$tabletfile" -a 1 -eq `echo "$istablet"` ]; then
     xrandr -o inverted
