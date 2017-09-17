@@ -48,6 +48,14 @@
 (eval-when-compile
   (require 'use-package))
 
+;;; Auto-update packages every 5 days
+(use-package auto-package-update
+   :ensure t
+   :config
+   (setq auto-package-update-delete-old-versions t
+         auto-package-update-interval 5)
+   (auto-package-update-maybe))
+
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -155,15 +163,12 @@
 (global-set-key [f1]          'revert-buffer)
 (global-set-key [f2]          'goto-line)
 (global-set-key [f5]          'query-replace)
-;;(global-set-key [f6]          'magit-status)
-;;(global-set-key [f12]         'kill-this-buffer)
 (global-set-key [home]        'beginning-of-line)
 (global-set-key [end]         'end-of-line)
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
 (global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
-;;(global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;;; Backup and cleanup
