@@ -131,7 +131,11 @@
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
 
-;; Minibuffer
+;;; Minibuffer and search
+(use-package avy
+  :ensure t
+  :bind (("M-s" . avy-goto-char-timer)))
+
 (use-package icomplete
   :ensure t
   :config
