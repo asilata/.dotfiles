@@ -48,24 +48,6 @@
 (eval-when-compile
   (require 'use-package))
 
-;;; Install the required packages
-(defvar required-packages-list
-  '(auctex rainbow-mode)
-  "List of packages required to be installed at startup.")
-
-(defun required-packages-installed-p ()
-  (loop for pkg in required-packages-list
-        when (not (package-installed-p pkg)) do (return nil)
-        finally (return t)))
-
-(unless (required-packages-installed-p)
-  (message "%s" "Refreshing package database...")
-  (package-refresh-contents)
-  (message "%s" " done.")
-  (dolist (pkg required-packages-list)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
-
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -89,6 +71,9 @@
                                           (buffer-name))
                                         "%b")))
 
+(use-package rainbow-mode
+  :mode "\\.\\(el|scss|sass\\)")
+
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'forward
@@ -111,7 +96,6 @@
   (show-paren-mode 1)
   (setq show-paren-style 'parenthesis)
   (use-package smartparens-config)
-  (use-package smartparens-latex)
   (smartparens-global-mode 1)
   )
 
@@ -263,7 +247,7 @@
   (if (region-active-p)
       (comment-or-uncomment-region (region-beginning) (region-end))
     (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
-  (next-line))
+  (forward-line))
 
 ;; Jekyll stuff (new post function, modified from hyde-mode's version)
 (defun jekyll-new-post (title directory)
@@ -280,19 +264,23 @@
     (markdown-mode)))
 
 ;;; Mode-specific hooks
-(use-package reftex)
-
 (use-package auto-complete
   :ensure t
   :config
-  (use-package auto-complete-auctex
-    :ensure t)
   (ac-flyspell-workaround))
 
-(use-package auctex-latexmk
+(use-package auctex
   :ensure t
+  :defer t
   :config
-  (auctex-latexmk-setup))
+  (use-package bibretrieve :ensure t)
+  (use-package auto-complete-auctex :ensure t)
+  (use-package reftex :ensure t)
+  (use-package smartparens-latex)
+  (use-package auctex-latexmk
+    :ensure t
+    :config
+    (auctex-latexmk-setup)))
 
 (use-package org
   :ensure t
@@ -317,19 +305,16 @@
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (turn-on-eldoc-mode)
-            (rainbow-mode 1)))
+(use-package eldoc-mode
+  :mode "\\.el\\")
 
 (use-package scss-mode
   :ensure t
-  :mode ("\\.\\(scss|sass\\)")
+  :mode "\\.\\(scss|sass\\)"
   :config
   (add-hook 'scss-mode-hook
             (lambda ()
-              (setq scss-compile-at-save nil)
-              (rainbow-mode 1))))
+              (setq scss-compile-at-save nil))))
 
 
 ;; Macaulay 2 start
@@ -356,4 +341,3 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
-
