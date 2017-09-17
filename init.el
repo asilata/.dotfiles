@@ -50,10 +50,7 @@
 
 ;;; Install the required packages
 (defvar required-packages-list
-  '(auctex haskell-mode magit org paredit rainbow-mode
-           scss-mode
-           volatile-highlights
-           web-mode yaml-mode zenburn-theme)
+  '(auctex rainbow-mode)
   "List of packages required to be installed at startup.")
 
 (defun required-packages-installed-p ()
@@ -102,7 +99,10 @@
   )
 
 ;;; Colour themes
-(load-theme 'zenburn t)
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (load-theme 'zenburn t))
 
 ;;; Editing
 (use-package smartparens
@@ -130,6 +130,8 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
+
+;; Minibuffer
 (use-package icomplete
   :ensure t
   :config
@@ -156,6 +158,7 @@
 
 (use-package smex
   :ensure t
+  :bind (("M-x" . smex))
   :config
   (setq smex-save-file (concat user-emacs-directory ".smex-items")))
 
@@ -164,15 +167,15 @@
 (global-set-key [f1]          'revert-buffer)
 (global-set-key [f2]          'goto-line)
 (global-set-key [f5]          'query-replace)
-(global-set-key [f6]          'magit-status)
-(global-set-key [f12]         'kill-this-buffer)
+;;(global-set-key [f6]          'magit-status)
+;;(global-set-key [f12]         'kill-this-buffer)
 (global-set-key [home]        'beginning-of-line)
 (global-set-key [end]         'end-of-line)
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
 (global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
-(global-set-key (kbd "M-x") 'smex)
+;;(global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;;; Backup and cleanup
@@ -203,16 +206,48 @@
 ;; Clean up old buffers.
 (use-package midnight)
 
+;;; Git
+(use-package magit
+  :ensure t
+  :bind (([f6] . magit-status)))
+
 ;;; Programming
 (use-package flycheck
   :ensure t
   :config
   (global-flycheck-mode))
 
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode)
+  :config
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (orgtbl-mode 1)
+              (auto-complete-mode 1))))
+
 (use-package sage-shell-mode
   :config
   (setq sage-shell:sage-executable "/usr/bin/sage")
-  (sage-shell:define-alias))
+  (sage-shell:define-alias)
+  (setq sage-shell:use-prompt-toolkit t))
+
+(use-package textile-mode
+  :ensure t
+  :mode ("\\.textile\\'" . textile-mode)
+  :config
+  (add-hook 'textile-mode-hook
+            'turn-on-orgtbl))
+
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html?\\'" . web-mode)
+  :config
+  (setq web-mode-enable-auto-pairing t
+        web-mode-enable-auto-pairing t))
+
+(use-package yaml-mode
+  :ensure t)
 
 (use-package yasnippet
   :config
@@ -225,20 +260,6 @@
       (comment-or-uncomment-region (region-beginning) (region-end))
     (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
   (next-line))
-
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode))
-
-(use-package textile-mode
-  :ensure t
-  :mode ("\\.textile\\'" . textile-mode))
-
-(use-package web-mode
-  :mode ("\\.html?\\'" . web-mode)
-  :config
-  (setq web-mode-enable-auto-pairing t
-        web-mode-enable-auto-pairing t))
 
 ;; Jekyll stuff (new post function, modified from hyde-mode's version)
 (defun jekyll-new-post (title directory)
@@ -269,6 +290,10 @@
   :config
   (auctex-latexmk-setup))
 
+(use-package org
+  :ensure t
+  :config)
+
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-global-PDF-mode 1)
@@ -282,26 +307,26 @@
             (yas-minor-mode 0)
             ))
 
-(add-hook 'haskell-mode-hook
-          'turn-on-haskell-indentation)
+(use-package haskell-mode
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook
+            'turn-on-haskell-indentation))
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
             (turn-on-eldoc-mode)
             (rainbow-mode 1)))
 
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (orgtbl-mode 1)
-            (auto-complete-mode 1)))
+(use-package scss-mode
+  :ensure t
+  :mode ("\\.\\(scss|sass\\)")
+  :config
+  (add-hook 'scss-mode-hook
+            (lambda ()
+              (setq scss-compile-at-save nil)
+              (rainbow-mode 1))))
 
-(add-hook 'scss-mode-hook
-          (lambda ()
-            (setq scss-compile-at-save nil)
-            (rainbow-mode 1)))
-
-(add-hook 'textile-mode-hook
-          'turn-on-orgtbl)
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
