@@ -43,8 +43,6 @@
   (package-refresh-contents)
   (package-install 'use-package)
   )
-(font-lock-add-keywords 'emacs-lisp-mode
-			'(("use-package" . font-lock-keyword-face)))
 (eval-when-compile
   (require 'use-package))
 
@@ -157,6 +155,11 @@
   :bind (("M-x" . smex))
   :config
   (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (progn (sml/setup)))
 
 
 ;;; Global keybindings
@@ -310,8 +313,13 @@
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 
-(use-package eldoc-mode
-  :mode "\\.el\\")
+(use-package emacs-lisp-mode
+  :init
+  (progn 
+    (use-package eldoc
+      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
+    (font-lock-add-keywords 'emacs-lisp-mode
+			'(("use-package" . font-lock-keyword-face)))))
 
 (use-package scss-mode
   :ensure t
