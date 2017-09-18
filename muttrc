@@ -66,6 +66,7 @@ bind index R read-subthread
 # Custom index format (look this up online)
 set index_format="%4C %Z %{%b %d} %-15.15L (%4c) %s"
 
+source "~/opt/homebrew/Cellar/mutt/1.6.2/share/doc/mutt/samples/gpg.rc"
 # Ask to sign all outbound messages
 set pgp_autosign
 
