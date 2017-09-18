@@ -76,5 +76,8 @@ fi
 export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin:$HOME/anaconda/bin:/Library/TeX/texbin" # Add RVM, brew, anaconda, and TeX to PATH for scripting
 export HOMBREW_CASK_OPTS="--appdir=$HOME/Applications"
 export TEXINPUTS=".:$HOME/Library/texmf:"
+#export SAGE_ROOT="/Users/asilata/opt/homebrew/bin/sage"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+source /Users/asilata/opt/homebrew/opt/autoenv/activate.sh
+export PATH="/Users/asilata/opt/homebrew/bin:$PATH"

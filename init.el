@@ -203,6 +203,10 @@
 (use-package markdown-mode
   :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode))
 
+;; (use-package sage-shell-mode
+;;   :config
+;;   (setq sage-shell:sage-root "/Users/asilata/opt/homebrew/bin/"))
+
 (use-package textile-mode
   :mode ("\\.textile\\'" . textile-mode))
 
@@ -252,7 +256,7 @@
             (setq TeX-source-correlate-method 'synctex)
             (setq TeX-source-correlate-mode t)
             (setq TeX-source-correlate-start-server t)
-            (setq TeX-view-program-list '(("PDF Viewer" "~/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+            (setq TeX-view-program-list '(("PDF Viewer" "~/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o")))
             (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
             (reftex-mode 1)
             (visual-line-mode 1)
