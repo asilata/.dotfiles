@@ -134,6 +134,7 @@
   )
 
 (use-package ido
+  :ensure t
   :config
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -141,8 +142,8 @@
         ido-use-filename-at-point 'guess
         ido-max-prospects 10
         ido-default-file-method 'selected-window)
-  (ido-mode 1)
-  )
+  (ido-mode 1))
+
 (use-package ido-vertical-mode
   :ensure t
   :config
