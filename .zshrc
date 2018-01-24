@@ -74,3 +74,6 @@ export LANG="en_US.UTF-8"
 if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+# Direnv
+eval "$(direnv hook zsh)"
