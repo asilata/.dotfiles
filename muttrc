@@ -5,14 +5,10 @@ set realname='Asilata Bapat'
 # the mail files. By default it is ~/Mail
 
 ## Multiple account settings (see other files)
-source "~/.mutt/account.uga"
+source "~/.mutt/account.anu"
 
 # Write mails in emacs.
 set editor="emacsclient -t %s"
-
-set mail_check=10
-set timeout=15
-set header_cache="~/.mutt/muttcache"
 
 # Ask yes/no before quitting mutt
 set quit=ask-yes
@@ -111,3 +107,9 @@ macro index "\Cu" "<limit>all<enter><last-entry>" #Full view; that is, view all 
 
 # Sorting
 folder-hook . set sort=threads
+
+# Notmuch integration:
+# 'L' performs a notmuch query, showing only the results
+macro index L "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" "show only messages matching a notmuch pattern"
+# 'A' shows all messages again 
+macro index A "<limit>all\n" "show all messages (undo limit)"

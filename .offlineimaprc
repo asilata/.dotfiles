@@ -1,0 +1,41 @@
+[general]
+accounts = ANU
+pythonfile = ~/.mutt/offlineimap.py
+status-backend = sqlite
+
+[Account ANU]
+localrepository = ANU-Local
+remoterepository = ANU-Remote
+
+# Auto refresh every ... minutes
+autorefresh = 5
+
+# Do ... many quick updates between auto-refreshes.
+quick = 24
+
+# run notmuch after refresh
+postsynchook = notmuch new
+
+[Repository ANU-Local]
+type = Maildir
+localfolders = ~/Mail/ANU
+sep = /
+
+[Repository ANU-Remote]
+type = IMAP
+remotehost = outlook.office365.com
+remoteusereval = get_user("ANU")
+remotepasseval = get_pass("ANU")
+realdelete = yes
+folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts']
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+# The following is not strictly necessary.
+# It generates a list of mailboxes to feed into .muttrc.
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mutt_mailboxes
+header = "mailboxes "
+peritem = "+%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"
