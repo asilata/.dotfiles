@@ -57,6 +57,8 @@ bind pager P previous-undeleted
 bind pager N next-undeleted
 bind pager q noop
 bind pager q exit
+
+bind index n next-unread
 bind index R read-subthread
 
 # Custom index format (look this up online)
@@ -64,40 +66,6 @@ set index_format="%4C %Z %{%b %d} %-15.15L (%4c) %s"
 
 # Ask to sign all outbound messages
 set pgp_autosign
-
-#Colors
-color hdrdefault yellow default # headers
-color search brightgreen default # highlight search patterns
-color indicator brightwhite blue # current message
-color indicator green color236 # current message
-color status yellow blue # modelines
-color tree magenta default # threads
-color attachment brightred default
-
-#Color the index
-color index brightyellow default ~N      # New
-color index yellow default ~O            # Old
-color index magenta default ~F
-color index blue default ~T              # Tagged
-color index red default ~D
-color index magenta default ~p!~F           # To me       
-
-color header brightred default "^(From|Subject):"
-
-color body magenta     default "(ftp|http|https)://[^ ]+"
-color body magenta     default [-a-z_0-9.]+@[-a-z_0-9.]+
-color body brightdefault default "\\*.*\\*"
-color body cyan default "<3|:)|:-)|=)|:-D|;-p|:/|:\\(|:-p|=D"
-color body cyan default "^.*output.*$"
-color body green        default "^(gpg: )?Good signature"
-color body brightgreen default "^(gpg: )?encrypted"
-color body brightred   default "^(gpg: )?Bad signature"
-color body red         default "^(gpg: )?warning:"
-color body red         default "^(gpg: ).*failed:"
-
-color quoted green default
-color quoted1 blue default
-color quoted2 magenta default
 
 #Macros
 bind index "\Cm" noop
@@ -113,3 +81,6 @@ folder-hook . set sort=threads
 macro index L "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" "show only messages matching a notmuch pattern"
 # 'A' shows all messages again 
 macro index A "<limit>all\n" "show all messages (undo limit)"
+
+# Colours
+source ~/.mutt/mutt_zenburn_colours
