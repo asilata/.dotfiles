@@ -331,6 +331,15 @@
               (setq scss-compile-at-save nil))))
 
 
+;; Email
+(use-package mu4e
+  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+  :config
+  (let ((mu4e-config-file (concat user-emacs-directory "mu4e-config.el")))
+    (if (file-exists-p mu4e-config-file)
+        (load mu4e-config-file)))
+  )
+
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
 ;; Macaulay 2 end
