@@ -33,9 +33,11 @@ if [[ -a ~/.zsh/zsh-git-prompt/zshrc.sh ]]; then
 fi
 
 # Left prompt: Green username@hostname: and yellow current path.
-PROMPT="$PR_BRIGHT_GREEN%n@%m:$PR_BRIGHT_YELLOW%~$PR_RESET$ "
+PROMPT="$PR_GREEN%n:$PR_BLUE%~$PR_RESET$ "
 # Right prompt: Git status info if applicable and red current time.
 RPROMPT='$(git_super_status)$PR_BRIGHT_RED%t$PR_RESET'
+
+GIT_PROMPT_EXECUTABLE="haskell"
 
 # Don't put duplicate lines in the history.
 setopt HIST_IGNORE_DUPS
@@ -44,9 +46,9 @@ setopt HIST_IGNORE_DUPS
 alias ls='ls -G'
 alias 1234='setxkbmap -layout dvorak -option ctrl:swapcaps'
 alias 2345='setxkbmap -layout us -option'
-alias emacs='~/opt/homebrew/Cellar/emacs/24.5/bin/emacs'
-alias ec='~/opt/homebrew/Cellar/emacs/24.5/bin/emacsclient -c -n'
-alias et='~/opt/homebrew/Cellar/emacs/24.5/bin/emacsclient -t'
+alias emacs='/usr/local/Cellar/emacs/25.3/bin/emacs'
+alias ec='/usr/local/Cellar/emacs/25.3/bin/emacsclient -c -n'
+alias et='/usr/local/Cellar/emacs/25.3/bin/emacsclient -t'
 
 #ibus
 # export XMODIFIERS=@im=ibus    #case matters for this variable!
@@ -73,11 +75,11 @@ if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-export PATH="$PATH:$HOME/.rvm/bin:$HOME/opt/homebrew/bin:$HOME/anaconda/bin:/Library/TeX/texbin" # Add RVM, brew, anaconda, and TeX to PATH for scripting
-export HOMBREW_CASK_OPTS="--appdir=$HOME/Applications"
+export PATH="$PATH:$HOME/.rvm/bin:/usr/local/bin:$HOME/anaconda/bin:/Library/TeX/texbin" # Add RVM, brew, anaconda, and TeX to PATH for scripting
+#export HOMBREW_CASK_OPTS="--appdir=$HOME/Applications"
 export TEXINPUTS=".:$HOME/Library/texmf:"
 #export SAGE_ROOT="/Users/asilata/opt/homebrew/bin/sage"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-source /Users/asilata/opt/homebrew/opt/autoenv/activate.sh
-export PATH="/Users/asilata/opt/homebrew/bin:$PATH"
+#source /Users/asilata/opt/homebrew/opt/autoenv/activate.sh
+#export PATH="/Users/asilata/opt/homebrew/bin:$PATH"
