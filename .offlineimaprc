@@ -13,9 +13,6 @@ autorefresh = 5
 # Do ... many quick updates between auto-refreshes.
 quick = 24
 
-# run notmuch after refresh
-postsynchook = notmuch new
-
 [Repository ANU-Local]
 type = Maildir
 localfolders = ~/Mail/ANU
