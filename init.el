@@ -314,7 +314,7 @@
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 
-(use-package emacs-lisp-mode
+(use-package lisp-mode
   :init
   (progn 
     (use-package eldoc
