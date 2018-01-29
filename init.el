@@ -146,6 +146,7 @@
   (ido-mode 1)
   )
 (use-package ido-vertical-mode
+  :ensure t
   :config
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -207,11 +208,13 @@
   (global-flycheck-mode))
 
 (use-package sage-shell-mode
+  :ensure t
   :config
   (setq sage-shell:sage-executable "/usr/bin/sage")
   (sage-shell:define-alias))
 
 (use-package yasnippet
+  :ensure t
   :config
   (yas-global-mode 1))
 
@@ -271,6 +274,7 @@
   (auctex-latexmk-setup))
 
 (use-package bibretrieve
+  :ensure t
   :config
   (setq bibretrieve-backends '(("mrl" . 10) ("arxiv" . 5))))
 
@@ -283,7 +287,7 @@
             (setq TeX-source-correlate-method 'synctex)
             (setq TeX-source-correlate-mode t)
             (setq TeX-source-correlate-start-server t)
-            (setq TeX-view-program-list '(("PDF Viewer" "~/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o")))
+            (setq TeX-view-program-list '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o")))
             (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
             (reftex-mode 1)
             (visual-line-mode 1)
