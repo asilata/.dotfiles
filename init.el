@@ -141,7 +141,8 @@
         ido-create-new-buffer 'always
         ido-use-filename-at-point 'guess
         ido-max-prospects 10
-        ido-default-file-method 'selected-window)
+        ido-default-file-method 'selected-window
+        ido-case-fold t)
   (ido-mode 1))
 
 (use-package ido-vertical-mode
@@ -349,7 +350,7 @@
 
 ;; Email
 (use-package mu4e
-  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
   :config
   (let ((mu4e-config-file (concat user-emacs-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)

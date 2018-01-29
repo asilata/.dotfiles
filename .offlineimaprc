@@ -25,7 +25,8 @@ remoteusereval = get_user("ANU")
 remotepasseval = get_pass("ANU")
 realdelete = yes
 folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts']
-sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+#sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+sslcacertfile = /usr/local/etc/openssl/cert.pem
 
 # The following is not strictly necessary.
 # It generates a list of mailboxes to feed into .muttrc.
