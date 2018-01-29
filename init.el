@@ -93,7 +93,12 @@
 (use-package zenburn-theme
   :ensure t
   :config
-  (load-theme 'zenburn t))
+  (load-theme 'zenburn t)
+  (zenburn-with-color-variables
+    (custom-theme-set-faces
+     'zenburn
+     `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))))
+  )
 
 ;;; Editing
 (use-package smartparens
@@ -352,10 +357,9 @@
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
   :config
-  (let ((mu4e-config-file (concat user-emacs-directory "mu4e-config.el")))
+  (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
-        (load mu4e-config-file)))
-  )
+        (load mu4e-config-file))))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)

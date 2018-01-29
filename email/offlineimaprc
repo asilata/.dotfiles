@@ -1,0 +1,23 @@
+[general]
+accounts = ANU
+pythonfile = ~/.offlineimap/offlineimap.py
+status-backend = sqlite
+
+[Account ANU]
+localrepository = ANU-Local
+remoterepository = ANU-Remote
+
+[Repository ANU-Local]
+type = Maildir
+localfolders = ~/Mail/ANU
+sep = /
+
+[Repository ANU-Remote]
+type = IMAP
+remotehost = outlook.office365.com
+remoteusereval = get_user("imap.office365.com")
+remotepasseval = get_pass("imap.office365.com")
+realdelete = yes
+folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts', 'Trash']
+sslcacertfile = /usr/local/etc/openssl/cert.pem
+
