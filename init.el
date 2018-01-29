@@ -43,31 +43,16 @@
   (package-refresh-contents)
   (package-install 'use-package)
   )
-(font-lock-add-keywords 'emacs-lisp-mode
-			'(("use-package" . font-lock-keyword-face)))
 (eval-when-compile
   (require 'use-package))
 
-;;; Install the required packages
-(defvar required-packages-list
-  '(auctex haskell-mode magit org paredit rainbow-mode
-           scss-mode
-           volatile-highlights
-           web-mode yaml-mode zenburn-theme)
-  "List of packages required to be installed at startup.")
-
-(defun required-packages-installed-p ()
-  (loop for pkg in required-packages-list
-        when (not (package-installed-p pkg)) do (return nil)
-        finally (return t)))
-
-(unless (required-packages-installed-p)
-  (message "%s" "Refreshing package database...")
-  (package-refresh-contents)
-  (message "%s" " done.")
-  (dolist (pkg required-packages-list)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
+;;; Auto-update packages every 5 days
+(use-package auto-package-update
+   :ensure t
+   :config
+   (setq auto-package-update-delete-old-versions t
+         auto-package-update-interval 5)
+   (auto-package-update-maybe))
 
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
@@ -92,6 +77,9 @@
                                           (buffer-name))
                                         "%b")))
 
+(use-package rainbow-mode
+  :mode "\\.\\(el|scss|sass\\)")
+
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'forward
@@ -102,7 +90,10 @@
   )
 
 ;;; Colour themes
-(load-theme 'zenburn t)
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (load-theme 'zenburn t))
 
 ;;; Editing
 (use-package smartparens
@@ -111,7 +102,6 @@
   (show-paren-mode 1)
   (setq show-paren-style 'parenthesis)
   (use-package smartparens-config)
-  (use-package smartparens-latex)
   (smartparens-global-mode 1)
   )
 
@@ -120,6 +110,7 @@
 (global-hl-line-mode 1)
 
 (use-package volatile-highlights
+  :ensure t
   :config (volatile-highlights-mode 1))
 
 (setq-default indent-tabs-mode nil)     ;Don't use tabs to indent...
@@ -129,7 +120,14 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
+
+;;; Minibuffer and search
+(use-package avy
+  :ensure t
+  :bind (("M-s" . avy-goto-char-timer)))
+
 (use-package icomplete
+  :ensure t
   :config
   (set-default 'imenu-auto-rescan t)
   (icomplete-mode 1) ;Show completions in minibuffer
@@ -154,23 +152,26 @@
 
 (use-package smex
   :ensure t
+  :bind (("M-x" . smex))
   :config
   (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (progn (sml/setup)))
 
 
 ;;; Global keybindings
 (global-set-key [f1]          'revert-buffer)
 (global-set-key [f2]          'goto-line)
 (global-set-key [f5]          'query-replace)
-(global-set-key [f6]          'magit-status)
-(global-set-key [f12]         'kill-this-buffer)
 (global-set-key [home]        'beginning-of-line)
 (global-set-key [end]         'end-of-line)
 (global-set-key [C-home]      'beginning-of-buffer)
 (global-set-key [C-end]       'end-of-buffer)
 (global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
-(global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;;; Backup and cleanup
@@ -201,17 +202,49 @@
 ;; Clean up old buffers.
 (use-package midnight)
 
+;;; Git
+(use-package magit
+  :ensure t
+  :bind (([f6] . magit-status)))
+
 ;;; Programming
 (use-package flycheck
   :ensure t
   :config
   (global-flycheck-mode))
 
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode)
+  :config
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (orgtbl-mode 1)
+              (auto-complete-mode 1))))
+
 (use-package sage-shell-mode
   :ensure t
   :config
   (setq sage-shell:sage-executable "/usr/bin/sage")
-  (sage-shell:define-alias))
+  (sage-shell:define-alias)
+  (setq sage-shell:use-prompt-toolkit t))
+
+(use-package textile-mode
+  :ensure t
+  :mode ("\\.textile\\'" . textile-mode)
+  :config
+  (add-hook 'textile-mode-hook
+            'turn-on-orgtbl))
+
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html?\\'" . web-mode)
+  :config
+  (setq web-mode-enable-auto-pairing t
+        web-mode-enable-auto-pairing t))
+
+(use-package yaml-mode
+  :ensure t)
 
 (use-package yasnippet
   :ensure t
@@ -225,24 +258,6 @@
       (comment-or-uncomment-region (region-beginning) (region-end))
     (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
   (next-line))
-
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode))
-
-;; (use-package sage-shell-mode
-;;   :config
-;;   (setq sage-shell:sage-root "/Users/asilata/opt/homebrew/bin/"))
-
-(use-package textile-mode
-  :ensure t
-  :mode ("\\.textile\\'" . textile-mode))
-
-(use-package web-mode
-  :mode ("\\.html?\\'" . web-mode)
-  :config
-  (setq web-mode-enable-auto-pairing t
-        web-mode-enable-auto-pairing t))
 
 ;; Jekyll stuff (new post function, modified from hyde-mode's version)
 (defun jekyll-new-post (title directory)
@@ -259,19 +274,27 @@
     (markdown-mode)))
 
 ;;; Mode-specific hooks
-(use-package reftex)
-
 (use-package auto-complete
   :ensure t
   :config
-  (use-package auto-complete-auctex
-    :ensure t)
   (ac-flyspell-workaround))
 
-(use-package auctex-latexmk
+(use-package auctex
   :ensure t
+  :defer t
   :config
-  (auctex-latexmk-setup))
+  (use-package bibretrieve :ensure t)
+  (use-package auto-complete-auctex :ensure t)
+  (use-package reftex :ensure t)
+  (use-package smartparens-latex)
+  (use-package auctex-latexmk
+    :ensure t
+    :config
+    (auctex-latexmk-setup)))
+
+(use-package org
+  :ensure t
+  :config)
 
 (use-package bibretrieve
   :ensure t
@@ -291,35 +314,37 @@
             (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
             (reftex-mode 1)
             (visual-line-mode 1)
+            (yas-minor-mode 0)
             ))
 
 ;; Adding LaTeX to exec-path
 (setenv "PATH" (concat (getenv "PATH") ":/Library/TeX/texbin/"))
 
-
-(add-hook 'haskell-mode-hook
-          'turn-on-haskell-indentation)
-
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (turn-on-eldoc-mode)
-            (rainbow-mode 1)))
-
 ;; Orgtbl hack?
 (use-package org-table)
 
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (orgtbl-mode 1)
-            (auto-complete-mode 1)))
+(use-package haskell-mode
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook
+            'turn-on-haskell-indentation))
 
-(add-hook 'scss-mode-hook
-          (lambda ()
-            (setq scss-compile-at-save nil)
-            (rainbow-mode 1)))
+(use-package lisp-mode
+  :init
+  (progn 
+    (use-package eldoc
+      :init
+      (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
+    (font-lock-add-keywords 'emacs-lisp-mode
+			'(("use-package" . font-lock-keyword-face)))))
 
-(add-hook 'textile-mode-hook
-          'turn-on-orgtbl)
+(use-package scss-mode
+  :ensure t
+  :mode "\\.\\(scss|sass\\)"
+  :config
+  (add-hook 'scss-mode-hook
+            (lambda ()
+              (setq scss-compile-at-save nil))))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
@@ -345,4 +370,3 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
-
