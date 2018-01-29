@@ -1,6 +1,6 @@
 [general]
 accounts = ANU
-pythonfile = ~/.mutt/offlineimap.py
+pythonfile = ~/.offlineimap/offlineimap.py
 status-backend = sqlite
 
 [Account ANU]
