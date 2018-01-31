@@ -26,6 +26,7 @@
           '((mu4e-sent-folder . "/ANU/Sent Items")
             (mu4e-drafts-folder . "/ANU/Drafts")
             (mu4e-trash-folder . "/ANU/Trash")
+            (mu4e-refile-folder . "/ANU/Archive")
             (smtpmail-smtp-server . "smtp.office365.com")	       
             (mu4e-sent-messages-behavior 'sent)
             (user-mail-address . "asilata.bapat@anu.edu.au")
@@ -84,5 +85,9 @@
   :ensure t
   :config
   (mu4e-maildirs-extension))
+
+;; Org mode integration
+(require 'org-mu4e)
+(setq org-mu4e-link-query-in-headers-mode nil)
 
 ;; Colours

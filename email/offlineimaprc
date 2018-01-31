@@ -18,6 +18,6 @@ remotehost = outlook.office365.com
 remoteusereval = get_user("imap.office365.com")
 remotepasseval = get_pass("imap.office365.com")
 realdelete = yes
-folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts', 'Trash']
+folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts', 'Trash', 'Archive']
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 

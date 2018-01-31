@@ -344,6 +344,14 @@
     (if (file-exists-p mu4e-config-file)
         (load mu4e-config-file))))
 
+;; Org-mode
+(use-package org
+  :bind (("C-c a" . 'org-agenda))
+  :config
+  (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
+    (if (file-exists-p org-config-file)
+        (load org-config-file))))
+
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
 ;; Macaulay 2 end

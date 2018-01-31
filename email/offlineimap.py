@@ -1,5 +1,4 @@
 #! /usr/bin/env python2
-#from subprocess import check_output
 import os, re
 
 def get_user(machine):
