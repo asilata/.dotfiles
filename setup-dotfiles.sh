@@ -22,6 +22,9 @@ ln -s $DOTFILES/wm/xmonad.hs ~/.xmonad/xmonad.hs
 # Gitignore
 ln -s $DOTFILES/gitignore_global ~/.gitignore_global
 
+# Emacs
+ln -s $DOTFILES/org-mode-config.el ~/.emacs.d/opt/org-mode-config.el
+
 # Sets up everything except tablet scripts. To set up tablet scripts, uncomment the following.
 # sudo ln -s $DOTFILES/tablet/cw-rotate /usr/local/bin/cw-rotate
 # sudo ln -s $DOTFILES/tablet/toggle-tablet /usr/local/bin/toggle-tablet

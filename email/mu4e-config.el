@@ -94,5 +94,9 @@
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
 
-;; TEMPORARY
+;; Org mode integration
 (require 'org-mu4e)
+(setq org-mu4e-link-query-in-headers-mode nil)
+
+;; Colours
+

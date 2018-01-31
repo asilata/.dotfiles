@@ -21,3 +21,4 @@ realdelete = yes
 folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts', 'Trash', 'Archive']
 sslcacertfile = /usr/local/etc/openssl/cert.pem
 
+
