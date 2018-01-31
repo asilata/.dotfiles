@@ -215,6 +215,9 @@
   :bind (([f6] . magit-status)))
 
 ;;; Programming
+(use-package conf-mode
+  :mode ("rc$"))
+
 (use-package flycheck
   :ensure t
   :config

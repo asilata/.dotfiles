@@ -1,5 +1,5 @@
 ;; Getting mail
-(setq mu4e-maildir "/home/asilata/Mail")
+(setq mu4e-maildir "/Users/asilatabapat/Mail")
 (setq mu4e-get-mail-command "offlineimap"
       mu4e-update-interval 300)
 
@@ -26,8 +26,9 @@
           '((mu4e-sent-folder . "/ANU/Sent Items")
             (mu4e-drafts-folder . "/ANU/Drafts")
             (mu4e-trash-folder . "/ANU/Trash")
+            (mu4e-refile-folder . "/ANU/Archive")
             (smtpmail-smtp-server . "smtp.office365.com")	       
-            (mu4e-sent-messages-behavior 'sent)
+            ;;(mu4e-sent-messages-behavior . 'sent)
             (user-mail-address . "asilata.bapat@anu.edu.au")
             (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")))
         )
@@ -54,8 +55,8 @@
 ;; Bookmarks
 (setq mu4e-bookmarks
       `(,(make-mu4e-bookmark
-          :name  "Reasonable but unread messages"
-          :query "flag:unread AND (maildir: 'ANU/INBOX' OR tag:\\Important)"
+          :name  "Unread (and reasonable) messages"
+          :query "flag:unread AND (maildir:\"/ANU/INBOX\" OR tag:\\Important)"
           :key ?u)
         ,(make-mu4e-bookmark
           :name "Today's messages"
@@ -85,4 +86,13 @@
   :config
   (mu4e-maildirs-extension))
 
-;; Colours
+;; Notifications
+(use-package mu4e-alert
+  :ensure t
+  :config
+  (mu4e-alert-set-default-style 'notifier)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
+
+;; TEMPORARY
+(require 'org-mu4e)
