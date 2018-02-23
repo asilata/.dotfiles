@@ -5,8 +5,7 @@
         (mapcar (lambda (x) (concat org-default-directory x ".org"))
                 '("todo" "math" "service" "teaching" "calendar"))))
 
-
-;;(setq org-agenda-files '("~/Dropbox/Org/todo.org" "~/Dropbox/Org/calendar.org" "~/Dropbox/Org/math.org"))
+(setq org-log-done t)
 (setq org-refile-targets
       '((org-agenda-files :maxlevel . 5)))
 (setq org-refile-use-outline-path 'file)
@@ -34,11 +33,6 @@
         ("c" "Calendar entry" entry
          (file "~/Dropbox/Org/calendar.org")
          "* %?\n%t\n")))
-
-(setq org-log-done t)
-(setq org-refile-targets
-      '((org-agenda-files :maxlevel . 5)))
-(setq org-refile-use-outline-path 'file)
 
 ;; Org files customization
 (setq org-cycle-separator-lines 1)
