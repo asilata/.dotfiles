@@ -34,9 +34,11 @@
 	     '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
-(setq url-http-attempt-keepalives nil)
+;(setq url-http-attempt-keepalives nil)
 
 ;;; Install use-package if not installed
 (unless (package-installed-p 'use-package)
@@ -366,11 +368,13 @@
 
 ;; Org-mode
 (use-package org
+  :ensure t
   :bind (("C-c a" . 'org-agenda))
   :config
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
     (if (file-exists-p org-config-file)
-        (load org-config-file))))
+        (load org-config-file)))
+  )
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
