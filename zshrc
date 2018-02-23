@@ -46,9 +46,9 @@ setopt HIST_IGNORE_DUPS
 alias ls='ls -G'
 alias 1234='setxkbmap -layout dvorak -option ctrl:swapcaps'
 alias 2345='setxkbmap -layout us -option'
-alias emacs='/usr/local/Cellar/emacs/25.3/bin/emacs'
-alias ec='/usr/local/Cellar/emacs/25.3/bin/emacsclient -c -n'
-alias et='/usr/local/Cellar/emacs/25.3/bin/emacsclient -t'
+alias emacs='/usr/local/bin/emacs'
+alias ec='/usr/local/bin/emacsclient -c -n'
+alias et='/usr/local/bin/emacsclient -t'
 
 #ibus
 # export XMODIFIERS=@im=ibus    #case matters for this variable!
