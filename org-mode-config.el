@@ -1,6 +1,12 @@
 ;; Org files locations
 (setq org-default-notes-file "~/Dropbox/Org/todo.org")
-(setq org-agenda-files '("~/Dropbox/Org/todo.org" "~/Dropbox/Org/calendar.org"))
+(setq org-agenda-files
+      (let ((org-default-directory "~/Dropbox/Org/"))
+        (mapcar (lambda (x) (concat org-default-directory x ".org"))
+                '("todo" "math" "service" "teaching" "calendar"))))
+
+
+;;(setq org-agenda-files '("~/Dropbox/Org/todo.org" "~/Dropbox/Org/calendar.org" "~/Dropbox/Org/math.org"))
 (setq org-refile-targets
       '((org-agenda-files :maxlevel . 5)))
 (setq org-refile-use-outline-path 'file)
@@ -8,6 +14,12 @@
 ;; Keywords
 (setq org-todo-keywords
       '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keyword-faces
+      '(("TODO" org-todo)
+	("DONE" org-done)
+        ("WAITING" :foreground "#F0DFAF" :weight bold)
+	("CANCELLED" :foreground "#CC9393" :weight bold :strike-through "#CC9393")
+        ))
 
 ;; Capturing
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -19,6 +31,9 @@
         ("c" "Calendar entry" entry
          (file "~/Dropbox/Org/calendar.org")
          "* %?\n%t\n")))
+
+;; Org files customization
+(setq org-cycle-separator-lines 1)
 
 ;; Agenda customization
 (setq org-agenda-window-setup 'current-window)
@@ -35,6 +50,31 @@
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-log-done t)
+
+(setq org-agenda-custom-commands
+      '(("c" "Comprehensive view"
+         ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
+                      (org-agenda-span 'day)
+                      (org-agenda-ndays 1)
+                      (org-agenda-start-on-weekday nil)
+                      (org-agenda-start-day "+0d")
+                      (org-agenda-todo-ignore-deadlines nil)))
+          (todo "TODO"
+                ((org-agenda-overriding-header "Unscheduled tasks:")
+                 (org-agenda-todo-ignore-deadlines 'all)
+                 (org-agenda-todo-ignore-scheduled 'all)))
+          (agenda "" ((org-agenda-overriding-header "Upcoming week:")
+                      (org-agenda-span 'week)
+                      (org-agenda-start-day "+1d")
+                      (org-agenda-start-on-weekday nil)
+                      ;;(org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                      ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
+                      ))
+          (todo "WAITING"
+                ((org-agenda-overriding-header "Waiting tasks:")
+                 (org-agenda-todo-ignore-deadlines 'all)
+                 (org-agenda-todo-ignore-scheduled 'all)))
+          ))))
 
 ;; Google calendar integration
 (use-package org-gcal
