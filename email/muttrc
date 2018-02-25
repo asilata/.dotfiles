@@ -1,6 +1,9 @@
 # My name
 set realname='Asilata Bapat'
 
+# Maildir
+set mbox_type=Maildir
+
 # By default, the shortcut "=" means the directory which contains all
 # the mail files. By default it is ~/Mail
 

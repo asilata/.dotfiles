@@ -28,7 +28,7 @@
             (mu4e-trash-folder . "/ANU/Trash")
             (mu4e-refile-folder . "/ANU/Archive")
             (smtpmail-smtp-server . "smtp.office365.com")	       
-            (mu4e-sent-messages-behavior 'sent)
+            ;(mu4e-sent-messages-behavior 'sent)
             (user-mail-address . "asilata.bapat@anu.edu.au")
             (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")))
         )

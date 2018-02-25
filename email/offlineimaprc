@@ -3,6 +3,10 @@ accounts = ANU
 pythonfile = ~/.offlineimap/offlineimap.py
 status-backend = sqlite
 
+#######
+# ANU #
+#######
+
 [Account ANU]
 localrepository = ANU-Local
 remoterepository = ANU-Remote
@@ -21,3 +25,31 @@ realdelete = yes
 folderfilter = lambda folder: folder in ['INBOX', 'Sent Items', 'Drafts', 'Trash', 'Archive']
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 
+#########
+# Gmail #
+#########
+
+[Account Gmail]
+localrepository = Gmail-Local
+remoterepository = Gmail-Remote
+
+[Repository Gmail-Local]
+type = GmailMaildir
+localfolders = ~/Mail/Gmail
+sep = /
+
+[Repository Gmail-Remote]
+type = Gmail
+#remotehost = imap.gmail.com
+remoteuser = get_user("imap.gmail.com")
+#remotepass = get_pass("imap.gmail.com")
+starttls = no
+ssl = yes
+auth_mechanisms = XOAUTH2
+oauth2_refresh_token_eval = get_refresh_token()
+oauth2_client_id_eval = get_client_id()
+oauth2_client_secret_eval = get_client_secret()
+oauth2_request_url = https://accounts.google.com/o/oauth2/token
+#realdelete = no
+folderfilter = lambda folder: folder in ['[Gmail]/All Mail']
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
