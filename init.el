@@ -216,6 +216,13 @@
   :bind (([f6] . magit-status)))
 
 ;;; Programming
+(use-package lean-mode
+  :config
+  (setq lean-rootdir "~/opt/lean-nightly-linux"))
+
+(use-package conf-mode
+  :mode ("rc$"))
+
 (use-package flycheck
   :ensure t
   :config
