@@ -34,6 +34,8 @@
 	     '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 (setq url-http-attempt-keepalives nil)
