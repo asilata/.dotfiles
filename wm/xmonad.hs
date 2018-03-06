@@ -5,6 +5,7 @@
 import XMonad hiding ((|||))
 
 import XMonad.Actions.DynamicWorkspaces -- For creating/deleting workspaces dynamically.
+import XMonad.Actions.GridSelect
 
 import XMonad.Hooks.ManageDocks -- For managing specific windows.
 import XMonad.Hooks.ManageHelpers
@@ -22,6 +23,7 @@ import XMonad.Layout.Monitor
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
+import XMonad.Layout.Spacing
 import XMonad.Layout.Tabbed
 
 import XMonad.Prompt
@@ -30,12 +32,13 @@ import XMonad.Prompt.Shell
 import qualified XMonad.StackSet as W
 
 import XMonad.Util.EZConfig -- More intuitive keybinding configuration
-import XMonad.Util.Loggers
+--import XMonad.Util.Loggers
+import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Themes
 import XMonad.Util.WorkspaceCompare
 
-import Data.List (intercalate)
+import Data.List (intercalate, isPrefixOf)
 import qualified Data.Map as M
 import Data.Monoid (All(..))
 import Data.Time
@@ -44,25 +47,51 @@ import System.Exit
 import System.IO
 import System.Locale
 
--- Colour configurations
-myInactiveBorderColor = "#656555"
-myActiveBorderColor = myInactiveTextColor
-myActiveColor = "#94bff3"
-myInactiveColor = "#5f5f5f"
-myActiveTextColor = "Black"
-myInactiveTextColor = "#dcdccc"
-myBackgroundColor = "#3f3f3f"
+-- Color configurations
+myFgColor = "#DCDCCC"
+myBgColor = "#3F3F3F"
+myHighlightedFgColor = myFgColor
+myHighlightedBgColor = "#2B2B2B"
+
+--- Borders
+myActiveBorderColor = "#94BFF3"
+myInactiveBorderColor = "#7CB8BB"
+myBorderWidth = 10
+
+-- Font
+myFont :: String
+myFont = "xft:UbuntuMono:size=14"
+
+-- new XPConfig (for shell prompt, tab bars, etc)
+myXPConfig :: XPConfig
+myXPConfig = def {
+  font = myFont,
+  fgColor = myFgColor,
+  bgColor = myBgColor,
+  fgHLight = myHighlightedFgColor,
+  bgHLight = myHighlightedBgColor,
+  borderColor = myActiveBorderColor,
+  height = 40}
+
+--myGSConfig :: GSConfig
+myGSConfig = def {
+  gs_cellheight = 75,
+  gs_cellwidth = 250,
+  gs_cellpadding = 20,
+  gs_font = myFont }
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here. Everything is emacs-style.
 --
 myKeys = \conf -> mkKeymap conf 
   $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", shellPrompt defaultXPConfig), -- launch shell prompt
+      ("M-r", shellPrompt myXPConfig), -- launch shell prompt
       ("M-S-c", kill), -- close focused window 
       ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
       ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
-      ("M-g", sendMessage $ JumpToLayout "Grid"), -- Grid layout
+      --("M-g", sendMessage $ JumpToLayout "Grid"), -- Grid layout
+      ("M-g", goToSelected myGSConfig),
+      ("M-k", namedScratchpadAction myScratchPads "konsole"),
       ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
       ("M-n", refresh), -- Resize viewed windows to the correct size
       ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
@@ -80,9 +109,10 @@ myKeys = \conf -> mkKeymap conf
       ("M-S-q", io (exitWith ExitSuccess)), -- Quit xmonad
       ("M-q", restart "xmonad" True), -- Restart xmonad
       ("M-S-<Backspace>", removeWorkspace), -- Remove workspace
-      ("M-w", selectWorkspace defaultXPConfig), -- Select workspace to navigate to
-      ("M-S-w", withWorkspace defaultXPConfig (windows . W.shift)), -- Move current window to selected workspace
-      ("M-S-r", renameWorkspace defaultXPConfig) -- Rename workspace
+      ("M-S-b", bringSelected myGSConfig), -- Bring selected window to this workspace
+      ("M-w", selectWorkspace myXPConfig), -- Select workspace to navigate to
+      ("M-S-w", withWorkspace myXPConfig (windows . W.shift)), -- Move current window to selected workspace
+      ("M-S-r", renameWorkspace def) -- Rename workspace
      ]
   ++
   -- mod-[1..9] switches to the appropriate workspace.
@@ -100,20 +130,26 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
-myDecoTheme = defaultTheme { 
+myDecoTheme = def { 
   fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
   }
 
-myHandleEventHook = minimizeEventHook
-myLayoutHook = myLayoutModifiers (Grid ||| tiled ||| simpleTabbed)
+myHandleEventHook = minimizeEventHook <+> fullscreenEventHook
+myLayoutHook = myLayoutModifiers (grid ||| tiled ||| simpleTabbed)
   where
     -- default layout modifiers to be applied everywhere
     myLayoutModifiers = (layoutHints . smartBorders . minimize . avoidStruts) 
     -- Default tiling algorithm partitions the screen into two panes.
-    tiled   = Tall 1 (3/100) (1/2)
+    tiled   = spacing 2 $ Tall 1 (3/100) (1/2)
+    grid = spacing 2 $ Grid
 
 ------------------------------------------------------------------------
 -- Window rules:
+
+myScratchPads :: [NamedScratchpad]
+myScratchPads = [
+  NS "konsole" "konsole --profile Floating" (fmap ("Floating" `isPrefixOf`) title) (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  ]
 
 myManageHook = composeAll . concat $
                [ [className =? c --> doFloat | c <- myFloats],
@@ -121,11 +157,12 @@ myManageHook = composeAll . concat $
                ]
   where
     myFloats = ["SMPlayer", "MPlayer", "Krunner", "Plugin-container", "Redshiftgui", "plasma", "Plasma", "plasma-desktop", "Plasma-desktop", "plasmashell", "Yakuake"]
+    --myFloats = []
     myFullFloats = ["Xournal"]
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False
 
 
 ------------------------------------------------------------------------
@@ -138,11 +175,11 @@ myLogHook = fadeInactiveLogHook fadeAmount >>
 ------------------------------------------------------------------------
 
 main = do
-  xmonad $ ewmh defaultConfig {
+  xmonad $ docks $ ewmh def {
     -- simple stuff
     terminal           = "konsole", --default terminal
     focusFollowsMouse  = myFocusFollowsMouse,
-    borderWidth        = 2,
+    borderWidth        = 5,
     modMask            = mod4Mask, --default mod key (mod4 is usually the win key)
     workspaces         = ["home", "math", "web"], --default workspaces that xmonad starts with
     normalBorderColor  = myInactiveBorderColor,
@@ -155,7 +192,7 @@ main = do
     -- hooks, layouts
     layoutHook         = myLayoutHook,
     handleEventHook    = myHandleEventHook,
-    manageHook         = manageDocks <+> myManageHook,
+    manageHook         = myManageHook <+> namedScratchpadManageHook myScratchPads,
     logHook            = myLogHook
     }
     
