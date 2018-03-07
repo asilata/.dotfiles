@@ -151,41 +151,27 @@ gestures = M.fromList
   , ([L], \_ -> sendMessage $ pullGroup L)
   , ([R], \_ -> sendMessage $ pullGroup R)
   ]
--- myMouseBindings = \conf -> mkKeymap conf $
---   [
---     ("M-button1", )
---   ]
-
-------------------------------------------------------------------------
--- layouts:
 
 myDecoTheme = def { 
   fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
   }
 
 myHandleEventHook = minimizeEventHook <+> fullscreenEventHook
--- myLayoutHook = myLayoutModifiers (grid ||| tiled ||| simpleTabbed)
---   where
---     -- default layout modifiers to be applied everywhere
---     myLayoutModifiers = (layoutHints . smartBorders . minimize . avoidStruts) 
---     -- Default tiling algorithm partitions the screen into two panes.
---     tiled   = spacing 2 $ Tall 1 (3/100) (1/2)
---     grid = spacing 2 $ Grid
 data GRIDIFY = GRIDIFY deriving (Read, Show, Eq, Typeable)
 instance Transformer GRIDIFY Window where
   transform GRIDIFY x k = k (GridRatio (4/3)) (const x)
 
 myLayoutHook = myLayoutModifiers (tall ||| threeColMid)
-  where myLayoutModifiers =
-          (layoutHints
-           . smartBorders
-           . minimize
-           . avoidStruts
-           . windowNavigation
-           . boringAuto
-           . (mkToggle (single NBFULL))
-           . (mkToggle (single GRIDIFY))
-           . subTabbed
+  where myLayoutModifiers = (
+          layoutHints
+          . smartBorders
+          . minimize
+          . avoidStruts
+          . windowNavigation
+          . boringAuto
+          . (mkToggle (single NBFULL))
+          . (mkToggle (single GRIDIFY))
+          . subTabbed
           )
         tall = Tall 1 (3/100) (1/2)
         threeColMid = ThreeColMid 1 (1/100) (1/2)
