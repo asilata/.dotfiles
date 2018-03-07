@@ -56,7 +56,7 @@
 ;;     (todo priority-down category-keep)
 ;;     (tags priority-down category-keep)
 ;;     (search category-keep))))
-
+(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM(Time spent) %16SCHEDULED")
 (setq org-agenda-custom-commands
       '(("c" "Comprehensive view"
          ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
