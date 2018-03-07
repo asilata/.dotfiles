@@ -3,7 +3,7 @@
 (setq org-agenda-files
       (let ((org-default-directory "~/Dropbox/Org/"))
         (mapcar (lambda (x) (concat org-default-directory x ".org"))
-                '("todo" "math" "service" "teaching" "calendar"))))
+                '("todo" "math" "service" "teaching" "calendar" "shared/shared"))))
 
 (setq org-log-done t)
 (setq org-refile-targets
