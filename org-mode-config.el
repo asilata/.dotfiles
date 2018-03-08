@@ -3,7 +3,7 @@
 (setq org-agenda-files
       (let ((org-default-directory "~/Dropbox/Org/"))
         (mapcar (lambda (x) (concat org-default-directory x ".org"))
-                '("todo" "math" "service" "teaching" "calendar"))))
+                '("todo" "math" "service" "teaching" "calendar" "shared/shared"))))
 
 
 ;;(setq org-agenda-files '("~/Dropbox/Org/todo.org" "~/Dropbox/Org/calendar.org" "~/Dropbox/Org/math.org"))
@@ -42,6 +42,7 @@
 (setq org-agenda-span 'fortnight)
 ;;don't show tasks as scheduled if they are already shown as a deadline
 (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+(setq org-agenda-skip-scheduled-if-done t)
 ;;don't give awarning colour to tasks with impending deadlines
 ;;if they are scheduled to be done
 (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
