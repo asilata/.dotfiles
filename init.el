@@ -183,6 +183,10 @@
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+;; Auto-revert buffers from files
+(setq global-auto-revert-mode 1)
+(setq auto-revert-interval 3600)
+
 ;;; Backup and cleanup
 ;; Back up files
 (setq backup-by-copying t
