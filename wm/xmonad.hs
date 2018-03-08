@@ -55,7 +55,7 @@ myHighlightedBgColor = "#2B2B2B"
 
 --- Borders
 myActiveBorderColor = "#94BFF3"
-myInactiveBorderColor = "#7CB8BB"
+myInactiveBorderColor = myBgColor  --"#7CB8BB"
 myBorderWidth = 10
 
 -- Font
@@ -157,7 +157,10 @@ myLayoutHook = myLayoutModifiers (grid ||| tiled ||| simpleTabbed)
 
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [
-  NS "konsole" "konsole --profile Floating" (fmap ("Floating" `isPrefixOf`) title) (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  NS "konsole" "konsole --profile Floating"
+    (fmap ("Floating" `isPrefixOf`) title <&&> className =? "konsole") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)),
+  NS "emacs"   "emacsclient -a '' -c --frame-parameters='(quote (name . \"Floating - emacs\"))'"
+    (fmap ("Floating" `isPrefixOf`) title <&&> className =? "Emacs24") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   ]
 
 myManageHook = composeAll . concat $
@@ -190,7 +193,7 @@ main = do
     focusFollowsMouse  = myFocusFollowsMouse,
     borderWidth        = 5,
     modMask            = mod4Mask, --default mod key (mod4 is usually the win key)
-    workspaces         = ["home", "math", "web"], --default workspaces that xmonad starts with
+    workspaces         = ["home", "math", "ims"], --default workspaces that xmonad starts with
     normalBorderColor  = myInactiveBorderColor,
     focusedBorderColor = myActiveBorderColor,
     
