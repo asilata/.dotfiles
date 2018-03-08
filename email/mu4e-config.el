@@ -90,4 +90,13 @@
 (require 'org-mu4e)
 (setq org-mu4e-link-query-in-headers-mode nil)
 
+;; Desktop notifications
+(use-package mu4e-alert
+  :config
+  (mu4e-alert-set-default-style 'libnotify)
+  (setq mu4e-alert-email-notification-types '(subjects))
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+  )
+
 ;; Colours

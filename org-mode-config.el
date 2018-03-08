@@ -3,7 +3,7 @@
 (setq org-agenda-files
       (let ((org-default-directory "~/Dropbox/Org/"))
         (mapcar (lambda (x) (concat org-default-directory x ".org"))
-                '("todo" "math" "service" "teaching" "calendar"))))
+                '("todo" "math" "service" "teaching" "calendar" "shared/shared"))))
 
 (setq org-log-done t)
 (setq org-refile-targets
@@ -57,7 +57,7 @@
 ;;     (todo priority-down category-keep)
 ;;     (tags priority-down category-keep)
 ;;     (search category-keep))))
-
+(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM(Time spent) %16SCHEDULED")
 (setq org-agenda-custom-commands
       '(("c" "Comprehensive view"
          ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")

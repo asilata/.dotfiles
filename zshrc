@@ -77,3 +77,6 @@ fi
 
 # Direnv
 eval "$(direnv hook zsh)"
+
+# Path including cabal
+export PATH=~/.cabal/bin:$PATH
