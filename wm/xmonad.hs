@@ -83,37 +83,46 @@ myGSConfig = def {
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here. Everything is emacs-style.
 --
-myKeys = \conf -> mkKeymap conf 
-  $ [ ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
-      ("M-r", shellPrompt myXPConfig), -- launch shell prompt
-      ("M-S-c", kill), -- close focused window 
-      ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
-      ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
-      --("M-g", sendMessage $ JumpToLayout "Grid"), -- Grid layout
-      ("M-g", goToSelected myGSConfig),
-      ("M-k", namedScratchpadAction myScratchPads "konsole"),
-      ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
-      ("M-n", refresh), -- Resize viewed windows to the correct size
-      ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
-      ("M-S-<Tab>", windows W.focusUp), -- Move focus to the previous window
-      ("M-m", windows W.focusMaster), -- Move focus to the master window
-      ("M-<Return>", windows W.swapMaster), -- Swap the focused window and the master window
-      ("M-S-j", windows W.swapDown), -- Swap the focused window with the next window
-      ("M-S-k", windows W.swapUp), -- Swap the focused window with the previous window
-      ("M-h", sendMessage Shrink), -- Shrink the master area
-      ("M-l", sendMessage Expand), -- Expand the master area
-      ("M-t", withFocused $ windows . W.sink), -- Push window back into tiling
-      ("M-,", sendMessage (IncMasterN 1)), -- Increment the number of windows in the master area
-      ("M-.", sendMessage (IncMasterN (-1))), -- Deincrement the number of windows in the master area
-      ("M-b", sendMessage ToggleStruts), -- Toggle the status bar gap
-      ("M-S-q", io (exitWith ExitSuccess)), -- Quit xmonad
-      ("M-q", restart "xmonad" True), -- Restart xmonad
-      ("M-S-<Backspace>", removeWorkspace), -- Remove workspace
-      ("M-S-b", bringSelected myGSConfig), -- Bring selected window to this workspace
-      ("M-w", selectWorkspace myXPConfig), -- Select workspace to navigate to
-      ("M-S-w", withWorkspace myXPConfig (windows . W.shift)), -- Move current window to selected workspace
-      ("M-S-r", renameWorkspace def) -- Rename workspace
-     ]
+myKeys = \conf -> mkKeymap conf $ [
+  -- Layout stuff
+  ("M-b", sendMessage ToggleStruts), -- Toggle the status bar gap
+  ("M-f", sendMessage $ JumpToLayout "Tabbed Simplest"), -- Full layout
+  ("M-h", sendMessage Shrink), -- Shrink the master area
+  ("M-l", sendMessage Expand), -- Expand the master area
+  ("M-,", sendMessage (IncMasterN 1)), -- Increment the number of windows in the master area
+  ("M-.", sendMessage (IncMasterN (-1))), -- Deincrement the number of windows in the master area
+  ("M-<Space>", sendMessage NextLayout), -- Rotate through the available layout algorithms
+  ("M-S-<Space>", setLayout $ XMonad.layoutHook conf), -- Reset to default layouts on the current workspace
+
+  -- Workspace stuff
+  ("M-w", selectWorkspace myXPConfig), -- Select workspace to navigate to
+  ("M-S-b", bringSelected myGSConfig), -- Bring selected window to this workspace
+  ("M-S-w", withWorkspace myXPConfig (windows . W.shift)), -- Move current window to selected workspace
+  ("M-S-r", renameWorkspace def), -- Rename workspace
+  ("M-S-<Backspace>", removeWorkspace), -- Remove workspace
+  
+  -- General window stuff
+  ("M-m", windows W.focusMaster), -- Move focus to the master window
+  ("M-n", refresh), -- Resize viewed windows to the correct size
+  ("M-s", withFocused $ windows . W.sink), -- Push window back into tiling
+  ("M-<Return>", windows W.swapMaster), -- Swap the focused window and the master window
+  ("M-<Tab>", windows W.focusDown), -- Move focus to the next window
+  ("M-S-c", kill), -- close focused window 
+  ("M-S-j", windows W.swapDown), -- Swap the focused window with the next window
+  ("M-S-k", windows W.swapUp), -- Swap the focused window with the previous window
+  ("M-S-<Tab>", windows W.focusUp), -- Move focus to the previous window
+
+  -- Specific window stuff/spawning/bringing
+  ("M-a", namedScratchpadAction myScratchPads "emacs"),
+  ("M-g", goToSelected myGSConfig), -- GridSelect
+  ("M-r", shellPrompt myXPConfig), -- launch shell prompt
+  ("M-t", namedScratchpadAction myScratchPads "konsole"), -- Start/bring "konsole" scratchpad
+  ("M-S-<Return>", spawn $ XMonad.terminal conf), -- launch a terminal
+
+  -- XMonad stuff
+  ("M-S-q", io (exitWith ExitSuccess)), -- Quit xmonad
+  ("M-q", restart "xmonad" True) -- Restart xmonad
+  ]
   ++
   -- mod-[1..9] switches to the appropriate workspace.
   map (\x -> ("M-" ++ show (x+1), withNthWorkspace W.greedyView x)) [0..8]
