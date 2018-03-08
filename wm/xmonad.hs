@@ -26,6 +26,7 @@ import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
+import XMonad.Layout.Simplest
 import XMonad.Layout.Spacing
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
@@ -38,7 +39,6 @@ import XMonad.Prompt.Shell
 import qualified XMonad.StackSet as W
 
 import XMonad.Util.EZConfig -- More intuitive keybinding configuration
---import XMonad.Util.Loggers
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Themes
@@ -54,22 +54,22 @@ import System.IO
 import System.Locale
 
 -- Color configurations
-myFgColor = "#DCDCCC"
-myBgColor = "#3F3F3F"
-myHighlightedFgColor = myFgColor
-myHighlightedBgColor = "#2B2B2B"
+myBgColor = "#073642"
+myHighlightedBgColor = "#002b36"
+myFgColor = "#657B83"
+myHighlightedFgColor = "#839496"
 
 --- Borders
-myActiveBorderColor = "#94BFF3"
-myInactiveBorderColor = myBgColor  --"#7CB8BB"
+myActiveBorderColor = "#268BD2"
+myInactiveBorderColor = myHighlightedBgColor --"#000000"
 myBorderWidth = 10
+
 
 -- Font
 myFont :: String
 myFont = "xft:UbuntuMono:size=14"
 
 -- new XPConfig (for shell prompt, tab bars, etc)
-myXPConfig :: XPConfig
 myXPConfig = def {
   font = myFont,
   fgColor = myFgColor,
@@ -160,10 +160,6 @@ gestures = M.fromList
   , ([R], \_ -> sendMessage $ pullGroup R)
   ]
 
-myDecoTheme = def { 
-  fontName = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
-  }
-
 myHandleEventHook = minimizeEventHook <+> fullscreenEventHook
 data GRIDIFY = GRIDIFY deriving (Read, Show, Eq, Typeable)
 instance Transformer GRIDIFY Window where
@@ -179,8 +175,18 @@ myLayoutHook = myLayoutModifiers (tall ||| threeColMid)
           . boringAuto
           . (mkToggle (single NBFULL))
           . (mkToggle (single GRIDIFY))
-          . subTabbed
+          . mySubTabbed
           )
+        mySubTabbed x = addTabs shrinkText myTabTheme $ subLayout [] Simplest x
+        myTabTheme = def {fontName = myFont
+                         , decoHeight = 40
+                         , activeTextColor = myHighlightedFgColor
+                         , inactiveTextColor = myFgColor
+                         , activeColor = myHighlightedBgColor
+                         , inactiveColor = myBgColor
+                         , activeBorderColor = myActiveBorderColor
+                         , inactiveBorderColor = myInactiveBorderColor
+                         }
         tall = Tall 1 (3/100) (1/2)
         threeColMid = ThreeColMid 1 (1/100) (1/2)
 
