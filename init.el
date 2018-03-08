@@ -222,6 +222,7 @@
 
 ;;; Programming
 (use-package lean-mode
+  :ensure t
   :config
   (setq lean-rootdir "~/opt/lean-nightly-linux"))
 
@@ -243,6 +244,7 @@
               (auto-complete-mode 1))))
 
 (use-package sage-shell-mode
+  :ensure t
   :config
   (setq sage-shell:sage-executable "/usr/bin/sage")
   (sage-shell:define-alias)
@@ -266,6 +268,7 @@
   :ensure t)
 
 (use-package yasnippet
+  :ensure t
   :config
   (yas-global-mode 1))
 
