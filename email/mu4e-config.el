@@ -92,6 +92,7 @@
 
 ;; Desktop notifications
 (use-package mu4e-alert
+  :ensure t
   :config
   (mu4e-alert-set-default-style 'libnotify)
   (setq mu4e-alert-email-notification-types '(subjects))

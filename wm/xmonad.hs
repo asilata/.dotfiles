@@ -96,7 +96,7 @@ myKeys = \conf -> mkKeymap conf $ [
   -- Workspace stuff
   ("M-w", selectWorkspace myXPConfig), -- Select workspace to navigate to
   ("M-S-w", withWorkspace myXPConfig (windows . W.shift)), -- Move current window to selected workspace
-  ("M-S-r", renameWorkspace def), -- Rename workspace
+  ("M-S-r", renameWorkspace myXPConfig), -- Rename workspace
   ("M-S-<Backspace>", removeWorkspace), -- Remove workspace
   
   -- General window stuff
