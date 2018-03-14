@@ -89,10 +89,10 @@
   :config
   (setq org-gcal-client-id
         (string-trim
-         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-id.gpg"))
-        org-gcal-client-secret
+         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-id.gpg")))
+  (setq org-gcal-client-secret
         (string-trim
-         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg"))
-        org-gcal-file-alist '(("asilata@gmail.com" . "~/Dropbox/Org/calendar.org")))
-  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) )))
+         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg")))
+  (setq org-gcal-file-alist '(("asilata@gmail.com" . "~/Dropbox/Org/calendar.org")))
+  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync))))
 
