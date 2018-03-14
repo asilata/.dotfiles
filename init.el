@@ -356,10 +356,13 @@
 ;; Email
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+  :bind (("M-p" . mml-secure-message-sign-pgpmime)) 
   :config
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
         (load mu4e-config-file))))
+
+(setq epg-gpg-program "gpg2")
 
 ;; Org-mode
 (use-package org
