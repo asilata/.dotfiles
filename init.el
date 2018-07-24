@@ -356,7 +356,7 @@
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :demand t
-  :bind (("M-p" . mml-secure-message-sign-pgpmime)) 
+  :bind (("M-p" . mml-secure-message-sign-pgpmime))
   :config
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
