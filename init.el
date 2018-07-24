@@ -1,4 +1,3 @@
-
 ;;==============================================================================
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
@@ -246,7 +245,7 @@
 (use-package sage-shell-mode
   :ensure t
   :config
-  (setq sage-shell:sage-executable "/usr/bin/sage")
+  (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
   (sage-shell:define-alias)
   (setq sage-shell:use-prompt-toolkit t))
 
