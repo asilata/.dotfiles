@@ -10,6 +10,7 @@
 *.dvi
 *.fdb_latexmk
 *.fls
+*.fmt
 *.gnuplot
 *.html
 *.log
@@ -31,12 +32,14 @@
 *.xls
 *.xoj
 _minted*
+_region_.tex
 
 # Compiled source
 *.beam
 *.class
 *.elc
 *.pyc
+*.sage.py
 
 # Compressed files
 *.7z
