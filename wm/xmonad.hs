@@ -197,9 +197,9 @@ myLayoutHook = myLayoutModifiers (tall ||| threeColMid)
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [
   NS "konsole" "konsole --profile Floating"
-    (fmap ("Floating" `isPrefixOf`) title <&&> className =? "konsole") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)),
+    (fmap ("Floating" `isPrefixOf`) title <&&> className =? "konsole") (customFloating $ W.RationalRect (1/4) (1/4) (2/3) (2/3)),
   NS "emacs"   "emacsclient -a '' -c --frame-parameters='(quote (name . \"Floating - emacs\"))'"
-    (fmap ("Floating" `isPrefixOf`) title <&&> className =? "Emacs24") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    (fmap ("Floating" `isPrefixOf`) title <&&> fmap ("Emacs" `isPrefixOf`) className) (customFloating $ W.RationalRect (1/12) (1/12) (2/3) (2/3))
   ]
 
 myManageHook = composeAll . concat $

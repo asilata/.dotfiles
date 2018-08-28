@@ -307,14 +307,11 @@
   (use-package auto-complete-auctex :ensure t)
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
+  (set-default 'preview-scale-function 2)
   (use-package auctex-latexmk
     :ensure t
     :config
     (auctex-latexmk-setup)))
-
-(use-package org
-  :ensure t
-  :config)
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
@@ -362,6 +359,7 @@
     (if (file-exists-p mu4e-config-file)
         (load mu4e-config-file))))
 
+;; GPG
 (setq epg-gpg-program "gpg2")
 
 ;; Org-mode
@@ -370,7 +368,10 @@
   :config
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
     (if (file-exists-p org-config-file)
-        (load org-config-file))))
+        (load org-config-file)))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (visual-line-mode 1))))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)

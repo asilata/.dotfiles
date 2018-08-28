@@ -80,6 +80,11 @@
 (add-to-list 'mu4e-headers-actions
              '("retag message" . mu4e-action-retag-message) t)
 
+(add-hook 'mu4e-compose-mode-hook
+          (lambda ()
+            (auto-fill-mode 0)
+            (visual-line-mode 1)))
+
 ;;Maildirs extra
 (use-package mu4e-maildirs-extension
   :ensure t
