@@ -37,6 +37,7 @@ _minted*
 *.class
 *.elc
 *.pyc
+*.sage.py
 
 # Compressed files
 *.7z
