@@ -99,3 +99,18 @@
                                ,(concat org-default-directory "algtop.org"))))
   (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync))))
 
+;; Encryption
+(use-package org-crypt
+  :config
+  (setq org-crypt-key "asilata@gmail.com")
+  (setq org-crypt-disable-auto-save t))
+
+;; Org journal
+(use-package org-journal
+  :ensure t
+  :config
+  (setq org-journal-dir (concat org-default-directory "journal/"))
+  (setq org-journal-enable-encryption t)
+  (setq org-journal-file-format "%Y-%m-%d.org")
+  )
+
