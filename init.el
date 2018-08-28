@@ -1,4 +1,3 @@
-
 ;;==============================================================================
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
@@ -246,7 +245,7 @@
 (use-package sage-shell-mode
   :ensure t
   :config
-  (setq sage-shell:sage-executable "/usr/bin/sage")
+  (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
   (sage-shell:define-alias)
   (setq sage-shell:use-prompt-toolkit t))
 
@@ -308,14 +307,11 @@
   (use-package auto-complete-auctex :ensure t)
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
+  (set-default 'preview-scale-function 2)
   (use-package auctex-latexmk
     :ensure t
     :config
     (auctex-latexmk-setup)))
-
-(use-package org
-  :ensure t
-  :config)
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
@@ -356,13 +352,14 @@
 ;; Email
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
-  :bind (("M-p" . mml-secure-message-sign-pgpmime))
   :demand t
+  :bind (("M-p" . mml-secure-message-sign-pgpmime))
   :config
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
         (load mu4e-config-file))))
 
+;; GPG
 (setq epg-gpg-program "gpg2")
 
 ;; Org-mode
@@ -371,7 +368,10 @@
   :config
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
     (if (file-exists-p org-config-file)
-        (load org-config-file))))
+        (load org-config-file)))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (visual-line-mode 1))))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)

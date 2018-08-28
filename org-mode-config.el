@@ -1,9 +1,9 @@
 ;; Org files locations
-(setq org-default-notes-file "~/Dropbox/Org/todo.org")
+(setq org-default-directory "~/MEGAsync/Org/")
+(setq org-default-notes-file (concat org-default-directory "todo.org"))
 (setq org-agenda-files
-      (let ((org-default-directory "~/Dropbox/Org/"))
-        (mapcar (lambda (x) (concat org-default-directory x ".org"))
-                '("todo" "math" "service" "teaching" "calendar" "shared/shared"))))
+      (mapcar (lambda (x) (concat org-default-directory x ".org"))
+              '("todo" "math" "service" "teaching" "calendar" "algtop" "shared/shared")))
 
 (setq org-log-done t)
 (setq org-refile-targets
@@ -57,7 +57,7 @@
 ;;     (todo priority-down category-keep)
 ;;     (tags priority-down category-keep)
 ;;     (search category-keep))))
-(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM(Time spent) %16SCHEDULED")
+(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %16SCHEDULED")
 (setq org-agenda-custom-commands
       '(("c" "Comprehensive view"
          ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
@@ -93,6 +93,24 @@
   (setq org-gcal-client-secret
         (string-trim
          (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg")))
-  (setq org-gcal-file-alist '(("asilata@gmail.com" . "~/Dropbox/Org/calendar.org")))
+  (setq org-gcal-file-alist `(("asilata@gmail.com" .
+                               ,(concat org-default-directory "calendar.org"))
+                              ("es2hibml3t2m5le9nl83lq0boo@group.calendar.google.com" .
+                               ,(concat org-default-directory "algtop.org"))))
   (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync))))
+
+;; Encryption
+(use-package org-crypt
+  :config
+  (setq org-crypt-key "asilata@gmail.com")
+  (setq org-crypt-disable-auto-save t))
+
+;; Org journal
+(use-package org-journal
+  :ensure t
+  :config
+  (setq org-journal-dir (concat org-default-directory "journal/"))
+  (setq org-journal-enable-encryption t)
+  (setq org-journal-file-format "%Y-%m-%d.org")
+  )
 
