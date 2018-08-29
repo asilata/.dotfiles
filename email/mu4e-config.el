@@ -31,12 +31,30 @@
             ;(mu4e-sent-messages-behavior 'sent)
             (user-mail-address . "asilata.bapat@anu.edu.au")
             (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")))
+        
+        ,(make-mu4e-context
+          :name "Gmail"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (mu4e-message-contact-field-matches
+               msg '(:to :cc :from) "asilata@gmail.com")))
+          :vars
+          '((mu4e-sent-folder . "/Gmail/[Gmail]/All Mail")
+            (mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts")
+            (mu4e-trash-folder . "/Gmail/[Gmail]/Bin")
+            ;(mu4e-refile-folder . "/Gmail/[Gmail].Archive")
+            (smtpmail-smtp-server . "smtp.office365.com")	       
+            (mu4e-sent-messages-behavior . 'delete)
+            (user-mail-address . "asilata@gmail.com")
+            (mu4e-reply-to-address . "asilata@gmail.com")))
         )
       )
 
 ;; Indexing
 (setq mu4e-index-cleanup nil
-      mu4e-index-lazy-check t)
+      ;mu4e-index-lazy-check t
+      )
 
 ;; mu4e display settings
 (setq mu4e-headers-date-format "  %_d %b"
@@ -56,7 +74,7 @@
 (setq mu4e-bookmarks
       `(,(make-mu4e-bookmark
           :name  "Reasonable but unread messages"
-          :query "flag:unread AND (maildir: 'ANU/INBOX' OR tag:\\Important)"
+          :query "flag:unread AND (maildir: 'ANU/INBOX' OR tag:\\\\Important)"
           :key ?u)
         ,(make-mu4e-bookmark
           :name "Today's messages"

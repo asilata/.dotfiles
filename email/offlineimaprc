@@ -1,5 +1,6 @@
 [general]
-accounts = ANU
+accounts = ANU, Gmail
+maxsyncaccounts = 2
 pythonfile = ~/.offlineimap/offlineimap.py
 status-backend = sqlite
 
@@ -32,6 +33,8 @@ sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 [Account Gmail]
 localrepository = Gmail-Local
 remoterepository = Gmail-Remote
+synclabels = yes
+labelsheader = X-Keywords
 
 [Repository Gmail-Local]
 type = GmailMaildir
@@ -40,16 +43,11 @@ sep = /
 
 [Repository Gmail-Remote]
 type = Gmail
-#remotehost = imap.gmail.com
-remoteuser = get_user("imap.gmail.com")
-#remotepass = get_pass("imap.gmail.com")
+remotehost = imap.gmail.com
+remoteusereval = get_user("smtp.gmail.com")
+remotepasseval = get_pass("smtp.gmail.com")
 starttls = no
 ssl = yes
-auth_mechanisms = XOAUTH2
-oauth2_refresh_token_eval = get_refresh_token()
-oauth2_client_id_eval = get_client_id()
-oauth2_client_secret_eval = get_client_secret()
-oauth2_request_url = https://accounts.google.com/o/oauth2/token
 #realdelete = no
-folderfilter = lambda folder: folder in ['[Gmail]/All Mail']
+folderfilter = lambda folder: folder.startswith('[Gmail]/') and folder[8:] in ['All Mail', 'Bin', 'Drafts'] 
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
