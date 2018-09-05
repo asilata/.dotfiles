@@ -27,8 +27,8 @@
             (mu4e-drafts-folder . "/ANU/Drafts")
             (mu4e-trash-folder . "/ANU/Trash")
             (mu4e-refile-folder . "/ANU/Archive")
-            (smtpmail-smtp-server . "smtp.office365.com")	       
-            ;(mu4e-sent-messages-behavior 'sent)
+            (smtpmail-smtp-server . "smtp.office365.com")
+            (mu4e-sent-messages-behavior . sent)
             (user-mail-address . "asilata.bapat@anu.edu.au")
             (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")))
         
@@ -37,15 +37,19 @@
           :match-func
           (lambda (msg)
             (when msg
-              (mu4e-message-contact-field-matches
-               msg '(:to :cc :from) "asilata@gmail.com")))
+              (or
+               (mu4e-message-contact-field-matches
+                msg '(:to :cc :from) "asilata@gmail.com")
+               (mu4e-message-contact-field-matches
+                msg '(:to :cc :from) "asilata@alum.mit.edu")
+               )))
           :vars
           '((mu4e-sent-folder . "/Gmail/[Gmail]/All Mail")
             (mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts")
             (mu4e-trash-folder . "/Gmail/[Gmail]/Bin")
-            ;(mu4e-refile-folder . "/Gmail/[Gmail].Archive")
-            (smtpmail-smtp-server . "smtp.office365.com")	       
-            (mu4e-sent-messages-behavior . 'delete)
+            (mu4e-refile-folder . "/Gmail/[Gmail]/All Mail")
+            (smtpmail-smtp-server . "smtp.office365.com")
+            (mu4e-sent-messages-behavior . delete)
             (user-mail-address . "asilata@gmail.com")
             (mu4e-reply-to-address . "asilata@gmail.com")))
         )
@@ -73,21 +77,32 @@
 ;; Bookmarks
 (setq mu4e-bookmarks
       `(,(make-mu4e-bookmark
-          :name  "Reasonable but unread messages"
-          :query "flag:unread AND (maildir: 'ANU/INBOX' OR tag:\\\\Important)"
+          :name "ANU Inbox"
+          :query "maildir:\"/ANU/INBOX\""
+          :key ?a)
+        ,(make-mu4e-bookmark
+          :name "Gmail Inbox"
+          :query "maildir:\"/Gmail/[Gmail]/All Mail\" AND tag:\\\\Inbox"
+          :key ?g)
+        ,(make-mu4e-bookmark
+          :name  "Reasonable but unread"
+          :query "flag:unread AND (maildir:'ANU/INBOX' OR tag:\\\\Inbox OR tag:\\\\Important)"
           :key ?u)
         ,(make-mu4e-bookmark
-          :name "Today's messages"
-          :query "date:today..now"
+          :name "Today and untrashed"
+          :query "date:today..now AND NOT (flag:trashed  OR maildir:'ANU/Trash' OR maildir:\"/Gmail/[Gmail]/Bin\")"
           :key ?t)
         ,(make-mu4e-bookmark
-          :name "Last 7 days"
-          :query "date:7d..now"
+          :name "Last week and untrashed"
+          :query "date:7d..now AND NOT (flag:trashed  OR maildir:'ANU/Trash' OR maildir:\"/Gmail/[Gmail]/Bin\")"
           :key ?w)
-        ,(make-mu4e-bookmark
-          :name "Procrastinated messages"
-          :query "tag:todo"
-          :key ?p)))
+        ))
+
+;; Custom functions
+;; (defun my/delete-without-trashing ()
+;;   (let (tfolder (mu4e-get-trash-folder (mu4e-message-at-point)))
+;;     (mu4e-mark-set refile tfolder)))
+;; (define-key mu4e-headers-mode-map (kbd "C-!") 'my/delete-without-trashing)
 
 ;; Various hooks
 (add-hook 'mu4e-headers-found-hook
@@ -103,11 +118,18 @@
             (auto-fill-mode 0)
             (visual-line-mode 1)))
 
+(add-hook 'mu4e-mark-execute-pre-hook
+  (lambda (mark msg)
+    (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\\\Inbox"))
+          ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
+          ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
+
 ;;Maildirs extra
 (use-package mu4e-maildirs-extension
   :ensure t
   :config
-  (mu4e-maildirs-extension))
+  (mu4e-maildirs-extension)
+  (setq mu4e-maildirs-extension-use-bookmarks t))
 
 ;; Org mode integration
 (require 'org-mu4e)
@@ -117,6 +139,11 @@
 (use-package mu4e-alert
   :ensure t
   :config
+  (setq mu4e-alert-interesting-mail-query
+        (concat
+         "flag:unread"
+         " AND NOT maildir: /[Gmail]/Bin"
+         " AND NOT maildir: /ANU/Trash"))
   (mu4e-alert-set-default-style 'libnotify)
   (setq mu4e-alert-email-notification-types '(subjects))
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
