@@ -212,7 +212,7 @@ myManageHook = composeAll . concat $
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = False
+myFocusFollowsMouse = True
 
 
 ------------------------------------------------------------------------
