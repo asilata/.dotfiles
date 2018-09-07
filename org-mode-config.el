@@ -27,7 +27,7 @@
          "* TODO %?\n%a\n" :clock-in t :clock-resume t)
         ("d" "todo with deadline" entry (file+headline org-default-notes-file "Tasks")
          "* TODO %?\n%a\nDEADLINE: %t" :clock-in t :clock-resume t)
-        ("r" "respond" entry (file+headline org-default-notes-file "Tasks")
+        ("r" "respond" entry (file+headline org-default-notes-file "Emails")
          "* TODO Reply to %:from (%:subject) :email:\n%a" :immediate-finish t)
         ("c" "Calendar entry" entry
          (file "~/Dropbox/Org/calendar.org")
