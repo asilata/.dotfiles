@@ -12,12 +12,13 @@
 
 ;; Keywords
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)" "SHELVED(s)")))
 (setq org-todo-keyword-faces
       '(("TODO" org-todo)
 	("DONE" org-done)
         ("WAITING" :foreground "#F0DFAF" :weight bold)
 	("CANCELLED" :foreground "#CC9393" :weight bold :strike-through "#CC9393")
+        ("SHELVED" :foreground "#DFAF8F" :weight bold)
         ))
 
 ;;capture todo items using C-c c t
@@ -76,11 +77,11 @@
                       (org-agenda-span 'week)
                       (org-agenda-start-day "+1d")
                       (org-agenda-start-on-weekday nil)
-                      ;;(org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
-                      ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+          ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
                       ))
-          (todo "WAITING"
-                ((org-agenda-overriding-header "Waiting tasks:")
+          (todo "WAITING|SHELVED"
+                ((org-agenda-overriding-header "Waiting or shelved tasks:")
                  (org-agenda-todo-ignore-deadlines 'all)
                  (org-agenda-todo-ignore-scheduled 'all)))
           ))))
