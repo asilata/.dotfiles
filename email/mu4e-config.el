@@ -30,7 +30,8 @@
             (smtpmail-smtp-server . "smtp.office365.com")
             (mu4e-sent-messages-behavior . sent)
             (user-mail-address . "asilata.bapat@anu.edu.au")
-            (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")))
+            (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")
+            (mu4e-compose-signature . "\nAsilata Bapat\nMathematical Sciences Institute\n4.84, Hanna Neumann Building #145, Science Road\nActon ACT 2601 Australia")))
         
         ,(make-mu4e-context
           :name "Gmail"
