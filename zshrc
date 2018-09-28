@@ -49,6 +49,7 @@ alias 1234='setxkbmap -layout dvorak -option ctrl:swapcaps'
 alias 2345='setxkbmap -layout us -option'
 alias ec='emacsclient -c -n'
 alias et='emacsclient -t'
+alias gsum='git-summary -ld'
 
 #ibus
 # export XMODIFIERS=@im=ibus    #case matters for this variable!
