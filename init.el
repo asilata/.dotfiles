@@ -366,12 +366,14 @@
 (use-package org
   :bind (("C-c a" . 'org-agenda))
   :config
+  (use-package org-bullets :ensure t)
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
     (if (file-exists-p org-config-file)
         (load org-config-file)))
   (add-hook 'org-mode-hook
             (lambda ()
-              (visual-line-mode 1))))
+              (visual-line-mode 1)
+              (org-bullets-mode 1))))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
