@@ -39,7 +39,7 @@
 
 ;; Agenda customization
 (setq org-agenda-window-setup 'current-window)
-(setq org-deadline-warning-days 7)
+(setq org-deadline-warning-days 3)
 ;;show me tasks scheduled or due in next fortnight
 (setq org-agenda-span 'fortnight)
 ;;don't show tasks as scheduled if they are already shown as a deadline
@@ -53,13 +53,6 @@
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-log-done t)
-;;sort tasks in order of when they are due and then by priority
-;; (setq org-agenda-sorting-strategy
-;;   (quote
-;;    ((agenda deadline-up priority-down)
-;;     (todo priority-down category-keep)
-;;     (tags priority-down category-keep)
-;;     (search category-keep))))
 (setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %16SCHEDULED")
 (setq org-agenda-custom-commands
       '(("c" "Comprehensive view"
