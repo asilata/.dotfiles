@@ -142,6 +142,12 @@
 (use-package ido
   :ensure t
   :config
+  (use-package ido-vertical-mode
+    :ensure t
+    :config
+    (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+    (setq ido-vertical-show-count t))
   (setq ido-enable-prefix nil
         ido-enable-flex-matching 1
         ido-create-new-buffer 'always
@@ -150,13 +156,6 @@
         ido-default-file-method 'selected-window
         ido-case-fold 1)
   (ido-mode 1))
-
-(use-package ido-vertical-mode
-  :ensure t
-  :config
-  (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-  (setq ido-vertical-show-count t))
 
 (use-package smex
   :ensure t
@@ -168,7 +167,6 @@
   :ensure t
   :config
   (progn (sml/setup)))
-
 
 ;;; Global keybindings
 (global-set-key [f1]          'revert-buffer)
