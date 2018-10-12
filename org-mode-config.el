@@ -30,8 +30,9 @@
          "* TODO %?\n%a\nDEADLINE: %t" :clock-in t :clock-resume t)
         ("r" "respond" entry (file+headline org-default-notes-file "Emails")
          "* TODO Reply to %:from (%:subject) :email:\n%a" :immediate-finish t)
-        ("c" "Calendar entry" entry
-         (file "~/Dropbox/Org/calendar.org")
+        ("m" "Meeting" entry (file+headline org-default-notes-file "Meetings")
+         "* Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
+        ("c" "Calendar entry" entry (file "~/Dropbox/Org/calendar.org")
          "* %?\n%t\n")))
 
 ;; Org files customization
