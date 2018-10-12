@@ -71,7 +71,7 @@
                       (org-agenda-span 'week)
                       (org-agenda-start-day "+1d")
                       (org-agenda-start-on-weekday nil)
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
           ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
                       ))
           (todo "WAITING|SHELVED"
