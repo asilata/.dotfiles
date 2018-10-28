@@ -151,11 +151,24 @@
   (setq ido-enable-prefix nil
         ido-enable-flex-matching 1
         ido-create-new-buffer 'always
+        ido-everywhere 1
         ido-use-filename-at-point 'guess
         ido-max-prospects 10
         ido-default-file-method 'selected-window
         ido-case-fold 1)
   (ido-mode 1))
+
+(use-package ido-completing-read+
+  :ensure t
+  :config
+  (ido-ubiquitous-mode 1))
+
+(use-package ido-vertical-mode
+  :ensure t
+  :config
+  (ido-vertical-mode 1)
+  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+  (setq ido-vertical-show-count t))
 
 (use-package smex
   :ensure t
@@ -373,9 +386,11 @@
               (visual-line-mode 1)
               (org-bullets-mode 1))))
 
+;; Org and reveal
 (use-package ox-reveal
   :ensure t
   :config
+  (use-package htmlize :ensure t)
   (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
 
 ;; Macaulay 2 start

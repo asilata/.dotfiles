@@ -99,7 +99,7 @@
 ;; Encryption
 (use-package org-crypt
   :config
-  (setq org-crypt-key "asilata@gmail.com")
+  (setq org-crypt-key "D93ED1F5")
   (setq org-crypt-disable-auto-save t))
 
 ;; Org journal
