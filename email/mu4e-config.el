@@ -1,7 +1,7 @@
 ;; Getting mail
 (setq mu4e-maildir "/home/asilata/Mail")
 (setq mu4e-get-mail-command "offlineimap"
-      mu4e-update-interval 300)
+      mu4e-update-interval (* 60 15))
 
 ;; Sending mail
 (setq message-send-mail-function 'smtpmail-send-it
