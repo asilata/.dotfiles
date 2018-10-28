@@ -145,11 +145,17 @@
   (setq ido-enable-prefix nil
         ido-enable-flex-matching 1
         ido-create-new-buffer 'always
+        ido-everywhere 1
         ido-use-filename-at-point 'guess
         ido-max-prospects 10
         ido-default-file-method 'selected-window
         ido-case-fold 1)
   (ido-mode 1))
+
+(use-package ido-completing-read+
+  :ensure t
+  :config
+  (ido-ubiquitous-mode 1))
 
 (use-package ido-vertical-mode
   :ensure t
