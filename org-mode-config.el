@@ -26,12 +26,11 @@
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline org-default-notes-file "Tasks")
          "* TODO %?\n%a\n" :clock-in t :clock-resume t)
-        ("d" "todo with deadline" entry (file+headline org-default-notes-file "Tasks")
-         "* TODO %?\n%a\nDEADLINE: %t" :clock-in t :clock-resume t)
         ("r" "respond" entry (file+headline org-default-notes-file "Emails")
          "* TODO Reply to %:from (%:subject) :email:\n%a" :immediate-finish t)
-        ("c" "Calendar entry" entry
-         (file "~/Dropbox/Org/calendar.org")
+        ("m" "Meeting" entry (file+headline org-default-notes-file "Meetings")
+         "* Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
+        ("c" "Calendar entry" entry (file "~/Dropbox/Org/calendar.org")
          "* %?\n%t\n")))
 
 ;; Org files customization
@@ -70,7 +69,7 @@
                       (org-agenda-span 'week)
                       (org-agenda-start-day "+1d")
                       (org-agenda-start-on-weekday nil)
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
           ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
                       ))
           (todo "WAITING|SHELVED"

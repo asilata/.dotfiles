@@ -9,9 +9,9 @@
   (defvar user-emacs-directory "~/.emacs.d/"
     "Root directory of the emacs configuration."))
 (defvar user-opt-directory (concat user-emacs-directory "opt/")
-  "User-installed emacs packages go here.")
+  "User-installed Emacs packages go here.")
 (defvar local-config-directory (concat user-emacs-directory "local/")
-  "Machine-local configuration files go here")
+  "Machine-local configuration files go here.")
 
 ;; Create these directories if they don't exist.
 (mapc (lambda (dir)
@@ -142,6 +142,12 @@
 (use-package ido
   :ensure t
   :config
+  (use-package ido-vertical-mode
+    :ensure t
+    :config
+    (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+    (setq ido-vertical-show-count t))
   (setq ido-enable-prefix nil
         ido-enable-flex-matching 1
         ido-create-new-buffer 'always
@@ -174,7 +180,6 @@
   :ensure t
   :config
   (progn (sml/setup)))
-
 
 ;;; Global keybindings
 (global-set-key [f1]          'revert-buffer)
@@ -278,7 +283,7 @@
   (yas-global-mode 1))
 
 (defun toggle-comment-line-or-region (&optional arg)
-  "Toggle commenting on current line or region, then go to the next line"
+  "Toggle commenting on current line or region (ARG), then go to the next line."
   (interactive)
   (if (region-active-p)
       (comment-or-uncomment-region (region-beginning) (region-end))
@@ -287,7 +292,7 @@
 
 ;; Jekyll stuff (new post function, modified from hyde-mode's version)
 (defun jekyll-new-post (title directory)
-  "Creates a new post"
+  "Create a new post titled TITLE in DIRECTORY."
   (interactive "MEnter post title: \nDEnter directory to save in: ")
   (let ((post-file-name (expand-file-name (format "%s/%s.markdown"
                                                   directory
@@ -340,7 +345,7 @@
 
 (use-package lisp-mode
   :init
-  (progn 
+  (progn
     (use-package eldoc
       :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
     (font-lock-add-keywords 'emacs-lisp-mode
