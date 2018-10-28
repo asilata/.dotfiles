@@ -381,6 +381,13 @@
               (visual-line-mode 1)
               (org-bullets-mode 1))))
 
+;; Org and reveal
+(use-package ox-reveal
+  :ensure t
+  :config
+  (use-package htmlize :ensure t)
+  (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
+
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
 ;; Macaulay 2 end
