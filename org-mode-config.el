@@ -6,19 +6,21 @@
               '("todo" "math" "service" "teaching" "calendar" "algtop" "shared/shared")))
 
 (setq org-log-done t)
+(setq org-log-state-notes-insert-after-drawers t)
 (setq org-refile-targets
       '((org-agenda-files :maxlevel . 5)))
 (setq org-refile-use-outline-path 'file)
 
 ;; Keywords
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)" "SHELVED(s)")))
+      '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)" "CANCELLED(c@)" "SHELVED(s)" "MEETING(m)")))
 (setq org-todo-keyword-faces
       '(("TODO" org-todo)
 	("DONE" org-done)
         ("WAITING" :foreground "#F0DFAF" :weight bold)
 	("CANCELLED" :foreground "#CC9393" :weight bold :strike-through "#CC9393")
         ("SHELVED" :foreground "#DFAF8F" :weight bold)
+        ("MEETING" :foreground "#8CD0D3" :weight bold)
         ))
 
 ;;capture todo items using C-c c t
@@ -28,8 +30,8 @@
          "* TODO %?\n%a\n" :clock-in t :clock-resume t)
         ("r" "respond" entry (file+headline org-default-notes-file "Emails")
          "* TODO Reply to %:from (%:subject) :email:\n%a" :immediate-finish t)
-        ("m" "Meeting" entry (file+headline org-default-notes-file "Meetings")
-         "* Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
+        ("m" "meeting" entry (file+headline org-default-notes-file "Meetings")
+         "* MEETING Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
         ("c" "Calendar entry" entry (file "~/Dropbox/Org/calendar.org")
          "* %?\n%t\n")))
 
