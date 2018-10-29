@@ -8,6 +8,7 @@ ln -s $DOTFILES/init.el ~/.emacs.d/init.el
 # Email stuff
 ln -s $DOTFILES/email/mu4e-config.el ~/.emacs.d/opt/mu4e-config.el
 ln -s $DOTFILES/email/offlineimaprc ~/.offlineimaprc
+ln -s $DOTFILES/email/mbsyncrc ~/.mbsyncrc
 ln -s $DOTFILES/email/offlineimap.py ~/.offlineimap/offlineimap.py
 ln -s $DOTFILES/email/muttrc ~/.mutt/muttrc
 ln -s $DOTFILES/email/mutt_zenburn_colours ~/.mutt/mutt_zenburn_colours

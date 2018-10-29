@@ -1,0 +1,56 @@
+#########
+# Gmail #
+#########
+IMAPAccount Gmail
+Host imap.gmail.com
+User asilata@gmail.com
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '/machine imap.gmail.com login/ {print $NF}'"
+AuthMechs LOGIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# Remote repository
+IMAPStore Gmail-remote
+Account Gmail
+
+# Local repository
+MaildirStore Gmail-local
+Path ~/Mail/Gmail/
+Inbox ~/Mail/Gmail/Inbox
+SubFolders Verbatim
+
+Channel Gmail
+Master :Gmail-remote:
+Slave :Gmail-local:
+Patterns "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Bin"
+Create Both
+Expunge Both
+SyncState *
+
+#######
+# ANU #
+#######
+IMAPAccount ANU
+Host outlook.office365.com
+User u1055856@anu.edu.au
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '/machine imap.office365.com login/ {print $NF}'"
+AuthMechs LOGIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# Remote repository
+IMAPStore ANU-remote
+Account ANU
+
+# Local repository
+MaildirStore ANU-local
+Path ~/Mail/ANU/
+Inbox ~/Mail/ANU/INBOX
+
+Channel ANU
+Master :ANU-remote:
+Slave :ANU-local:
+Patterns "INBOX" "Sent Items" "Drafts" "Trash" "Archive"
+Create Both
+Expunge Both
+SyncState *
