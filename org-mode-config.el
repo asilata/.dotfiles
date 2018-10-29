@@ -36,6 +36,9 @@
 ;; Org files customization
 (setq org-cycle-separator-lines 1)
 
+;; Syntax highlighting
+(setq org-highlight-latex-and-related '(latex))
+
 ;; Agenda customization
 (setq org-agenda-window-setup 'current-window)
 (setq org-deadline-warning-days 3)
