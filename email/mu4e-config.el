@@ -84,7 +84,7 @@
           :key ?a)
         ,(make-mu4e-bookmark
           :name "Gmail Inbox"
-          :query "maildir:\"/Gmail/[Gmail]/All Mail\" AND tag:\\\\Inbox"
+          :query "maildir:\"/Gmail/INBOX\""
           :key ?g)
         ,(make-mu4e-bookmark
           :name  "Reasonable but unread"

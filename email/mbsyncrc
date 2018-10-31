@@ -16,15 +16,14 @@ Account Gmail
 # Local repository
 MaildirStore Gmail-local
 Path ~/Mail/Gmail/
-Inbox ~/Mail/Gmail/Inbox
+Inbox ~/Mail/Gmail/INBOX
 SubFolders Verbatim
 
 Channel Gmail
 Master :Gmail-remote:
 Slave :Gmail-local:
-Patterns "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Bin"
+Patterns "INBOX" "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Bin"
 Create Both
-Expunge Both
 SyncState *
 
 #######
@@ -52,5 +51,4 @@ Master :ANU-remote:
 Slave :ANU-local:
 Patterns "INBOX" "Sent Items" "Drafts" "Trash" "Archive"
 Create Both
-Expunge Both
 SyncState *
