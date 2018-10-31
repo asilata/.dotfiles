@@ -77,6 +77,10 @@
                                             (abbreviate-file-name (buffer-file-name))
                                           (buffer-name))
                                         "%b")))
+(use-package golden-ratio
+  :ensure t
+  :config
+  (golden-ratio-mode 1))
 
 (use-package rainbow-mode
   :mode "\\.\\(el|scss|sass\\)")
