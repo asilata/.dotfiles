@@ -27,14 +27,17 @@
 ;;capture todo items using C-c c t
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-capture-templates
-      '(("t" "todo" entry (file+headline org-default-notes-file "Tasks")
+      `(("t" "todo" entry (file+headline org-default-notes-file "Tasks")
          "* TODO %?\n%a\n" :clock-in t :clock-resume t)
         ("r" "respond" entry (file+headline org-default-notes-file "Emails")
          "* TODO Reply to %:from (%:subject) :email:\n%a" :immediate-finish t)
         ("m" "meeting" entry (file+headline org-default-notes-file "Meetings")
          "* MEETING Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
-        ("c" "Calendar entry" entry (file "~/Dropbox/Org/calendar.org")
-         "* %?\n%t\n")))
+        ("c" "Calendar entry" entry (file ,(concat org-default-directory "calendar.org"))
+         "* %?\n%t\n")
+        ("f" "Recipes" entry (file ,(concat org-default-directory "recipes.org"))
+         "%(org-chef-get-recipe-from-url)"
+         :empty-lines 1)))
 
 ;; Org files customization
 (setq org-cycle-separator-lines 1)

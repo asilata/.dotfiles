@@ -397,6 +397,9 @@
   (use-package htmlize :ensure t)
   (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
 
+(use-package org-chef
+  :ensure t)
+
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
 ;; Macaulay 2 end
