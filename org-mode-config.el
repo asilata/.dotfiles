@@ -1,9 +1,10 @@
 ;; Org files locations
-(setq org-default-directory "~/MEGAsync/Org/")
+(setq org-default-directory "~/Org/")
+(setq org-shared-directory "~/Org-shared/")
 (setq org-default-notes-file (concat org-default-directory "todo.org"))
 (setq org-agenda-files
-      (mapcar (lambda (x) (concat org-default-directory x ".org"))
-              '("todo" "math" "service" "teaching" "calendar" "algtop" "shared/shared")))
+      (append (file-expand-wildcards (concat org-default-directory "*.org"))
+              (file-expand-wildcards (concat org-shared-directory "*.org"))))
 
 (setq org-log-done t)
 (setq org-log-state-notes-insert-after-drawers t)
