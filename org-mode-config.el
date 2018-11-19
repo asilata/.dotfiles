@@ -24,6 +24,24 @@
         ("MEETING" :foreground "#8CD0D3" :weight bold)
         ))
 
+(setq org-tag-persistent-alist
+      '((:startgroup . nil)
+        ("work" . ?w)
+        ("service" . ?s)
+        ("personal" . ?p)
+        (:endgroup . nil)
+        ("longterm" . ?l)
+        ("reading" . ?r)
+        ("annoying" . ?a)
+        ("shared")
+        ("email" . ?e)
+        ))
+
+(setq org-tag-faces
+      '(("work" . (:foreground "#8CD0D3" :weight bold))
+        ("service" . (:foreground "#8CD0D3" :weight bold))
+        ("personal" . (:foreground "#8CD0D3" :weight bold))))
+
 ;;capture todo items using C-c c t
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-capture-templates
