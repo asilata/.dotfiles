@@ -61,7 +61,8 @@
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-log-done t)
-(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %16SCHEDULED")
+(setq org-pretty-entities t)
+(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
 (setq org-agenda-custom-commands
       '(("c" "Comprehensive view"
          ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
