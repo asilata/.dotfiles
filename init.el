@@ -342,7 +342,7 @@
             (lambda ()
               (setq scss-compile-at-save nil))))
 
-i;; GPG
+;; GPG
 (setq epg-gpg-program "gpg2")
 
 ;; Org-mode
