@@ -40,9 +40,6 @@ RPROMPT='$(git_super_status)$PR_BRIGHT_RED%t$PR_RESET'
 # Don't put duplicate lines in the history.
 setopt HIST_IGNORE_DUPS
 
-# Run German fortune
-spruch -x && echo "\n"
-
 # Aliases
 alias ls='ls --color=auto'
 alias 1234='setxkbmap -layout dvorak -option ctrl:swapcaps'
@@ -76,8 +73,3 @@ if [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-# Direnv
-eval "$(direnv hook zsh)"
-
-# Path including cabal
-export PATH=~/.cabal/bin:$PATH
