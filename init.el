@@ -1,4 +1,4 @@
-;;==============================================================================
+
 ;; Emacs initialization file
 ;; (Inspired by emacs-prelude)
 ;;==============================================================================
@@ -60,7 +60,6 @@
 (setq initial-scratch-message nil)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
 (blink-cursor-mode -1)
 (line-number-mode 1)
 (column-number-mode 1)
@@ -99,10 +98,6 @@
   :ensure t
   :config
   (load-theme 'zenburn t)
-  (zenburn-with-color-variables
-    (custom-theme-set-faces
-     'zenburn
-     `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))))
   )
 
 ;;; Editing
@@ -235,18 +230,8 @@
   :bind (([f6] . magit-status)))
 
 ;;; Programming
-(use-package lean-mode
-  :ensure t
-  :config
-  (setq lean-rootdir "~/opt/lean-nightly-linux"))
-
 (use-package conf-mode
   :mode ("rc$"))
-
-(use-package flycheck
-  :ensure t
-  :config
-  (global-flycheck-mode))
 
 (use-package markdown-mode
   :ensure t
@@ -257,12 +242,6 @@
               (orgtbl-mode 1)
               (auto-complete-mode 1))))
 
-(use-package sage-shell-mode
-  :ensure t
-  :config
-  (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
-  (sage-shell:define-alias)
-  (setq sage-shell:use-prompt-toolkit t))
 
 (use-package textile-mode
   :ensure t
@@ -363,18 +342,7 @@
             (lambda ()
               (setq scss-compile-at-save nil))))
 
-
-;; Email
-(use-package mu4e
-  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
-  :demand t
-  :bind (("M-p" . mml-secure-message-sign-pgpmime))
-  :config
-  (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
-    (if (file-exists-p mu4e-config-file)
-        (load mu4e-config-file))))
-
-;; GPG
+i;; GPG
 (setq epg-gpg-program "gpg2")
 
 ;; Org-mode
@@ -399,18 +367,6 @@
 
 (use-package org-chef
   :ensure t)
-
-;; Macaulay 2 start
-(load "emacs-Macaulay2.el" t)
-;; Macaulay 2 end
-
-;; Singular stuff
-(add-to-list 'load-path "/usr/share/Singular/emacs")
-(autoload 'singular "singular"
-  "Start Singular using default values." t)
-(autoload 'singular-other "singular"
-  "Ask for arguments and start Singular." t)
-(setq auto-mode-alist (cons '("\\.sing\\'" . c++-mode) auto-mode-alist))
 
 ;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
