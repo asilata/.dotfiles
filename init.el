@@ -138,9 +138,16 @@
 
 (use-package counsel
   :ensure t
-  :bind (("C-s" . swiper))
+  :bind (("C-s" . swiper)
+         ("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x C-g" . counsel-git)
+         ("C-c C-r" . ivy-resume)
+         ("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view))
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t))
 
 (use-package smart-mode-line
   :ensure t
