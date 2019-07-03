@@ -24,6 +24,7 @@ Master :Gmail-remote:
 Slave :Gmail-local:
 Patterns "INBOX" "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Bin"
 Create Both
+Expunge Slave
 SyncState *
 
 #######
@@ -49,6 +50,7 @@ Inbox ~/Mail/ANU/INBOX
 Channel ANU
 Master :ANU-remote:
 Slave :ANU-local:
-Patterns "INBOX" "Sent Items" "Drafts" "Trash" "Archive"
+Patterns "INBOX" "Sent Items" "Drafts" "Deleted Items" "Archive"
 Create Both
+Expunge Slave
 SyncState *
