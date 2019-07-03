@@ -1,6 +1,6 @@
 ;; Org files locations
-(setq org-default-directory "~/Org/")
-(setq org-shared-directory "~/Org-shared/")
+(setq org-default-directory "~/storage/shared/Stuff/Org/")
+(setq org-shared-directory "~/storage/shared/Stuff/Org-shared/")
 (setq org-default-notes-file (concat org-default-directory "todo.org"))
 (setq org-agenda-files
       (append (file-expand-wildcards (concat org-default-directory "*.org"))
