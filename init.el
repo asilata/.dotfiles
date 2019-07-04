@@ -137,6 +137,7 @@
          ("C-c v" . ivy-push-view)
          ("C-c V" . ivy-pop-view))
   :config
+  (use-package ivy-hydra :ensure t)
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t))
 
@@ -314,6 +315,16 @@
             (visual-line-mode 1)
             (yas-minor-mode 0)
             ))
+
+(use-package ivy-bibtex
+  :ensure t
+  :config
+  (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
+                                (t . ivy--regex-plus)))
+  (setq bibtex-completion-bibliography
+        '("~/Bibliography/math.bib"))
+  (setq bibtex-completion-library-path '("~/Papers"))
+  (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
 
 (use-package haskell-mode
   :ensure t
