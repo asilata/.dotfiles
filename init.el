@@ -257,6 +257,10 @@
               (orgtbl-mode 1)
               (auto-complete-mode 1))))
 
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-c m c" . mc/edit-lines)))
+
 (use-package sage-shell-mode
   :ensure t
   :config
@@ -399,6 +403,17 @@
 
 (use-package org-chef
   :ensure t)
+
+(use-package org-noter
+  :ensure t
+  :config
+  (golden-ratio-mode 0))
+
+;; PDF tools
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-width))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)
