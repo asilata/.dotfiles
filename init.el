@@ -77,11 +77,6 @@
                                             (abbreviate-file-name (buffer-file-name))
                                           (buffer-name))
                                         "%b")))
-(use-package golden-ratio
-  :ensure t
-  :config
-  (golden-ratio-mode 1))
-
 (use-package rainbow-mode
   :mode "\\.\\(el|scss|sass\\)")
 
@@ -136,49 +131,25 @@
   :ensure t
   :bind (("M-s" . avy-goto-char-timer)))
 
-(use-package icomplete
+(use-package ivy
   :ensure t
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view))
   :config
-  (set-default 'imenu-auto-rescan t)
-  (icomplete-mode 1) ;Show completions in minibuffer
-  )
+  (use-package ivy-hydra :ensure t)
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t))
 
-(use-package ido
+(use-package swiper
   :ensure t
-  :config
-  (use-package ido-vertical-mode
-    :ensure t
-    :config
-    (ido-vertical-mode 1)
-    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-    (setq ido-vertical-show-count t))
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching 1
-        ido-create-new-buffer 'always
-        ido-everywhere 1
-        ido-use-filename-at-point 'guess
-        ido-max-prospects 10
-        ido-default-file-method 'selected-window
-        ido-case-fold 1)
-  (ido-mode 1))
+  :bind (("C-s" . swiper)))
 
-(use-package ido-completing-read+
+(use-package counsel
   :ensure t
-  :config
-  (ido-ubiquitous-mode 1))
-
-(use-package ido-vertical-mode
-  :ensure t
-  :config
-  (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-  (setq ido-vertical-show-count t))
-
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex))
-  :config
-  (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x C-g" . counsel-git)))
 
 (use-package smart-mode-line
   :ensure t
@@ -256,6 +227,10 @@
             (lambda ()
               (orgtbl-mode 1)
               (auto-complete-mode 1))))
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-c m c" . mc/edit-lines)))
 
 (use-package sage-shell-mode
   :ensure t
@@ -341,6 +316,16 @@
             (yas-minor-mode 0)
             ))
 
+(use-package ivy-bibtex
+  :ensure t
+  :config
+  (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
+                                (t . ivy--regex-plus)))
+  (setq bibtex-completion-bibliography
+        '("~/Bibliography/math.bib"))
+  (setq bibtex-completion-library-path '("~/Papers"))
+  (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
+
 (use-package haskell-mode
   :ensure t
   :config
@@ -399,6 +384,17 @@
 
 (use-package org-chef
   :ensure t)
+
+(use-package org-noter
+  :ensure t
+  :config
+  (golden-ratio-mode 0))
+
+;; PDF tools
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-width))
 
 ;; Macaulay 2 start
 (load "emacs-Macaulay2.el" t)

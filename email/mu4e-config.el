@@ -26,7 +26,7 @@
           :vars
           '((mu4e-sent-folder . "/ANU/Sent Items")
             (mu4e-drafts-folder . "/ANU/Drafts")
-            (mu4e-trash-folder . "/ANU/Trash")
+            (mu4e-trash-folder . "/ANU/Deleted Items")
             (mu4e-refile-folder . "/ANU/Archive")
             (smtpmail-smtp-server . "smtp.office365.com")
             (mu4e-sent-messages-behavior . sent)
