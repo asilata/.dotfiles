@@ -296,7 +296,15 @@
   :ensure t
   :defer t
   :config
-  (use-package bibretrieve :ensure t)
+  (use-package bibretrieve
+    :config
+    (add-hook
+     'bibretrieve-pre-write-bib-items-hook
+     (lambda ()
+       (mark-whole-buffer)
+       (shell-command-on-region
+        (point-min) (point-max)
+        "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
   (use-package auto-complete-auctex :ensure t)
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
@@ -395,6 +403,7 @@
 
 ;; PDF tools
 (use-package pdf-tools
+  :ensure t
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-width))
