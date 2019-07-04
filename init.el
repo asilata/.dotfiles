@@ -200,6 +200,13 @@
 ;; Clean up old buffers.
 (use-package midnight)
 
+
+;; Completion
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode 1))
+
 ;;; Git
 (use-package magit
   :ensure t
@@ -225,8 +232,7 @@
   :config
   (add-hook 'markdown-mode-hook
             (lambda ()
-              (orgtbl-mode 1)
-              (auto-complete-mode 1))))
+              (orgtbl-mode 1))))
 
 (use-package multiple-cursors
   :ensure t
@@ -287,11 +293,6 @@
     (markdown-mode)))
 
 ;;; Mode-specific hooks
-(use-package auto-complete
-  :ensure t
-  :config
-  (ac-flyspell-workaround))
-
 (use-package auctex
   :ensure t
   :defer t
@@ -305,7 +306,6 @@
        (shell-command-on-region
         (point-min) (point-max)
         "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
-  (use-package auto-complete-auctex :ensure t)
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2)
@@ -319,7 +319,6 @@
 	    (TeX-global-PDF-mode 1)
             (flyspell-mode 1)
             (auto-fill-mode 0)
-            (auto-complete-mode 1)
             (setq TeX-view-program-list '(("Okular" "okular %o")))
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
