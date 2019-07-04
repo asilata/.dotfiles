@@ -33,8 +33,9 @@
         ("longterm" . ?l)
         ("reading" . ?r)
         ("annoying" . ?a)
-        ("shared")
+        ("shared" . ?h)
         ("email" . ?e)
+        ("shopping" . ?b)
         ))
 
 (setq org-tag-faces
