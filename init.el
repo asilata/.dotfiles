@@ -136,49 +136,18 @@
   :ensure t
   :bind (("M-s" . avy-goto-char-timer)))
 
-(use-package icomplete
+(use-package counsel
   :ensure t
+  :bind (("C-s" . swiper)
+         ("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x C-g" . counsel-git)
+         ("C-c C-r" . ivy-resume)
+         ("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view))
   :config
-  (set-default 'imenu-auto-rescan t)
-  (icomplete-mode 1) ;Show completions in minibuffer
-  )
-
-(use-package ido
-  :ensure t
-  :config
-  (use-package ido-vertical-mode
-    :ensure t
-    :config
-    (ido-vertical-mode 1)
-    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-    (setq ido-vertical-show-count t))
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching 1
-        ido-create-new-buffer 'always
-        ido-everywhere 1
-        ido-use-filename-at-point 'guess
-        ido-max-prospects 10
-        ido-default-file-method 'selected-window
-        ido-case-fold 1)
-  (ido-mode 1))
-
-(use-package ido-completing-read+
-  :ensure t
-  :config
-  (ido-ubiquitous-mode 1))
-
-(use-package ido-vertical-mode
-  :ensure t
-  :config
-  (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-  (setq ido-vertical-show-count t))
-
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex))
-  :config
-  (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t))
 
 (use-package smart-mode-line
   :ensure t
