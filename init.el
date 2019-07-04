@@ -131,18 +131,24 @@
   :ensure t
   :bind (("M-s" . avy-goto-char-timer)))
 
-(use-package counsel
+(use-package ivy
   :ensure t
-  :bind (("C-s" . swiper)
-         ("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x C-g" . counsel-git)
-         ("C-c C-r" . ivy-resume)
+  :bind (("C-c C-r" . ivy-resume)
          ("C-c v" . ivy-push-view)
          ("C-c V" . ivy-pop-view))
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t))
+
+(use-package swiper
+  :ensure t
+  :bind (("C-s" . swiper)))
+
+(use-package counsel
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x C-g" . counsel-git)))
 
 (use-package smart-mode-line
   :ensure t
