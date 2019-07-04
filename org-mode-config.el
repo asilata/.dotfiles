@@ -62,6 +62,12 @@
 
 ;; Syntax highlighting
 (setq org-highlight-latex-and-related '(latex))
+;; (add-to-list 'org-latex-classes '("amsart" "\\documentclass{amsart}"
+;;                                   ("\\section{%s}" . "\\section*{%s}")
+;;                                   ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 ;; Agenda customization
 (setq org-agenda-window-setup 'current-window)
