@@ -213,6 +213,12 @@
   :bind (([f6] . magit-status)))
 
 ;;; Programming
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
+  (counsel-projectile-mode 1))
+
 (use-package lean-mode
   :ensure t
   :config
@@ -363,7 +369,7 @@
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :demand t
-  :bind (("M-p" . mml-secure-message-sign-pgpmime))
+  :bind (("C-c p" . mml-secure-message-sign-pgpmime))
   :config
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
