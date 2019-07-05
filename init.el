@@ -318,17 +318,17 @@
 ;;; Mode-specific hooks
 (use-package auctex
   :ensure t
-  :defer t
-  :config
+  :init
   (use-package bibretrieve
     :config
     (add-hook
      'bibretrieve-pre-write-bib-items-hook
      (lambda ()
-       (mark-whole-buffer)
        (shell-command-on-region
         (point-min) (point-max)
         "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
+  :defer t
+  :config
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2)
