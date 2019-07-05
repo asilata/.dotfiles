@@ -89,7 +89,7 @@
         )
   )
 
-;;; Colour themes
+;;; Colour themes and prettification
 (use-package zenburn-theme
   :ensure t
   :config
@@ -99,6 +99,22 @@
      'zenburn
      `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))))
   )
+
+(use-package all-the-icons-dired
+  :ensure t
+  :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+
+(use-package all-the-icons-ivy
+  :ensure t
+  :config
+  (all-the-icons-ivy-setup))
+
+(use-package dired-sidebar
+  :ensure t
+  :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
+  :commands
+  (dired-sidebar-toggle-sidebar))
 
 ;;; Editing
 (use-package smartparens
@@ -402,9 +418,7 @@
   :ensure t)
 
 (use-package org-noter
-  :ensure t
-  :config
-  (golden-ratio-mode 0))
+  :ensure t)
 
 ;; PDF tools
 (use-package pdf-tools
