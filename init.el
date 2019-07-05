@@ -246,7 +246,8 @@
 (use-package flycheck
   :ensure t
   :config
-  (global-flycheck-mode))
+  (global-flycheck-mode)
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (use-package markdown-mode
   :ensure t
@@ -451,3 +452,7 @@
 
 ;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars callargs cl-functions)
+;; End:

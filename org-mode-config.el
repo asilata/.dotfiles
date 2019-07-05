@@ -168,3 +168,7 @@
                        (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
                 (org-todo 'todo)))))))
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars callargs)
+;; End:
