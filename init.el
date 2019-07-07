@@ -76,11 +76,6 @@
                                             (abbreviate-file-name (buffer-file-name))
                                           (buffer-name))
                                         "%b")))
-(use-package golden-ratio
-  :ensure t
-  :config
-  (golden-ratio-mode 1))
-
 (use-package rainbow-mode
   :mode "\\.\\(el|scss|sass\\)")
 
@@ -93,12 +88,18 @@
         )
   )
 
-;;; Colour themes
+;;; Colour themes and prettification
 (use-package zenburn-theme
   :ensure t
   :config
   (load-theme 'zenburn t)
   )
+
+(use-package dired-sidebar
+  :ensure t
+  :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
+  :commands
+  (dired-sidebar-toggle-sidebar))
 
 ;;; Editing
 (use-package smartparens
@@ -131,18 +132,25 @@
   :ensure t
   :bind (("M-s" . avy-goto-char-timer)))
 
-(use-package counsel
+(use-package ivy
   :ensure t
-  :bind (("C-s" . swiper)
-         ("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x C-g" . counsel-git)
-         ("C-c C-r" . ivy-resume)
+  :bind (("C-c C-r" . ivy-resume)
          ("C-c v" . ivy-push-view)
          ("C-c V" . ivy-pop-view))
   :config
+  (use-package ivy-hydra :ensure t)
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t))
+
+(use-package swiper
+  :ensure t
+  :bind (("C-s" . swiper)))
+
+(use-package counsel
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x C-g" . counsel-git)))
 
 (use-package smart-mode-line
   :ensure t
@@ -193,12 +201,25 @@
 ;; Clean up old buffers.
 (use-package midnight)
 
+
+;; Completion
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode 1))
+
 ;;; Git
 (use-package magit
   :ensure t
   :bind (([f6] . magit-status)))
 
 ;;; Programming
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
+  (counsel-projectile-mode 1))
+
 (use-package conf-mode
   :mode ("rc$"))
 
@@ -208,8 +229,14 @@
   :config
   (add-hook 'markdown-mode-hook
             (lambda ()
-              (orgtbl-mode 1)
-              (auto-complete-mode 1))))
+              (orgtbl-mode 1))))
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-c m c" . mc/edit-lines)
+         ("C-c m n" . mc/mark-next-like-this)
+         ("C-c m p" . mc/mark-previous-like-this)
+         ("C-c m a" . mc/mark-all-like-this)))
 
 
 (use-package textile-mode
@@ -257,17 +284,19 @@
     (markdown-mode)))
 
 ;;; Mode-specific hooks
-(use-package auto-complete
-  :ensure t
-  :config
-  (ac-flyspell-workaround))
-
 (use-package auctex
   :ensure t
+  :init
+  (use-package bibretrieve
+    :config
+    (add-hook
+     'bibretrieve-pre-write-bib-items-hook
+     (lambda ()
+       (shell-command-on-region
+        (point-min) (point-max)
+        "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
   :defer t
   :config
-  (use-package bibretrieve :ensure t)
-  (use-package auto-complete-auctex :ensure t)
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2)
@@ -281,13 +310,20 @@
 	    (TeX-global-PDF-mode 1)
             (flyspell-mode 1)
             (auto-fill-mode 0)
-            (auto-complete-mode 1)
             (setq TeX-view-program-list '(("Okular" "okular %o")))
             (setq TeX-view-program-selection '((output-pdf "Okular")))
             (reftex-mode 1)
             (visual-line-mode 1)
             (yas-minor-mode 0)
             ))
+
+(use-package ivy-bibtex
+  :ensure t
+  :config
+  (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
+                                (t . ivy--regex-plus)))
+  (setq bibtex-completion-bibliography
+        '("~/Projects/Bibliography/math.bib")))
 
 (use-package haskell-mode
   :ensure t

@@ -33,8 +33,9 @@
         ("longterm" . ?l)
         ("reading" . ?r)
         ("annoying" . ?a)
-        ("shared")
+        ("shared" . ?h)
         ("email" . ?e)
+        ("shopping" . ?b)
         ))
 
 (setq org-tag-faces
@@ -62,6 +63,14 @@
 
 ;; Syntax highlighting
 (setq org-highlight-latex-and-related '(latex))
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("amsart" "\\documentclass[a4paper]{amsart}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;; Agenda customization
 (setq org-agenda-window-setup 'current-window)
