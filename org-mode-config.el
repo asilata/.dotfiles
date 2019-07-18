@@ -11,6 +11,7 @@
 (setq org-refile-targets
       '((org-agenda-files :maxlevel . 5)))
 (setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
 
 ;; Keywords
 (setq org-todo-keywords
