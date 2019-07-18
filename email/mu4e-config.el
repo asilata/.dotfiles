@@ -50,7 +50,7 @@
             (mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts")
             (mu4e-trash-folder . "/Gmail/[Gmail]/Bin")
             (mu4e-refile-folder . "/Gmail/[Gmail]/All Mail")
-            (smtpmail-smtp-server . "smtp.office365.com")
+            (smtpmail-smtp-server . "smtp.gmail.com")
             (mu4e-sent-messages-behavior . delete)
             (user-mail-address . "asilata@gmail.com")
             (mu4e-reply-to-address . "asilata@gmail.com")))
@@ -153,3 +153,8 @@
   )
 
 ;; Colours
+
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars callargs cl-functions)
+;; End:
