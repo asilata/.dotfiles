@@ -159,7 +159,7 @@
 
 (use-package swiper
   :ensure t
-  :bind (("C-s" . swiper)))
+  :bind (("C-s" . swiper-isearch)))
 
 (use-package counsel
   :ensure t
