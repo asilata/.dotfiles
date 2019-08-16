@@ -88,15 +88,15 @@
           :key ?g)
         ,(make-mu4e-bookmark
           :name  "Reasonable but unread"
-          :query "flag:unread AND (maildir:'ANU/INBOX' OR tag:\\\\Inbox OR tag:\\\\Important)"
+          :query "flag:unread AND (maildir:\"ANU/INBOX\" OR tag:\\\\Inbox OR tag:\\\\Important)"
           :key ?u)
         ,(make-mu4e-bookmark
           :name "Today and untrashed"
-          :query "date:today..now AND NOT (flag:trashed  OR maildir:'ANU/Trash' OR maildir:\"/Gmail/[Gmail]/Bin\")"
+          :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
           :key ?t)
         ,(make-mu4e-bookmark
           :name "Last week and untrashed"
-          :query "date:7d..now AND NOT (flag:trashed  OR maildir:'ANU/Trash' OR maildir:\"/Gmail/[Gmail]/Bin\")"
+          :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
           :key ?w)
         ))
 
@@ -144,8 +144,8 @@
   (setq mu4e-alert-interesting-mail-query
         (concat
          "flag:unread"
-         " AND NOT maildir: /[Gmail]/Bin"
-         " AND NOT maildir: /ANU/Trash"))
+         " AND NOT maildir:\"/Gmail/[Gmail]/Bin\""
+         " AND NOT maildir:\"/ANU/Deleted Items\""))
   (mu4e-alert-set-default-style 'libnotify)
   (setq mu4e-alert-email-notification-types '(subjects))
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
