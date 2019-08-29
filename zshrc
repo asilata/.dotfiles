@@ -80,4 +80,4 @@ fi
 eval "$(direnv hook zsh)"
 
 # Path including cabal
-export PATH=~/.cabal/bin:$PATH
+export PATH=~/.local/bin:~/.cabal/bin:$PATH
