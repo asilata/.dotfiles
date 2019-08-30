@@ -55,6 +55,11 @@
          auto-package-update-interval 5)
    (auto-package-update-maybe))
 
+;;; Use paradox in the package management menu
+(use-package paradox
+  :config
+  (paradox-enable))
+
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
