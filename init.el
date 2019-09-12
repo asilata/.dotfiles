@@ -172,6 +172,10 @@
          ("C-x C-f" . counsel-find-file)
          ("C-x C-g" . counsel-git)))
 
+(use-package which-key :ensure t
+  :config
+  (which-key-mode 1))
+
 (use-package smart-mode-line
   :ensure t
   :config
