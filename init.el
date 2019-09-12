@@ -336,27 +336,29 @@
        (shell-command-on-region
         (point-min) (point-max)
         "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
+  (use-package auctex-latexmk
+    :ensure t
+    :config
+    (auctex-latexmk-setup))
   :defer t
   :config
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
-  (set-default 'preview-scale-function 2)
-  (use-package auctex-latexmk
-    :ensure t
-    :config
-    (auctex-latexmk-setup)))
+  (set-default 'preview-scale-function 2))
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-global-PDF-mode 1)
             (flyspell-mode 1)
             (auto-fill-mode 0)
-            (setq TeX-view-program-list '(("Okular" "okular %o")))
-            (setq TeX-view-program-selection '((output-pdf "Okular")))
-            (reftex-mode 1)
+            (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+            (TeX-source-correlate-mode 1)
             (visual-line-mode 1)
             (yas-minor-mode 0)
+            (reftex-mode 1)
             ))
+
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 
 (use-package ivy-bibtex
   :ensure t
