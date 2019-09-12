@@ -57,7 +57,12 @@
 
 ;;; Use paradox in the package management menu
 (use-package paradox
+  :ensure t
+  :init
+  (setq paradox-github-token
+        (cadr (auth-source-user-and-password "api.github.com" "asilata")))
   :config
+  (setq paradox-automatically-star t)
   (paradox-enable))
 
 ;;; Buffer customizations
