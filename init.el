@@ -175,7 +175,15 @@
   :ensure t
   :bind (("M-x" . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
-         ("C-x C-g" . counsel-git)))
+         ("C-x C-g" . counsel-git)
+         ("C-h v" . counsel-describe-variable)
+         ("C-h f" . counsel-describe-function)))
+
+(use-package ivy-rich
+  :ensure t
+  :after ivy
+  :config
+  (ivy-rich-mode 1))
 
 (use-package which-key :ensure t
   :config
