@@ -257,6 +257,14 @@
   (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
   (counsel-projectile-mode 1))
 
+(use-package dumb-jump
+  :ensure t
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g b" . dumb-jump-back))
+  :config
+  (setq dumb-jump-selector 'ivy))
+
 (use-package lean-mode
   :ensure t
   :config
