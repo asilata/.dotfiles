@@ -183,6 +183,7 @@
   :ensure t
   :after ivy
   :config
+  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
   (ivy-rich-mode 1))
 
 (use-package which-key :ensure t
