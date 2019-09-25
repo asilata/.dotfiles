@@ -62,6 +62,13 @@
   (setq paradox-automatically-star t)
   (paradox-enable))
 
+;;; EXWM
+(use-package exwm
+  :ensure t
+  :config
+  (require 'exwm-config)
+  (exwm-config-default))
+
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
