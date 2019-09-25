@@ -28,11 +28,8 @@
 
 ;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
-;(require 'melpa)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives
              '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
@@ -49,11 +46,11 @@
 
 ;;; Auto-update packages every 5 days
 (use-package auto-package-update
-   :ensure t
-   :config
-   (setq auto-package-update-delete-old-versions t
-         auto-package-update-interval 5)
-   (auto-package-update-maybe))
+  :ensure t
+  :config
+  (setq auto-package-update-delete-old-versions t
+        auto-package-update-interval 5)
+  (auto-package-update-maybe))
 
 ;;; Use paradox in the package management menu
 (use-package paradox
@@ -404,7 +401,7 @@
     (use-package eldoc
       :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
     (font-lock-add-keywords 'emacs-lisp-mode
-			'(("use-package" . font-lock-keyword-face)))))
+                            '(("use-package" . font-lock-keyword-face)))))
 
 (use-package scss-mode
   :ensure t
