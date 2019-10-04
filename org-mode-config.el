@@ -74,7 +74,7 @@
          :immediate-finish t)
         ("h" "Health")
         ("hw" "Weight" table-line (file+headline ,(concat org-default-directory "health.org") "Weight")
-         "|%<%Y-%m-%d>|%?|")
+         "|%<%Y-%m-%d>|%?||")
         ("m" "meeting" entry (file+headline org-default-notes-file "Meetings")
          "* MEETING Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
         ("c" "Calendar entry" entry (file ,(concat org-default-directory "calendar.org"))
