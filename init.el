@@ -3,6 +3,7 @@
 ;; (Inspired by emacs-prelude)
 ;;==============================================================================
 
+;;; Initial boilerplate
 (require 'cl)
 
 (unless (boundp 'user-emacs-directory)
@@ -13,7 +14,7 @@
 (defvar local-config-directory (concat user-emacs-directory "local/")
   "Machine-local configuration files go here.")
 
-;; Create these directories if they don't exist.
+;;;; Create these directories if they don't exist.
 (mapc (lambda (dir)
         (unless (file-exists-p dir)
           (make-directory dir)))
@@ -23,10 +24,11 @@
 (let ((default-directory user-opt-directory))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; To fix cursor colour bug...
+;;;; To fix cursor colour bug...
 (setq inhibit-x-resources 't)
 
-;;; Package management with MELPA (in addition to the GNU archive).
+;;; Package management
+;;;; Package management with MELPA (in addition to the GNU archive).
 (require 'package)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/") t)
@@ -36,7 +38,7 @@
 
 (setq url-http-attempt-keepalives nil)
 
-;;; Install use-package if not installed
+;;;; Install use-package if not installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package)
@@ -44,7 +46,7 @@
 (eval-when-compile
   (require 'use-package))
 
-;;; Auto-update packages every 5 days
+;;;; Auto-update packages every 5 days
 (use-package auto-package-update
   :ensure t
   :config
@@ -52,7 +54,7 @@
         auto-package-update-interval 5)
   (auto-package-update-maybe))
 
-;;; Use paradox in the package management menu
+;;;; Use paradox in the package management menu
 (use-package paradox
   :ensure t
   :init
@@ -93,9 +95,11 @@
                                             (abbreviate-file-name (buffer-file-name))
                                           (buffer-name))
                                         "%b")))
-(use-package rainbow-mode
-  :mode "\\.\\(el|scss|sass\\)")
+;;;; Auto-revert buffers from files
+(setq global-auto-revert-mode 1)
+(setq auto-revert-interval 3600)
 
+;;;; Uniquify buffer names
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'forward
@@ -125,6 +129,9 @@
   :ensure t
   :config
   (all-the-icons-ivy-setup))
+
+(use-package rainbow-mode
+  :mode "\\.\\(el|scss|sass\\)")
 
 (use-package dired-sidebar
   :ensure t
@@ -157,8 +164,35 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
+;;;; Multiple cursors
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-c m c" . mc/edit-lines)
+         ("C-c m n" . mc/mark-next-like-this)
+         ("C-c m p" . mc/mark-previous-like-this)
+         ("C-c m a" . mc/mark-all-like-this)))
+
+;;;; Toggle comments function
+(defun toggle-comment-line-or-region (&optional arg)
+  "Toggle commenting on current line or region (ARG), then go to the next line."
+  (interactive)
+  (if (region-active-p)
+      (comment-or-uncomment-region (region-beginning) (region-end))
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
+  (forward-line))
+
+
+;;;; Outshine mode
+(use-package outshine
+  :ensure t
+  :init
+  (defvar outline-minor-mode-prefix "\M-#")
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'outshine-mode)
+  (add-hook 'LaTeX-mode-hook 'outshine-mode))
 
 ;;; Minibuffer and search
+;;;; Ivy, etc
 (use-package avy
   :ensure t
   :bind (("M-s" . avy-goto-char-timer)))
@@ -192,6 +226,7 @@
   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
   (ivy-rich-mode 1))
 
+;;;; Other goodies
 (use-package which-key :ensure t
   :config
   (which-key-mode 1))
@@ -213,12 +248,8 @@
 (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; Auto-revert buffers from files
-(setq global-auto-revert-mode 1)
-(setq auto-revert-interval 3600)
-
 ;;; Backup and cleanup
-;; Back up files
+;;;; Back up files
 (setq backup-by-copying t
       delete-old-versions t
       kept-old-versions 2
@@ -229,7 +260,7 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; Delete old backup files
+;;;; Delete old backup files
 (defun delete-old-backup-files ()
   "Delete backup files that have not been accessed in a month."
   (let ((month (* 60 60 24 7 30))
@@ -242,11 +273,11 @@
         (delete-file file)))))
 (delete-old-backup-files)
 
-;; Clean up old buffers.
+;;;; Clean up old buffers.
 (use-package midnight)
 
 
-;; Completion
+;;; Completion
 (use-package company
   :ensure t
   :config
@@ -258,6 +289,7 @@
   :bind (([f6] . magit-status)))
 
 ;;; Programming
+;;;; Projects and jumping
 (use-package counsel-projectile
   :ensure t
   :config
@@ -272,87 +304,32 @@
   :config
   (setq dumb-jump-selector 'ivy))
 
+;;;; Assorted packages
+;;;;; Lean
 (use-package lean-mode
   :ensure t
   :config
   (setq lean-rootdir "~/opt/lean-nightly-linux"))
 
+;;;;; Conf-mode
 (use-package conf-mode
   :mode ("rc$"))
 
+;;;;; Flycheck
 (use-package flycheck
   :ensure t
   :config
   (global-flycheck-mode)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode)
-  :config
-  (add-hook 'markdown-mode-hook
-            (lambda ()
-              (orgtbl-mode 1))))
-
-(use-package multiple-cursors
-  :ensure t
-  :bind (("C-c m c" . mc/edit-lines)
-         ("C-c m n" . mc/mark-next-like-this)
-         ("C-c m p" . mc/mark-previous-like-this)
-         ("C-c m a" . mc/mark-all-like-this)))
-
-(use-package sage-shell-mode
+;;;;; Haskell
+(use-package haskell-mode
   :ensure t
   :config
-  (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
-  (sage-shell:define-alias)
-  (setq sage-shell:use-prompt-toolkit t))
+  (add-hook 'haskell-mode-hook
+            'turn-on-haskell-indentation))
 
-(use-package textile-mode
-  :ensure t
-  :mode ("\\.textile\\'" . textile-mode)
-  :config
-  (add-hook 'textile-mode-hook
-            'turn-on-orgtbl))
-
-(use-package web-mode
-  :ensure t
-  :mode ("\\.html?\\'" . web-mode)
-  :config
-  (setq web-mode-enable-auto-pairing t
-        web-mode-enable-auto-pairing t))
-
-(use-package yaml-mode
-  :ensure t)
-
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
-
-(defun toggle-comment-line-or-region (&optional arg)
-  "Toggle commenting on current line or region (ARG), then go to the next line."
-  (interactive)
-  (if (region-active-p)
-      (comment-or-uncomment-region (region-beginning) (region-end))
-    (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
-  (forward-line))
-
-;; Jekyll stuff (new post function, modified from hyde-mode's version)
-(defun jekyll-new-post (title directory)
-  "Create a new post titled TITLE in DIRECTORY."
-  (interactive "MEnter post title: \nDEnter directory to save in: ")
-  (let ((post-file-name (expand-file-name (format "%s/%s.markdown"
-                                                  directory
-                                                  (concat (format-time-string "%Y-%m-%d-") (downcase (replace-regexp-in-string " " "-" title)))))))
-    (find-file post-file-name)
-    (insert "---\n")
-    (insert (format "title: \"%s\"\n" title))
-    (insert (format "date: \"%s\"\n" (format-time-string "%Y-%m-%d %H:%M:%S %z")))
-    (insert "---\n\n")
-    (markdown-mode)))
-
-;;; Mode-specific hooks
+;;;;; LaTeX etc
 (use-package auctex
   :ensure t
   :init
@@ -398,12 +375,8 @@
   (setq bibtex-completion-library-path '("~/Papers"))
   (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
 
-(use-package haskell-mode
-  :ensure t
-  :config
-  (add-hook 'haskell-mode-hook
-            'turn-on-haskell-indentation))
 
+;;;;; Lisp
 (use-package lisp-mode
   :init
   (progn
@@ -412,6 +385,27 @@
     (font-lock-add-keywords 'emacs-lisp-mode
                             '(("use-package" . font-lock-keyword-face)))))
 
+;;;;; Macaulay 2
+(load "emacs-Macaulay2.el" t)
+
+;;;;; Markdown
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode)
+  :config
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (orgtbl-mode 1))))
+
+;;;;; Sage
+(use-package sage-shell-mode
+  :ensure t
+  :config
+  (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
+  (sage-shell:define-alias)
+  (setq sage-shell:use-prompt-toolkit t))
+
+;;;;; SCSS
 (use-package scss-mode
   :ensure t
   :mode "\\.\\(scss|sass\\)"
@@ -420,8 +414,56 @@
             (lambda ()
               (setq scss-compile-at-save nil))))
 
+;;;;; Singular
+(add-to-list 'load-path "/usr/share/Singular/emacs")
+(autoload 'singular "singular"
+  "Start Singular using default values." t)
+(autoload 'singular-other "singular"
+  "Ask for arguments and start Singular." t)
+(setq auto-mode-alist (cons '("\\.sing\\'" . c++-mode) auto-mode-alist))
 
-;; Email
+;;;;; Textile
+(use-package textile-mode
+  :ensure t
+  :mode ("\\.textile\\'" . textile-mode)
+  :config
+  (add-hook 'textile-mode-hook
+            'turn-on-orgtbl))
+
+;;;;; Web-mode
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html?\\'" . web-mode)
+  :config
+  (setq web-mode-enable-auto-pairing t
+        web-mode-enable-auto-pairing t))
+
+;;;;; YAML
+(use-package yaml-mode
+  :ensure t)
+
+;;;;; Yasnippet
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
+
+;;;; Jekyll stuff (new post function, modified from hyde-mode's version)
+(defun jekyll-new-post (title directory)
+  "Create a new post titled TITLE in DIRECTORY."
+  (interactive "MEnter post title: \nDEnter directory to save in: ")
+  (let ((post-file-name (expand-file-name (format "%s/%s.markdown"
+                                                  directory
+                                                  (concat (format-time-string "%Y-%m-%d-") (downcase (replace-regexp-in-string " " "-" title)))))))
+    (find-file post-file-name)
+    (insert "---\n")
+    (insert (format "title: \"%s\"\n" title))
+    (insert (format "date: \"%s\"\n" (format-time-string "%Y-%m-%d %H:%M:%S %z")))
+    (insert "---\n\n")
+    (markdown-mode)))
+
+;;; Email
+;;;; mu4e
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :demand t
@@ -431,10 +473,11 @@
     (if (file-exists-p mu4e-config-file)
         (load mu4e-config-file))))
 
-;; GPG
+;;;; GPG
 (setq epg-gpg-program "gpg2")
 
-;; Org-mode
+;;; Org-mode
+;;;; Org
 (use-package org
   :bind (("C-c a" . 'org-agenda))
   :config
@@ -447,51 +490,44 @@
               (visual-line-mode 1)
               (org-bullets-mode 1))))
 
-;; Org and reveal
+;;;; Org-reveal
 (use-package ox-reveal
   :ensure t
   :config
   (use-package htmlize :ensure t)
   (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
 
+;;;; Org-chef
 (use-package org-chef
   :ensure t)
 
+;;;; Org-noter
 (use-package org-noter
   :ensure t)
 
-;; PDF tools
+;;; PDF tools
 (use-package pdf-tools
   :ensure t
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-width))
 
-;; Macaulay 2 start
-(load "emacs-Macaulay2.el" t)
-;; Macaulay 2 end
 
-;; Singular stuff
-(add-to-list 'load-path "/usr/share/Singular/emacs")
-(autoload 'singular "singular"
-  "Start Singular using default values." t)
-(autoload 'singular-other "singular"
-  "Ask for arguments and start Singular." t)
-(setq auto-mode-alist (cons '("\\.sing\\'" . c++-mode) auto-mode-alist))
-
-;; Load local settings if they exist.
+;;; Endnotes
+;;;; Load local settings if they exist.
 (when (file-exists-p local-config-directory)
   (mapc 'load (directory-files local-config-directory 't "^[^#].*el$")))
 
-;; Made new custom file (for the output of custom-set-variables, etc).
+;;;; New custom file (for the output of custom-set-variables, etc).
 (setq custom-file (concat local-config-directory "custom.el"))
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load custom-file)
 
-;; Recompile all previously byte-compiled files in the directory.
+;;;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
 
+;;;; Local variables
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars callargs cl-functions)
 ;; End:
