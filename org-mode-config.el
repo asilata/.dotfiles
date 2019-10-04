@@ -23,6 +23,8 @@
 	("CANCELLED" :foreground "#CC9393" :weight bold :strike-through "#CC9393")
         ("SHELVED" :foreground "#DFAF8F" :weight bold)
         ("MEETING" :foreground "#8CD0D3" :weight bold)
+        ("BOOKMARK" :foreground "#DC8CC3" :weight bold)
+        ("READING" :foreground "#F0DFAF" :weight bold)
         ))
 
 (setq org-tag-persistent-alist
@@ -46,11 +48,23 @@
 
 ;;capture todo items using C-c c t
 (global-set-key (kbd "C-c c") 'org-capture)
+(use-package orca
+  :ensure t
+  :config
+  (setq orca-handler-list
+        `((orca-handler-current-buffer
+           "\\* Tasks")
+          (orca-handler-file
+           ,(concat org-default-directory "bookmarks.org")
+           "\\* Bookmarks"))))
+
 (setq org-capture-templates
       `(("t" "todo" entry (file+headline org-default-notes-file "Tasks")
          "* TODO %?\n%a\n" :clock-in t :clock-resume t)
-        ("r" "respond" entry (file+headline org-default-notes-file "Emails")
+        ("e" "respond" entry (file+headline org-default-notes-file "Emails")
          "* TODO Reply to %:from (%:subject) :email:\n  DEADLINE:%^{Deadline}t\n  %a" :immediate-finish t)
+        ("r" "reading" entry (file ,(concat org-default-directory "books.org"))
+         "* %^{Status|READING} %^{Title} %^{AUTHOR}p \n  - Recorded on: %U" :empty-lines 1 :immediate-finish t)
         ("j" "journal" entry (file+datetree ,(concat org-default-directory "journal.org.gpg"))
          "* %^{Title}\n  %U\n  %?" :empty-lines 1 :clock-in t :clock-resume t)
         ("p" "shared journal" entry (file+datetree ,(concat org-shared-directory "journal.org.gpg"))
@@ -67,7 +81,11 @@
          "* %?\n%t\n")
         ("f" "Recipes" entry (file ,(concat org-default-directory "recipes.org"))
          "%(org-chef-get-recipe-from-url)"
-         :empty-lines 1)))
+         :empty-lines 1)
+        ;; ("F" "Recipes" entry (file ,(concat org-default-directory "recipes.org"))
+        ;;  "%(org-chef-recipe-org-string (org-chef-fetch-recipe (caar org-stored-links))"
+        ;;  :empty-lines 1)
+        ("L" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")))
 
 ;; Org files customization
 (setq org-cycle-separator-lines 1)
