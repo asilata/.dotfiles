@@ -75,6 +75,7 @@
 (setq mu4e-use-fancy-chars t)
 (setq mu4e-attachment-dir "/tmp")
 (setq mu4e-view-show-images t)
+(setq mu4e-html2text-command 'mu4e-shr2text)
 
 ;; Bookmarks
 (setq mu4e-bookmarks
