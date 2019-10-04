@@ -1,4 +1,3 @@
-(setq helloworld "hihi")
 (setq exwm-input-global-keys
       `(
         ;; 's-q': Reset (to line-mode).
