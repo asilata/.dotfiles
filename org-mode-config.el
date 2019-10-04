@@ -1,4 +1,4 @@
-;; Org files locations
+;;; Org files locations
 (setq org-default-directory "~/Org/")
 (setq org-shared-directory "~/Org-shared/")
 (setq org-default-notes-file (concat org-default-directory "todo.org"))
@@ -6,6 +6,7 @@
       (append (file-expand-wildcards (concat org-default-directory "*.org"))
               (file-expand-wildcards (concat org-shared-directory "*.org"))))
 
+;;; Global options for notes and refiling
 (setq org-log-done t)
 (setq org-log-state-notes-insert-after-drawers t)
 (setq org-refile-targets
@@ -13,9 +14,10 @@
 (setq org-refile-use-outline-path 'file)
 (setq org-outline-path-complete-in-steps nil)
 
-;; Keywords
+;;; Keywords
 (setq org-todo-keywords
       '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)" "CANCELLED(c@)" "SHELVED(s)" "MEETING(m)")))
+
 (setq org-todo-keyword-faces
       '(("TODO" org-todo)
 	("DONE" org-done)
@@ -27,6 +29,7 @@
         ("READING" :foreground "#F0DFAF" :weight bold)
         ))
 
+;;; Tags
 (setq org-tag-persistent-alist
       '((:startgroup . nil)
         ("work" . ?w)
@@ -46,8 +49,10 @@
         ("service" . (:foreground "#8CD0D3" :weight bold))
         ("personal" . (:foreground "#8CD0D3" :weight bold))))
 
-;;capture todo items using C-c c t
+;;; Captures
 (global-set-key (kbd "C-c c") 'org-capture)
+
+;;;; Orca
 (use-package orca
   :ensure t
   :config
@@ -58,6 +63,7 @@
            ,(concat org-default-directory "bookmarks.org")
            "\\* Bookmarks"))))
 
+;;;; Capture templates
 (setq org-capture-templates
       `(("t" "todo" entry (file+headline org-default-notes-file "Tasks")
          "* TODO %?\n%a\n" :clock-in t :clock-resume t)
@@ -87,10 +93,10 @@
         ;;  :empty-lines 1)
         ("L" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")))
 
-;; Org files customization
+;;; Org files customization
 (setq org-cycle-separator-lines 1)
 
-;; Syntax highlighting
+;;; Syntax highlighting
 (setq org-highlight-latex-and-related '(latex))
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
@@ -101,24 +107,21 @@
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-;; Agenda customization
+;;; Agenda customization
+;;;; Viewing options
 (setq org-agenda-window-setup 'current-window)
 (setq org-deadline-warning-days 3)
-;;show me tasks scheduled or due in next fortnight
 (setq org-agenda-span 'fortnight)
-;;don't show tasks as scheduled if they are already shown as a deadline
 (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
 (setq org-agenda-skip-scheduled-if-done t)
-;;don't give awarning colour to tasks with impending deadlines
-;;if they are scheduled to be done
 (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
-;;don't show tasks that are scheduled or have deadlines in the
-;;normal todo list
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-log-done t)
 (setq org-pretty-entities t)
 (setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
+
+;;;; Custom agendas
 (setq org-agenda-custom-commands
       '(("c" "Comprehensive view"
          ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
@@ -144,7 +147,7 @@
                  (org-agenda-todo-ignore-scheduled 'all)))
           ))))
 
-;; Google calendar integration
+;;; Google calendar integration
 (use-package org-gcal
   :ensure t
   :config
@@ -160,13 +163,13 @@
                                ,(concat org-default-directory "algtop.org"))))
   (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync))))
 
-;; Encryption
+;;; Encryption
 (use-package org-crypt
   :config
   (setq org-crypt-key "D93ED1F5")
   (setq org-crypt-disable-auto-save t))
 
-;; Org journal
+;;; Org journal
 (use-package org-journal
   :ensure t
   :config
@@ -175,8 +178,8 @@
   (setq org-journal-file-format "%Y-%m-%d.org")
   )
 
-;; Custom functionality, etc
-
+;;; Custom functions
+;;;; Mark todo as done if all checkboxes are done
 (eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function auto-done-checkboxes)))
 
@@ -198,6 +201,7 @@
                   (org-todo 'done)
                 (org-todo 'todo)))))))
 
+;;; Local variables
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars callargs)
 ;; End:
