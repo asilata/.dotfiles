@@ -66,8 +66,10 @@
 (use-package exwm
   :ensure t
   :config
-  (require 'exwm-config)
-  (exwm-config-default))
+  (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
+    (if (file-exists-p exwm-config-file)
+        (load exwm-config-file)))
+  (exwm-enable))
 
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
