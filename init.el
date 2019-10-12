@@ -188,8 +188,8 @@
   :init
   (defvar outline-minor-mode-prefix "\M-#")
   :config
-  (add-hook 'emacs-lisp-mode-hook 'outshine-mode)
-  (add-hook 'LaTeX-mode-hook 'outshine-mode))
+  (setq outshine-use-speed-commands t)
+  (add-hook 'prog-mode-hook 'outshine-mode))
 
 ;;; Minibuffer and search
 ;;;; Ivy, etc
