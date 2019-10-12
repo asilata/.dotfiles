@@ -305,12 +305,6 @@
   (setq dumb-jump-selector 'ivy))
 
 ;;;; Assorted packages
-;;;;; Lean
-(use-package lean-mode
-  :ensure t
-  :config
-  (setq lean-rootdir "~/opt/lean-nightly-linux"))
-
 ;;;;; Conf-mode
 (use-package conf-mode
   :mode ("rc$"))
@@ -375,6 +369,12 @@
   (setq bibtex-completion-library-path '("~/Papers"))
   (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
 
+
+;;;;; Lean
+(use-package lean-mode
+  :ensure t
+  :config
+  (setq lean-rootdir "~/opt/lean-nightly-linux"))
 
 ;;;;; Lisp
 (use-package lisp-mode

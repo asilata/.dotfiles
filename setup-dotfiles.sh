@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+# * Initialise
 DOTFILES=~/.dotfiles
 
 # * Emacs
@@ -28,7 +29,7 @@ ln -s $DOTFILES/wm/exwm-config-file.el ~/.emacs.d/opt/exwm-config-file.el
 git config --global core.excludesfile "$HOME/.gitignore_global"
 ln -s $DOTFILES/gitignore_global ~/.gitignore_global
 
-# * To set up tablet scripts, uncomment the following.
+# * Tablet scripts
 # sudo ln -s $DOTFILES/tablet/cw-rotate /usr/local/bin/cw-rotate
 # sudo ln -s $DOTFILES/tablet/toggle-tablet /usr/local/bin/toggle-tablet
 
