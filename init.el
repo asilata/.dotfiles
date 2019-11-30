@@ -73,6 +73,12 @@
         (load exwm-config-file)))
   (exwm-enable))
 
+(use-package exwm-mff
+  :ensure t
+  :after exwm
+  :config
+  (exwm-mff-mode 1))
+
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
