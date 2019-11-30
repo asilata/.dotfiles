@@ -170,6 +170,10 @@
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 
+;;;; Objed
+(use-package objed
+  :ensure t)
+
 ;;;; Multiple cursors
 (use-package multiple-cursors
   :ensure t
@@ -350,6 +354,7 @@
     :config
     (auctex-latexmk-setup))
   :defer t
+  :bind (([f7] . TeX-error-overview))
   :config
   (use-package reftex :ensure t)
   (use-package smartparens-latex)
