@@ -85,13 +85,15 @@
          "* MEETING Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
         ("c" "Calendar entry" entry (file ,(concat org-default-directory "calendar.org"))
          "* %?\n%t\n")
-        ("f" "Recipes" entry (file ,(concat org-default-directory "recipes.org"))
+        ("f" "Recipes" entry (file ,(concat org-shared-directory "recipes.org"))
          "%(org-chef-get-recipe-from-url)"
          :empty-lines 1)
         ;; ("F" "Recipes" entry (file ,(concat org-default-directory "recipes.org"))
         ;;  "%(org-chef-recipe-org-string (org-chef-fetch-recipe (caar org-stored-links))"
         ;;  :empty-lines 1)
-        ("L" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")))
+        ("L" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")
+        ("l" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")
+        ))
 
 ;;; Org files customization
 (setq org-cycle-separator-lines 1)

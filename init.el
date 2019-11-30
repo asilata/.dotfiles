@@ -195,8 +195,12 @@
   (defvar outline-minor-mode-prefix "\M-#")
   :config
   (setq outshine-use-speed-commands t)
-  (add-hook 'prog-mode-hook 'outshine-mode))
+  (add-hook 'prog-mode-hook 'outshine-mode)
+  (add-hook 'LaTeX-mode-hook 'outshine-mode))
 
+;;;; Browse kill ring
+(use-package browse-kill-ring
+  :ensure t)
 ;;; Minibuffer and search
 ;;;; Ivy, etc
 (use-package avy
@@ -494,7 +498,8 @@
   (add-hook 'org-mode-hook
             (lambda ()
               (visual-line-mode 1)
-              (org-bullets-mode 1))))
+              (org-bullets-mode 1)))
+  (setq org-use-speed-commands t))
 
 ;;;; Org-reveal
 (use-package ox-reveal
@@ -511,12 +516,19 @@
 (use-package org-noter
   :ensure t)
 
+;;;; Org-pdfview
+(use-package org-pdfview
+  :ensure t
+  :config
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 ;;; PDF tools
 (use-package pdf-tools
   :ensure t
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-width))
+
+(use-package pdf-tools-org)
 
 
 ;;; Endnotes
