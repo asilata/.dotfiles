@@ -1,20 +1,20 @@
-;; Getting mail
+;;; Getting mail
 (setq mu4e-maildir "/home/asilata/Mail")
 (setq mu4e-get-mail-command "mbsync -a"
       mu4e-update-interval (* 60 15))
 (setq mu4e-change-filenames-when-moving t)
 
-;; Sending mail
+;;; Sending mail
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-smtp-service 587
       message-kill-buffer-on-exit t)
 
-;; Global user settings
+;;; Global user settings
 (setq user-full-name  "Asilata Bapat"
       mu4e-compose-signature "\nAsilata"
       mu4e-user-mail-address-list '("asilata.bapat@anu.edu.au" "asilata@gmail.com" "asilata@uga.edu" "asilata@math.uchicago.edu" "asilata@mit.edu"))
 
-;; Context switching
+;;; Context switching
 (setq mu4e-contexts
       `(,(make-mu4e-context
           :name "ANU"
@@ -57,12 +57,12 @@
         )
       )
 
-;; Indexing
+;;; Indexing
 (setq mu4e-index-cleanup nil
       ;mu4e-index-lazy-check t
       )
 
-;; mu4e display settings
+;;; mu4e display settings
 (setq mu4e-headers-date-format "  %_d %b"
       mu4e-headers-time-format "%_l:%M %P"
       mu4e-headers-fields
@@ -77,7 +77,7 @@
 (setq mu4e-view-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
 
-;; Bookmarks
+;;; Bookmarks
 (setq mu4e-bookmarks
       `(,(make-mu4e-bookmark
           :name "ANU Inbox"
@@ -101,13 +101,13 @@
           :key ?w)
         ))
 
-;; Custom functions
+;;; Custom functions
 ;; (defun my/delete-without-trashing ()
 ;;   (let (tfolder (mu4e-get-trash-folder (mu4e-message-at-point)))
 ;;     (mu4e-mark-set refile tfolder)))
 ;; (define-key mu4e-headers-mode-map (kbd "C-!") 'my/delete-without-trashing)
 
-;; Various hooks
+;;; Various hooks
 (add-hook 'mu4e-headers-found-hook
           (lambda () (setq truncate-lines t)))
 
@@ -127,14 +127,14 @@
           ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
           ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
 
-;;Maildirs extra
+;;; Maildirs extra
 (use-package mu4e-maildirs-extension
   :ensure t
   :config
   (mu4e-maildirs-extension)
   (setq mu4e-maildirs-extension-use-bookmarks t))
 
-;; Org mode integration
+;;; Org mode integration
 (require 'org-mu4e)
 (setq org-mu4e-link-query-in-headers-mode nil)
 
@@ -153,9 +153,7 @@
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
   )
 
-;; Colours
-
-
+;;; Endnotes
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars callargs cl-functions)
 ;; End:
