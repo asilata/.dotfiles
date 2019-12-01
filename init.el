@@ -491,6 +491,17 @@
 ;;;; GPG
 (setq epg-gpg-program "gpg2")
 
+;;; Elfeed
+(use-package elfeed
+  :ensure t
+  :config
+  (require 'elfeed-link)
+  (use-package elfeed-org :ensure t)
+  (elfeed-org)
+  (setq rmh-elfeed-org-files '("~/.elfeed/elfeed.org"))
+  (setq elfeed-search-title-max-width 1000)
+  (setq elfeed-use-curl nil))
+
 ;;; Org-mode
 ;;;; Org
 (use-package org
