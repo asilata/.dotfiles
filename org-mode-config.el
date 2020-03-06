@@ -122,6 +122,7 @@
 (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-scheduled 'all)
+(setq org-agenda-todo-list-sublevels nil)
 (setq org-log-done t)
 (setq org-pretty-entities t)
 (setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
@@ -166,7 +167,9 @@
                                ,(concat org-default-directory "calendar.org"))
                               ("es2hibml3t2m5le9nl83lq0boo@group.calendar.google.com" .
                                ,(concat org-default-directory "algtop.org"))))
-  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync))))
+  (setq org-gcal-up-days 7)
+  (setq org-gcal-down-days 7)
+  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch))))
 
 ;;; Encryption
 (use-package org-crypt
