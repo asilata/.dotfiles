@@ -16,7 +16,7 @@
 
 ;;; Keywords
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)" "CANCELLED(c@)" "SHELVED(s)" "MEETING(m)")))
+      '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)" "CANCELLED(c@)" "SHELVED(s)" "MEETING(m)" "ONGOING(o)")))
 
 (setq org-todo-keyword-faces
       '(("TODO" org-todo)
@@ -25,6 +25,7 @@
 	("CANCELLED" :foreground "#CC9393" :weight bold :strike-through "#CC9393")
         ("SHELVED" :foreground "#DFAF8F" :weight bold)
         ("MEETING" :foreground "#8CD0D3" :weight bold)
+        ("ONGOING" :foreground "#DC8CC3" :weight bold :italic t)
         ("BOOKMARK" :foreground "#DC8CC3" :weight bold)
         ("READING" :foreground "#F0DFAF" :weight bold)
         ))
@@ -139,12 +140,16 @@
                 ((org-agenda-overriding-header "Unscheduled tasks:")
                  (org-agenda-todo-ignore-deadlines 'all)
                  (org-agenda-todo-ignore-scheduled 'all)))
+          (todo "ONGOING"
+                ((org-agenda-overriding-header "Ongoing tasks:")
+                 (org-agenda-todo-ignore-deadlines 'all)
+                 (org-agenda-todo-ignore-scheduled 'all)))
           (agenda "" ((org-agenda-overriding-header "Upcoming week:")
                       (org-agenda-span 'week)
                       (org-agenda-start-day "+1d")
                       (org-agenda-start-on-weekday nil)
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
-          ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
+                      ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
                       ))
           (todo "WAITING|SHELVED"
                 ((org-agenda-overriding-header "Waiting or shelved tasks:")
