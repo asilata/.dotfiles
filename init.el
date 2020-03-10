@@ -126,6 +126,9 @@
      `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))))
   )
 
+(use-package all-the-icons
+  :ensure t)
+
 (use-package all-the-icons-dired
   :ensure t
   :config
