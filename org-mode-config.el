@@ -194,6 +194,25 @@
   (setq org-journal-file-format "%Y-%m-%d.org")
   )
 
+;;; Org roam
+(use-package org-roam
+  :hook 
+  (after-init . org-roam-mode)
+  :straight (:host github :repo "jethrokuan/org-roam")
+  :custom
+  (org-roam-directory (concat org-default-directory "Roam"))
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-show-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+
+(use-package company-org-roam
+  :after org-roam company org
+  :config
+  (company-org-roam-init))
+
 ;;; Custom functions
 ;;;; Mark todo as done if all checkboxes are done
 (eval-after-load 'org-list
