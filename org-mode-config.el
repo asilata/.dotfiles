@@ -55,7 +55,7 @@
 
 ;;;; Orca
 (use-package orca
-  :ensure t
+  :straight t
   :config
   (setq orca-handler-list
         `((orca-handler-current-buffer
@@ -163,7 +163,7 @@
 
 ;;; Google calendar integration
 (use-package org-gcal
-  :ensure t
+  :straight t
   :config
   (setq org-gcal-client-id
         (string-trim
@@ -187,7 +187,7 @@
 
 ;;; Org journal
 (use-package org-journal
-  :ensure t
+  :straight t
   :config
   (setq org-journal-dir (concat org-default-directory "journal/"))
   (setq org-journal-enable-encryption t)

@@ -129,7 +129,7 @@
 
 ;;; Maildirs extra
 (use-package mu4e-maildirs-extension
-  :ensure t
+  :straight t
   :config
   (mu4e-maildirs-extension)
   (setq mu4e-maildirs-extension-use-bookmarks t))
@@ -140,7 +140,7 @@
 
 ;; Desktop notifications
 (use-package mu4e-alert
-  :ensure t
+  :straight t
   :config
   (setq mu4e-alert-interesting-mail-query
         (concat

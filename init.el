@@ -28,23 +28,22 @@
 (setq inhibit-x-resources 't)
 
 ;;; Package management
-;;;; Package management with MELPA (in addition to the GNU archive).
-(require 'package)
-(add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/") t)
-(package-initialize)
-
-(setq url-http-attempt-keepalives nil)
+;;;; Straight
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 ;;;; Install use-package if not installed
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package)
-  )
-(eval-when-compile
-  (require 'use-package))
+(straight-use-package 'use-package)
 
 ;;;; Auto-update packages every 5 days
 (use-package auto-package-update
@@ -56,7 +55,7 @@
 
 ;;;; Use paradox in the package management menu
 (use-package paradox
-  :ensure t
+  :straight t
   :init
   (setq paradox-github-token
         (cadr (auth-source-user-and-password "api.github.com" "asilata")))
@@ -66,7 +65,7 @@
 
 ;;; EXWM
 (use-package exwm
-  :ensure t
+  :straight t
   :config
   (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
     (if (file-exists-p exwm-config-file)
@@ -111,7 +110,7 @@
 
 ;;; Colour themes and prettification
 (use-package zenburn-theme
-  :ensure t
+  :straight t
   :config
   (load-theme 'zenburn t)
   (zenburn-with-color-variables
@@ -121,15 +120,15 @@
   )
 
 (use-package all-the-icons
-  :ensure t)
+  :straight t)
 
 (use-package all-the-icons-dired
-  :ensure t
+  :straight t
   :config
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 
 (use-package all-the-icons-ivy
-  :ensure t
+  :straight t
   :config
   (all-the-icons-ivy-setup))
 
@@ -137,14 +136,14 @@
   :mode "\\.\\(el|scss|sass\\)")
 
 (use-package dired-sidebar
-  :ensure t
+  :straight t
   :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
   :commands
   (dired-sidebar-toggle-sidebar))
 
 ;;; Editing
 (use-package smartparens
-  :ensure t
+  :straight t
   :config
   (show-paren-mode 1)
   (setq show-paren-style 'parenthesis)
@@ -157,7 +156,7 @@
 (global-hl-line-mode 1)
 
 (use-package volatile-highlights
-  :ensure t
+  :straight t
   :config (volatile-highlights-mode 1))
 
 (setq-default indent-tabs-mode nil)     ;Don't use tabs to indent...
@@ -169,11 +168,11 @@
 
 ;;;; Objed
 (use-package objed
-  :ensure t)
+  :straight t)
 
 ;;;; Multiple cursors
 (use-package multiple-cursors
-  :ensure t
+  :straight t
   :bind (("C-c m c" . mc/edit-lines)
          ("C-c m n" . mc/mark-next-like-this)
          ("C-c m p" . mc/mark-previous-like-this)
@@ -191,7 +190,7 @@
 
 ;;;; Outshine mode
 (use-package outshine
-  :ensure t
+  :straight t
   :init
   (defvar outline-minor-mode-prefix "\M-#")
   :config
@@ -201,29 +200,29 @@
 
 ;;;; Browse kill ring
 (use-package browse-kill-ring
-  :ensure t)
+  :straight t)
 ;;; Minibuffer and search
 ;;;; Ivy, etc
 (use-package avy
-  :ensure t
+  :straight t
   :bind (("M-s" . avy-goto-char-timer)))
 
 (use-package ivy
-  :ensure t
+  :straight t
   :bind (("C-c C-r" . ivy-resume)
          ("C-c v" . ivy-push-view)
          ("C-c V" . ivy-pop-view))
   :config
-  (use-package ivy-hydra :ensure t)
+  (use-package ivy-hydra :straight t)
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t))
 
 (use-package swiper
-  :ensure t
+  :straight t
   :bind (("C-s" . swiper-isearch)))
 
 (use-package counsel
-  :ensure t
+  :straight t
   :bind (("M-x" . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
          ("C-x C-g" . counsel-git)
@@ -231,19 +230,19 @@
          ("C-h f" . counsel-describe-function)))
 
 (use-package ivy-rich
-  :ensure t
+  :straight t
   :after ivy
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
   (ivy-rich-mode 1))
 
 ;;;; Other goodies
-(use-package which-key :ensure t
+(use-package which-key :straight t
   :config
   (which-key-mode 1))
 
 (use-package smart-mode-line
-  :ensure t
+  :straight t
   :config
   (progn (sml/setup)))
 
@@ -290,25 +289,25 @@
 
 ;;; Completion
 (use-package company
-  :ensure t
+  :straight t
   :config
   (global-company-mode 1))
 
 ;;; Git
 (use-package magit
-  :ensure t
+  :straight t
   :bind (([f6] . magit-status)))
 
 ;;; Programming
 ;;;; Projects and jumping
 (use-package counsel-projectile
-  :ensure t
+  :straight t
   :config
   (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
   (counsel-projectile-mode 1))
 
 (use-package dumb-jump
-  :ensure t
+  :straight t
   :bind (("M-g o" . dumb-jump-go-other-window)
          ("M-g j" . dumb-jump-go)
          ("M-g b" . dumb-jump-back))
@@ -322,21 +321,21 @@
 
 ;;;;; Flycheck
 (use-package flycheck
-  :ensure t
+  :straight t
   :config
   (global-flycheck-mode)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 ;;;;; Haskell
 (use-package haskell-mode
-  :ensure t
+  :straight t
   :config
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 
 ;;;;; LaTeX etc
 (use-package auctex
-  :ensure t
+  :straight t
   :init
   (use-package bibretrieve
     :config
@@ -347,13 +346,13 @@
         (point-min) (point-max)
         "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
   (use-package auctex-latexmk
-    :ensure t
+    :straight t
     :config
     (auctex-latexmk-setup))
   :defer t
   :bind (([f7] . TeX-error-overview))
   :config
-  (use-package reftex :ensure t
+  (use-package reftex :straight t
     :config
     (setq reftex-default-bibliography "~/Bibliography/math.bib"))
   (use-package smartparens-latex)
@@ -374,7 +373,7 @@
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 
 (use-package ivy-bibtex
-  :ensure t
+  :straight t
   :config
   (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
                                 (t . ivy--regex-plus)))
@@ -386,7 +385,7 @@
 
 ;;;;; Lean
 (use-package lean-mode
-  :ensure t
+  :straight t
   :config
   (setq lean-rootdir "~/opt/lean-nightly-linux"))
 
@@ -404,7 +403,7 @@
 
 ;;;;; Markdown
 (use-package markdown-mode
-  :ensure t
+  :straight t
   :mode ("\\.\\(m\\(ark\\)?down\\|md\\|txt\\)$" . markdown-mode)
   :config
   (add-hook 'markdown-mode-hook
@@ -413,7 +412,7 @@
 
 ;;;;; Sage
 (use-package sage-shell-mode
-  :ensure t
+  :straight t
   :config
   (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
   (sage-shell:define-alias)
@@ -421,7 +420,7 @@
 
 ;;;;; SCSS
 (use-package scss-mode
-  :ensure t
+  :straight t
   :mode "\\.\\(scss|sass\\)"
   :config
   (add-hook 'scss-mode-hook
@@ -438,7 +437,7 @@
 
 ;;;;; Textile
 (use-package textile-mode
-  :ensure t
+  :straight t
   :mode ("\\.textile\\'" . textile-mode)
   :config
   (add-hook 'textile-mode-hook
@@ -446,7 +445,7 @@
 
 ;;;;; Web-mode
 (use-package web-mode
-  :ensure t
+  :straight t
   :mode ("\\.html?\\'" . web-mode)
   :config
   (setq web-mode-enable-auto-pairing t
@@ -454,11 +453,11 @@
 
 ;;;;; YAML
 (use-package yaml-mode
-  :ensure t)
+  :straight t)
 
 ;;;;; Yasnippet
 (use-package yasnippet
-  :ensure t
+  :straight t
   :config
   (yas-global-mode 1))
 
@@ -492,10 +491,10 @@
 
 ;;; Elfeed
 (use-package elfeed
-  :ensure t
+  :straight t
   :config
   (require 'elfeed-link)
-  (use-package elfeed-org :ensure t)
+  (use-package elfeed-org :straight t)
   (elfeed-org)
   (setq rmh-elfeed-org-files '("~/.elfeed/elfeed.org"))
   (setq elfeed-search-title-max-width 1000)
@@ -506,7 +505,7 @@
 (use-package org
   :bind (("C-c a" . 'org-agenda))
   :config
-  (use-package org-bullets :ensure t)
+  (use-package org-bullets :straight t)
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
     (if (file-exists-p org-config-file)
         (load org-config-file)))
@@ -518,32 +517,33 @@
 
 ;;;; Org-reveal
 (use-package ox-reveal
-  :ensure t
+  :straight t
   :config
-  (use-package htmlize :ensure t)
+  (use-package htmlize :straight t)
   (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
 
 ;;;; Org-chef
 (use-package org-chef
-  :ensure t)
+  :straight t)
 
 ;;;; Org-noter
 (use-package org-noter
-  :ensure t)
+  :straight t)
 
 ;;;; Org-pdfview
 (use-package org-pdfview
-  :ensure t
+  :straight t
   :config
   (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 ;;; PDF tools
 (use-package pdf-tools
-  :ensure t
+  :straight t
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-width))
 
-(use-package pdf-tools-org)
+(use-package pdf-tools-org
+  :straight (:host github :repo "machc/pdf-tools-org"))
 
 
 ;;; Endnotes
