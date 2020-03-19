@@ -359,7 +359,9 @@
   :defer t
   :bind (([f7] . TeX-error-overview))
   :config
-  (use-package reftex :ensure t)
+  (use-package reftex :ensure t
+    :config
+    (setq reftex-default-bibliography "~/Bibliography/math.bib"))
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2))
 
