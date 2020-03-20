@@ -73,12 +73,6 @@
         (load exwm-config-file)))
   (exwm-enable))
 
-(use-package exwm-mff
-  :ensure t
-  :after exwm
-  :config
-  (exwm-mff-mode 1))
-
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -359,7 +353,9 @@
   :defer t
   :bind (([f7] . TeX-error-overview))
   :config
-  (use-package reftex :ensure t)
+  (use-package reftex :ensure t
+    :config
+    (setq reftex-default-bibliography "~/Bibliography/math.bib"))
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2))
 
