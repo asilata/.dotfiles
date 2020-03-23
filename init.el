@@ -72,6 +72,43 @@
         (load exwm-config-file)))
   (exwm-enable))
 
+;;; Org-mode
+;;;; Org
+(use-package org
+  :straight t
+  :bind (("C-c a" . org-agenda))
+  :config
+  (use-package org-bullets :straight t)
+  (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
+    (if (file-exists-p org-config-file)
+        (load org-config-file)))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (visual-line-mode 1)
+              (org-bullets-mode 1)))
+  (setq org-use-speed-commands t))
+
+;;;; Org-reveal
+(use-package ox-reveal
+  :straight t
+  :config
+  (use-package htmlize :straight t)
+  (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
+
+;;;; Org-chef
+(use-package org-chef
+  :straight t)
+
+;;;; Org-noter
+(use-package org-noter
+  :straight t)
+
+;;;; Org-pdfview
+(use-package org-pdfview
+  :straight t
+  :config
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
+
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -228,6 +265,9 @@
          ("C-x C-g" . counsel-git)
          ("C-h v" . counsel-describe-variable)
          ("C-h f" . counsel-describe-function)))
+
+(use-package smex
+  :straight t)
 
 (use-package ivy-rich
   :straight t
@@ -500,41 +540,6 @@
   (setq elfeed-search-title-max-width 1000)
   (setq elfeed-use-curl nil))
 
-;;; Org-mode
-;;;; Org
-(use-package org
-  :bind (("C-c a" . 'org-agenda))
-  :config
-  (use-package org-bullets :straight t)
-  (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
-    (if (file-exists-p org-config-file)
-        (load org-config-file)))
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (visual-line-mode 1)
-              (org-bullets-mode 1)))
-  (setq org-use-speed-commands t))
-
-;;;; Org-reveal
-(use-package ox-reveal
-  :straight t
-  :config
-  (use-package htmlize :straight t)
-  (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
-
-;;;; Org-chef
-(use-package org-chef
-  :straight t)
-
-;;;; Org-noter
-(use-package org-noter
-  :straight t)
-
-;;;; Org-pdfview
-(use-package org-pdfview
-  :straight t
-  :config
-  (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 ;;; PDF tools
 (use-package pdf-tools
   :straight t
@@ -559,6 +564,11 @@
 
 ;;;; Recompile all previously byte-compiled files in the directory.
 (byte-recompile-directory user-emacs-directory)
+
+;;;; Add package.el just so that package-list-packages includes them
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
 
 ;;;; Local variables
 ;; Local Variables:
