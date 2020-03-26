@@ -4,7 +4,8 @@
 (setq org-default-notes-file (concat org-default-directory "todo.org"))
 (setq org-agenda-files
       (append (file-expand-wildcards (concat org-default-directory "*.org"))
-              (file-expand-wildcards (concat org-shared-directory "*.org"))))
+              (file-expand-wildcards (concat org-shared-directory "*.org"))
+              '("~/Teaching")))
 
 ;;; Global options for notes and refiling
 (setq org-log-done t)
