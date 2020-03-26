@@ -45,24 +45,6 @@
 ;;;; Install use-package if not installed
 (straight-use-package 'use-package)
 
-;;;; Auto-update packages every 5 days
-(use-package auto-package-update
-  :ensure t
-  :config
-  (setq auto-package-update-delete-old-versions t
-        auto-package-update-interval 5)
-  (auto-package-update-maybe))
-
-;;;; Use paradox in the package management menu
-(use-package paradox
-  :straight t
-  :init
-  (setq paradox-github-token
-        (cadr (auth-source-user-and-password "api.github.com" "asilata")))
-  :config
-  (setq paradox-automatically-star t)
-  (paradox-enable))
-
 ;;; EXWM
 (use-package exwm
   :straight t
@@ -543,6 +525,8 @@
 ;;; PDF tools
 (use-package pdf-tools
   :straight t
+  :bind (:map pdf-view-mode-map
+              (("C-s" . isearch-forward)))
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-width))
