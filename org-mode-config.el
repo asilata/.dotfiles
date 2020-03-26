@@ -201,6 +201,12 @@
   :straight (:host github :repo "jethrokuan/org-roam")
   :custom
   (org-roam-directory (concat org-default-directory "Roam"))
+  (org-roam-capture-templates
+   `(("d" "default" plain #'org-roam--capture-get-point
+      "* %U\n  %?"
+      :file-name "%<%Y%m%d%H%M%S>-${slug}"
+      :head "#+TITLE: ${title}\n\n- references :: \n\n"
+      :unnarrowed t)))
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
