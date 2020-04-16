@@ -248,8 +248,10 @@
          ("C-h v" . counsel-describe-variable)
          ("C-h f" . counsel-describe-function)))
 
-(use-package smex
-  :straight t)
+(use-package ivy-prescient
+  :straight t
+  :config
+  (ivy-prescient-mode))
 
 (use-package ivy-rich
   :straight t
@@ -314,6 +316,11 @@
   :straight t
   :config
   (global-company-mode 1))
+
+(use-package company-prescient
+  :straight t
+  :config
+  (company-prescient-mode))
 
 ;;; Git
 (use-package magit
