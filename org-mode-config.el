@@ -5,7 +5,9 @@
 (setq org-agenda-files
       (append (file-expand-wildcards (concat org-default-directory "*.org"))
               (file-expand-wildcards (concat org-shared-directory "*.org"))
-              '("~/Teaching")))
+              (directory-files-recursively (concat org-default-directory "Projects") org-agenda-file-regexp)
+              (directory-files-recursively (concat org-default-directory "Teaching") org-agenda-file-regexp)
+              ))
 
 ;;; Global options for notes and refiling
 (setq org-log-done t)
