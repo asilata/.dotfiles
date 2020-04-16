@@ -401,6 +401,7 @@
   :straight t
   :init
   (use-package bibretrieve
+    :straight (:host github :repo "asilata/bibretrieve")
     :config
     (add-hook
      'bibretrieve-pre-write-bib-items-hook
@@ -481,6 +482,9 @@
   (sage-shell:define-alias)
   (setq sage-shell:use-prompt-toolkit t))
 
+;;;;; Scratch
+(use-package scratch
+  :straight t)
 ;;;;; SCSS
 (use-package scss-mode
   :straight t
