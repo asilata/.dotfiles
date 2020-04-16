@@ -45,7 +45,8 @@
 ;;;; Install use-package if not installed
 (straight-use-package 'use-package)
 
-;;; EXWM
+;;; Window management
+;;;; EXWM
 (use-package exwm
   :straight t
   :config
@@ -54,6 +55,32 @@
         (load exwm-config-file)))
   (exwm-enable))
 
+;;;; Ace-window
+(use-package ace-window
+  :straight t
+  :bind (("C-x o" . ace-window))
+  :custom
+  (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
+  (aw-minibuffer-flag t)
+  :custom-face
+  (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
+  )
+
+;;;; Winner-mode
+(use-package winner
+  :straight t
+  :config
+  (winner-mode t))
+
+;;;; Flip window
+(defun flip-window ()
+  (interactive)
+  (let ((win (get-mru-window t t t)))
+    (if win
+        (progn
+          (select-frame-set-input-focus (window-frame win))
+          (select-window win))
+      (mode-line-other-buffer))))
 ;;; Org-mode
 ;;;; Org
 (use-package org

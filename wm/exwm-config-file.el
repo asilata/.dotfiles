@@ -17,7 +17,8 @@
         ;; 's-r': Launch application.
         ([?\s-r] . (lambda (command)
                      (interactive (list (read-shell-command "$ ")))
-                     (start-process-shell-command command nil command)))))
+                     (start-process-shell-command command nil command)))
+        ([?\s-s] . flip-window)))
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars callargs)
 ;; End:
