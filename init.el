@@ -382,6 +382,13 @@
   (global-flycheck-mode)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
+;;;;; Graphviz
+(use-package graphviz-dot-mode
+  :straight t
+  :config
+  (use-package company-graphviz-dot)
+  (setq graphviz-dot-indent-width 4))
+
 ;;;;; Haskell
 (use-package haskell-mode
   :straight t
