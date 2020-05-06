@@ -154,6 +154,10 @@
         )
   )
 
+;;;; iBuffer mode
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer)))
+
 ;;; Colour themes and prettification
 (use-package zenburn-theme
   :straight t
@@ -187,6 +191,8 @@
   :commands
   (dired-sidebar-toggle-sidebar))
 
+(use-package dired-narrow
+  :straight t)
 ;;; Editing
 (use-package smartparens
   :straight t
@@ -286,6 +292,10 @@
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
   (ivy-rich-mode 1))
+
+(use-package wgrep
+  :straight t
+  :after ivy)
 
 ;;;; Other goodies
 (use-package which-key :straight t
