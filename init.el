@@ -162,11 +162,13 @@
 (use-package zenburn-theme
   :straight t
   :config
-  (load-theme 'zenburn t)
   (zenburn-with-color-variables
     (custom-theme-set-faces
      'zenburn
-     `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))))
+     `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))
+     `(hl-line-face ((t (:background ,zenburn-bg-2))))
+     `(hl-line ((t (:background ,zenburn-bg-2))))))
+  (load-theme 'zenburn t)
   )
 
 (use-package all-the-icons
