@@ -455,8 +455,8 @@
   :config
   (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
                                 (t . ivy--regex-plus)))
-  (setq bibtex-completion-bibliography
-        '("~/Bibliography/math.bib"))
+  (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
+  (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
   (setq bibtex-completion-library-path '("~/Papers"))
   (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
 

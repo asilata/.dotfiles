@@ -197,6 +197,16 @@
   (setq org-journal-file-format "%Y-%m-%d.org")
   )
 
+;;; Org ref
+(use-package org-ref
+  :straight t
+  :config
+  (setq
+   org-ref-default-bibliography '("~/Bibliography/math.bib")
+   org-ref-pdf-directory "~/Papers/"
+   org-ref-completion-library 'org-ref-ivy-cite
+   org-ref-notes-function 'org-ref-notes-function-many-files
+   ))
 ;;; Org roam
 (use-package org-roam
   :hook 
@@ -219,6 +229,50 @@
 
 (use-package company-org-roam
   :after org-roam company org
+(defcustom orb-title-format "${title} (${citekey})."
+  "Title format for `orb-templates'.")
+
+(use-package org-roam-bibtex
+  :after org-roam ivy-bibtex
+  :straight (:host github :repo "org-roam/org-roam-bibtex")
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind (:map org-mode-map
+              (("C-c n a" . orb-note-actions)))
+  :init
+  :custom
+  (orb-templates
+   `(("r" "ref" plain
+      (function org-roam-capture--get-point)
+      ""
+      :file-name "Bibnotes/${citekey}"
+      :head ,(s-join "\n"
+                     (list
+                      (concat "#+title: " orb-title-format)
+                      "#+roam_key: ${ref}"
+                      "#+created: %U"
+                      ""
+                      "* Notes\n%?"
+                      ))
+      :unnarrowed t)
+     ("n" "ref + org-noter" plain
+      (function org-roam-capture--get-point)
+      ""
+      :file-name "Bibnotes/${citekey}"
+      :head ,(s-join "\n"
+                     (list
+                      (concat "#+title: " orb-title-format)
+                      "#+roam_key: ${ref}"
+                      "#+created: %U"
+                      ""
+                      "* Notes\n%?"
+                      "* Org-noter notes :noter:"
+                      "  :PROPERTIES:"
+                      "  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
+                      "  :NOTER_PAGE:"
+                      "  :END:"
+                      ))
+      :unnarrowed t)
+      )))
   :config
   (company-org-roam-init))
 
