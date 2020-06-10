@@ -25,7 +25,7 @@
       '(("TODO" org-todo)
 	("DONE" org-done)
         ("WAITING" :foreground "#F0DFAF" :weight bold)
-	("CANCELLED" :foreground "#CC9393" :weight bold :strike-through "#CC9393")
+	("CANCELLED" :foreground "#CC9393" :weight bold)
         ("SHELVED" :foreground "#DFAF8F" :weight bold)
         ("MEETING" :foreground "#8CD0D3" :weight bold)
         ("ONGOING" :foreground "#DC8CC3" :weight bold :italic t)
