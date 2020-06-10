@@ -193,8 +193,17 @@
   :commands
   (dired-sidebar-toggle-sidebar))
 
-(use-package dired-narrow
+(use-package treemacs
+  :straight t
+  :bind (:map global-map
+              ([f8] . treemacs-select-window))
+  :custom
+  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?))
+
+(use-package treemacs-magit
+  :after treemacs magit
   :straight t)
+
 (use-package dired-narrow
   :straight t
   :bind (:map dired-mode-map
