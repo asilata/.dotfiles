@@ -193,6 +193,10 @@
 
 (use-package dired-narrow
   :straight t)
+(use-package dired-narrow
+  :straight t
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow)))
 ;;; Editing
 (use-package smartparens
   :straight t
