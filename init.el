@@ -130,6 +130,7 @@
 (size-indication-mode 1)
 (setq fill-column 90)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq visible-bell t)
 
 (if (fboundp 'fringe-mode) (fringe-mode 4))
 (setq scroll-margin 0
