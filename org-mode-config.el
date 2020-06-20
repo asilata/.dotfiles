@@ -67,44 +67,6 @@
            ,(concat org-default-directory "bookmarks.org")
            "\\* Bookmarks"))))
 
-;;;; Capture templates
-(setq org-capture-templates
-      `(("t" "todo" entry (file+headline org-default-notes-file "Tasks")
-         "* TODO %?\n%a\n" :clock-in t :clock-resume t)
-        ("e" "respond" entry (file+headline org-default-notes-file "Emails")
-         "* TODO Reply to %:from (%:subject) :email:\n  DEADLINE:%^{Deadline}t\n  %a" :immediate-finish t)
-        ("r" "Reading")
-        ("rb" "book" entry (file ,(concat org-default-directory "books.org"))
-         "* %^{Status|READING} %^{Title} %^{AUTHOR}p \n  - Recorded on: %U" :empty-lines 1 :immediate-finish t)
-        ("rm" "math" entry (file ,(concat org-default-directory "math-reading.org"))
-         "* TO-READ %T\n  %a" :empty-lines 1 :immediate-finish t)
-        ("j" "Journal")
-        ("jj" "journal" entry (file+olp+datetree ,(concat org-default-directory "journal.org.gpg"))
-         "* %^{Title}\n  %U\n  %?" :empty-lines 1 :clock-in t :clock-resume t)
-        ("jp" "shared journal" entry (file+olp+datetree ,(concat org-shared-directory "journal.org.gpg"))
-         "* Note by %n at %<%H:%M>\n  %?" :empty-lines 1 :clock-in t :clock-resume t)
-        ("jm" "math journal" entry (file+olp+datetree ,(concat org-default-directory "calculations.org"))
-         "* %<%H:%M>\n  %?" :empty-lines 1 :clock-in t :clock-resume t)
-        ("b" "borrowed" entry (file+olp ,(concat org-shared-directory "shared.org") "Reminders" "Loans")
-         "* BORROWED %^{Thing borrowed} from %^{From|me} to %^{To|me}.\n  DEADLINE:%^{Deadline}t"
-         :immediate-finish t)
-        ("h" "Health")
-        ("hw" "Weight" table-line (file+headline ,(concat org-default-directory "health.org") "Weight")
-         "|%<%Y-%m-%d>|%?||" :immediate-finish t)
-        ("m" "meeting" entry (file+headline org-default-notes-file "Meetings")
-         "* MEETING Meeting with %? :meeting:\n" :clock-in t :clock-resume t)
-        ("c" "Calendar entry" entry (file ,(concat org-default-directory "calendar.org"))
-         "* %?\n%t\n")
-        ("f" "Recipes" entry (file ,(concat org-shared-directory "recipes.org"))
-         "%(org-chef-get-recipe-from-url)"
-         :empty-lines 1)
-        ;; ("F" "Recipes" entry (file ,(concat org-default-directory "recipes.org"))
-        ;;  "%(org-chef-recipe-org-string (org-chef-fetch-recipe (caar org-stored-links))"
-        ;;  :empty-lines 1)
-        ("L" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")
-        ("l" "Link" entry #'orca-handle-link "* BOOKMARK %(orca-wash-link)\nAdded: %U\n%?")
-        ))
-
 ;;; Org files customization
 (setq org-cycle-separator-lines 1)
 
@@ -298,6 +260,14 @@
                        (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
                 (org-todo 'todo)))))))
+
+(eval-after-load 'org-list
+  '(add-hook 'org-checkbox-statistics-hook (function auto-done-checkboxes)))
+
+;;; Private settings (including capture templates)
+(let ((org-private-settings (concat user-opt-directory "private/org-private-settings.el")))
+  (if (file-exists-p org-private-settings)
+      (load org-private-settings)))
 
 ;;; Local variables
 ;; Local Variables:
