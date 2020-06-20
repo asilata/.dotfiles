@@ -9,53 +9,10 @@
       smtpmail-smtp-service 587
       message-kill-buffer-on-exit t)
 
-;;; Global user settings
-(setq user-full-name  "Asilata Bapat"
-      mu4e-compose-signature "\nAsilata"
-      mu4e-user-mail-address-list '("asilata.bapat@anu.edu.au" "asilata@gmail.com" "asilata@uga.edu" "asilata@math.uchicago.edu" "asilata@mit.edu"))
-
-;;; Context switching
-(setq mu4e-contexts
-      `(,(make-mu4e-context
-          :name "ANU"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (mu4e-message-contact-field-matches
-               msg '(:to :cc :from) "asilata.bapat@anu.edu.au")))
-          :vars
-          '((mu4e-sent-folder . "/ANU/Sent Items")
-            (mu4e-drafts-folder . "/ANU/Drafts")
-            (mu4e-trash-folder . "/ANU/Deleted Items")
-            (mu4e-refile-folder . "/ANU/Archive")
-            (smtpmail-smtp-server . "smtp.office365.com")
-            (mu4e-sent-messages-behavior . sent)
-            (user-mail-address . "asilata.bapat@anu.edu.au")
-            (mu4e-reply-to-address . "asilata.bapat@anu.edu.au")
-            (mu4e-compose-signature . "\nAsilata Bapat\nMathematical Sciences Institute\n4.84, Hanna Neumann Building #145, Science Road\nActon ACT 2601 Australia")))
-        
-        ,(make-mu4e-context
-          :name "Gmail"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (or
-               (mu4e-message-contact-field-matches
-                msg '(:to :cc :from) "asilata@gmail.com")
-               (mu4e-message-contact-field-matches
-                msg '(:to :cc :from) "asilata@alum.mit.edu")
-               )))
-          :vars
-          '((mu4e-sent-folder . "/Gmail/[Gmail]/All Mail")
-            (mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts")
-            (mu4e-trash-folder . "/Gmail/[Gmail]/Bin")
-            (mu4e-refile-folder . "/Gmail/[Gmail]/All Mail")
-            (smtpmail-smtp-server . "smtp.gmail.com")
-            (mu4e-sent-messages-behavior . delete)
-            (user-mail-address . "asilata@gmail.com")
-            (mu4e-reply-to-address . "asilata@gmail.com")))
-        )
-      )
+;;; Private settings (user settings, contexts)
+(let ((mu4e-private-settings (concat user-opt-directory "private/mu4e-private-settings.el")))
+  (if (file-exists-p mu4e-private-settings)
+      (load mu4e-private-settings)))
 
 ;;; Indexing
 (setq mu4e-index-cleanup nil
