@@ -169,31 +169,65 @@
    org-ref-completion-library 'org-ref-ivy-cite
    org-ref-notes-function 'org-ref-notes-function-many-files
    ))
+
 ;;; Org roam
 (use-package org-roam
-  :hook 
-  (after-init . org-roam-mode)
-  :straight (:host github :repo "jethrokuan/org-roam")
-  :custom
-  (org-roam-directory (concat org-default-directory "Roam"))
-  (org-roam-capture-templates
-   `(("d" "default" plain #'org-roam--capture-get-point
-      "* %U\n  %?"
-      :file-name "%<%Y%m%d%H%M%S>-${slug}"
-      :head "#+TITLE: ${title}\n\n- references :: \n\n"
-      :unnarrowed t)))
+  :hook (after-init . org-roam-mode)
+  :straight t
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph))
+               ("C-c n g" . org-roam-show-graph)
+               ("C-c n t" . org-roam-today))
               :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
+              (("C-c n i" . org-roam-insert)))
+  :custom
+  (org-roam-directory (concat org-default-directory "Roam"))
+  (org-roam-capture-templates
+   (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}")
+         (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
+         (org-roam-notes-head "\n- references :: \n\n"))
+     `(("d" "default" plain #'org-roam-capture--get-point
+        "* Notes%?"
+        :file-name ,org-roam-file-name-format
+        :head ,(concat org-roam-common-head org-roam-notes-head)
+        :unnarrowed t)
+       ("l" "link" plain #'org-roam-capture--get-point
+        ""
+        :file-name ,org-roam-file-name-format
+        :head ,(concat org-roam-common-head org-roam-notes-head)
+        :immediate-finish t)
+       ;; ("m" "meeting" entry #'org-roam-capture--get-point
+       ;;  "* MEETING \n\n%?"
+       ;;  :file-name "%<%Y-%m-%d>"
+       ;;  :head "#+title: %<%Y-%m-%d>\n\n")
+       ("p" "person" plain #'org-roam-capture--get-point
+        "%?"
+        :file-name "People/${slug}"
+        :head ,(concat org-roam-common-head "#+roam_alias: %^{AKA}\n\n")
+        :immediate-finish t))))
+  (org-roam-dailies-capture-templates
+   (let ((daily-title-format "%<%Y-%m-%d>"))
+     `(("d" "daily" plain #'org-roam-capture--get-point
+        ""
+        :immediate-finish t
+        :file-name ,(concat "Dailies/" daily-title-format)
+        :head ,(concat "#+title: " daily-title-format "\n\n")))))
+  (org-roam-tag-sources '(prop all-directories)))
 
-(use-package company-org-roam
-  :after org-roam company org
-(defcustom orb-title-format "${title} (${citekey})."
-  "Title format for `orb-templates'.")
+;;;; org-roam-server
+(use-package org-roam-server
+  :straight t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-label-truncate t
+        org-roam-server-label-truncate-length 60
+        org-roam-server-label-wrap-length 20))
 
+;;;; org-roam-bibtex
 (use-package org-roam-bibtex
   :after org-roam ivy-bibtex
   :straight (:host github :repo "org-roam/org-roam-bibtex")
@@ -203,46 +237,71 @@
   :init
   :custom
   (orb-templates
-   `(("r" "ref" plain
-      (function org-roam-capture--get-point)
-      ""
-      :file-name "Bibnotes/${citekey}"
-      :head ,(s-join "\n"
-                     (list
-                      (concat "#+title: " orb-title-format)
-                      "#+roam_key: ${ref}"
-                      "#+created: %U"
-                      ""
-                      "* Notes\n%?"
-                      ))
-      :unnarrowed t)
-     ("n" "ref + org-noter" plain
-      (function org-roam-capture--get-point)
-      ""
-      :file-name "Bibnotes/${citekey}"
-      :head ,(s-join "\n"
-                     (list
-                      (concat "#+title: " orb-title-format)
-                      "#+roam_key: ${ref}"
-                      "#+created: %U"
-                      ""
-                      "* Notes\n%?"
-                      "* Org-noter notes :noter:"
-                      "  :PROPERTIES:"
-                      "  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
-                      "  :NOTER_PAGE:"
-                      "  :END:"
-                      ))
-      :unnarrowed t)
-      )))
+   (let* ((orb-title-format "${title} (${author})")
+          (orb-file-name-format "Bibnotes/${citekey}")
+          (orb-front-matter "#+roam_key: ${ref}\n#+created: %U\n\n")
+          (orb-common-head (concat "#+title: " orb-title-format "\n" orb-front-matter)))
+     `(("r" "ref" plain #'org-roam-capture--get-point
+        "%?"
+        :file-name ,orb-file-name-format
+        :head ,(concat orb-common-head "* Notes")
+        :unnarrowed t
+        :immediate-finish t)
+       ("n" "ref + org-noter" plain #'org-roam-capture--get-point
+        "%?"
+        :file-name ,orb-file-name-format
+        :head ,(s-join "\n" (list orb-common-head
+                                  "* Notes"
+                                  "* Org-noter notes :noter:"
+                                  "  :PROPERTIES:"
+                                  "  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
+                                  "  :NOTER_PAGE:"
+                                  "  :END:\n\n"))
+        :unnarrowed t
+        :immediate-finish t)
+       ))))
+  
+;;;; deft
+(use-package deft
+  :straight t
+  :after org-roam
+  :bind ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory org-roam-directory)
+  )
+
+;;;; company-org-roam
+(use-package company-org-roam
+  :after org-roam company org
+  :straight (:host github :repo "org-roam/company-org-roam")
   :config
-  (company-org-roam-init))
+  (push 'company-org-roam company-backends))
+
+
+;;; Org-brain
+(use-package org-brain
+  :straight t
+  :init
+  (setq org-brain-path (concat org-default-directory "Brain/"))
+  :config
+  (setq org-track-id-globally t)
+  (setq org-id-locations-file (concat user-emacs-directory ".org-id-locations"))
+  (push '("b" "Brain" plain (function org-brain-goto-end)
+          "* %i%?" :empty-lines 1)
+        org-capture-templates)
+  (setq org-brain-visualize-default-choices 'all)
+  (setq org-brain-title-max-length 12)
+  (setq org-brain-include-file-entries t
+        org-brain-file-entries-use-title t)
+  (setq org-brain-file-from-input-function
+        (lambda (x) (if (cdr x) (car x) (concat org-brain-path "default"))))
+  )
 
 ;;; Custom functions
 ;;;; Mark todo as done if all checkboxes are done
-(eval-after-load 'org-list
-  '(add-hook 'org-checkbox-statistics-hook (function auto-done-checkboxes)))
-
 (defun auto-done-checkboxes ()
   (save-excursion
     (org-back-to-heading t)
