@@ -197,10 +197,6 @@
         :file-name ,org-roam-file-name-format
         :head ,(concat org-roam-common-head org-roam-notes-head)
         :immediate-finish t)
-       ;; ("m" "meeting" entry #'org-roam-capture--get-point
-       ;;  "* MEETING \n\n%?"
-       ;;  :file-name "%<%Y-%m-%d>"
-       ;;  :head "#+title: %<%Y-%m-%d>\n\n")
        ("p" "person" plain #'org-roam-capture--get-point
         "%?"
         :file-name "People/${slug}"
