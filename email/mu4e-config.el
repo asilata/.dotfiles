@@ -1,5 +1,4 @@
 ;;; Getting mail
-(setq mu4e-maildir "/home/asilata/Mail")
 (setq mu4e-get-mail-command "mbsync -a"
       mu4e-update-interval (* 60 15))
 (setq mu4e-change-filenames-when-moving t)
@@ -16,7 +15,7 @@
 
 ;;; Indexing
 (setq mu4e-index-cleanup nil
-      ;mu4e-index-lazy-check t
+      mu4e-index-lazy-check t
       )
 
 ;;; mu4e display settings
