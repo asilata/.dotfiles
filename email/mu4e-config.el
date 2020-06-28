@@ -15,27 +15,46 @@
 
 ;;; Indexing
 (setq mu4e-index-cleanup nil
-      mu4e-index-lazy-check t
-      )
+      mu4e-index-lazy-check t)
 
-;;; mu4e display settings
-(setq mu4e-headers-date-format "  %_d %b"
+;;; General view settings
+(setq mu4e-headers-date-format "  %_d %b %y"
       mu4e-headers-time-format "%_l:%M %P"
       mu4e-headers-fields
-      '((:human-date . 10)
-        (:flags . 5)
+      '((:human-date . 12)
+        (:flags . 4)
+        (:size . 8)
         (:from-or-to . 20)
         (:thread-subject . nil))
       mu4e-headers-skip-duplicates t)
 (setq message-kill-buffer-on-exit t)
 (setq mu4e-use-fancy-chars t)
-(setq mu4e-attachment-dir "/tmp")
+(setq mu4e-split-view 'horizontal)
+
+;;; Message view settings
+(setq mu4e-view-use-gnus nil)
 (setq mu4e-view-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
+(setq mu4e-attachment-dir "/tmp")
+(add-hook 'mu4e-view-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<tab>") 'shr-next-link)
+            (local-set-key (kbd "<backtab>") 'shr-previous-link)))
+
+;;; Message editing settings
+
 
 ;;; Bookmarks
 (setq mu4e-bookmarks
       `(,(make-mu4e-bookmark
+          :name  "Reasonable recent messages"
+          :query "date:12m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
+          :key ?r)
+        ,(make-mu4e-bookmark
+          :name "Mailing lists"
+          :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
+          :key ?l)
+        ,(make-mu4e-bookmark
           :name "ANU Inbox"
           :query "maildir:\"/ANU/INBOX\""
           :key ?a)
@@ -43,10 +62,6 @@
           :name "Gmail Inbox"
           :query "maildir:\"/Gmail/INBOX\""
           :key ?g)
-        ,(make-mu4e-bookmark
-          :name  "Reasonable but unread"
-          :query "flag:unread AND (maildir:\"ANU/INBOX\" OR tag:\\\\Inbox OR tag:\\\\Important)"
-          :key ?u)
         ,(make-mu4e-bookmark
           :name "Today and untrashed"
           :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
