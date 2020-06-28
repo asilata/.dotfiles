@@ -173,7 +173,7 @@
 ;;; Org roam
 (use-package org-roam
   :hook (after-init . org-roam-mode)
-  :straight t
+  :straight (:host github :repo "org-roam/org-roam")
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
@@ -185,7 +185,7 @@
   (org-roam-directory (concat org-default-directory "Roam"))
   (org-roam-capture-templates
    (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}")
-         (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
+         (org-roam-common-head "#+title: ${title}\n#+created: %U\n#+roam_tags: \n")
          (org-roam-notes-head "\n- references :: \n\n"))
      `(("d" "default" plain #'org-roam-capture--get-point
         "* Notes%?"
@@ -203,13 +203,15 @@
         :head ,(concat org-roam-common-head "#+roam_alias: %^{AKA}\n\n")
         :immediate-finish t))))
   (org-roam-dailies-capture-templates
-   (let ((daily-title-format "%<%Y-%m-%d>"))
+   (let* ((daily-title-format "%<%Y-%m-%d>")
+          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n#+roam_tags: \n")))
      `(("d" "daily" plain #'org-roam-capture--get-point
         ""
         :immediate-finish t
         :file-name ,(concat "Dailies/" daily-title-format)
-        :head ,(concat "#+title: " daily-title-format "\n\n")))))
-  (org-roam-tag-sources '(prop all-directories)))
+        :head ,daily-front-matter))))
+  (org-roam-tag-sources '(prop all-directories))
+  (require 'org-roam-protocol))
 
 ;;;; org-roam-server
 (use-package org-roam-server
