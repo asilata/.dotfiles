@@ -423,6 +423,13 @@
             'turn-on-haskell-indentation))
 
 ;;;;; LaTeX etc
+
+(defun ab/normalise-bib ()
+  (interactive)
+  (shell-command-on-region
+   (point-min) (point-max)
+   "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))
+
 (use-package auctex
   :straight t
   :init
@@ -431,10 +438,8 @@
     :config
     (add-hook
      'bibretrieve-pre-write-bib-items-hook
-     (lambda ()
-       (shell-command-on-region
-        (point-min) (point-max)
-        "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))))
+     'ab/normalise-bib
+     ))
   (use-package auctex-latexmk
     :straight t
     :config
