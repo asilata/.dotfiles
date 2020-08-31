@@ -84,8 +84,11 @@
 ;;; Org-mode
 ;;;; Org
 (use-package org
+  :after counsel
   :straight t
-  :bind (("C-c a" . org-agenda))
+  :bind (("C-c a" . org-agenda)
+         (:map org-mode-map
+               ("C-c C-j" . counsel-outline)))
   :config
   (use-package org-bullets :straight t)
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
@@ -106,6 +109,10 @@
 
 ;;;; Org-chef
 (use-package org-chef
+  :straight t)
+
+;;;; Org-mime
+(use-package org-mime
   :straight t)
 
 ;;;; Org-noter
