@@ -150,6 +150,14 @@
   (setq org-crypt-key "D93ED1F5")
   (setq org-crypt-disable-auto-save t))
 
+;;; Org babel
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t)
+   (emacs-lisp . t)
+   (python . t)
+   (shell . t)))
+(setq org-confirm-babel-evaluate nil)
 ;;; Org journal
 (use-package org-journal
   :straight t
