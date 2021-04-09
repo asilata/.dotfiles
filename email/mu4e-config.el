@@ -8,11 +8,6 @@
       smtpmail-smtp-service 587
       message-kill-buffer-on-exit t)
 
-;;; Private settings (user settings, contexts)
-(let ((mu4e-private-settings (concat user-opt-directory "private/mu4e-private-settings.el")))
-  (if (file-exists-p mu4e-private-settings)
-      (load mu4e-private-settings)))
-
 ;;; Indexing
 (setq mu4e-index-cleanup nil
       mu4e-index-lazy-check t)
@@ -72,6 +67,12 @@
           :key ?w)
         ))
 
+
+;;; Maildirs shortcuts (NOT WORKING)
+(setq mu4e-maildirs-shortcuts
+      '( (:maildir "/ANU/INBOX" :key ?a)
+         (:maildir "/Gmail/INBOX" :key ?g)))
+
 ;;; Custom functions
 ;; (defun my/delete-without-trashing ()
 ;;   (let (tfolder (mu4e-get-trash-folder (mu4e-message-at-point)))
@@ -98,12 +99,19 @@
           ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
           ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
 
+;;; Emacs default
+(setq mail-user-agent 'mu4e-user-agent)
+
+;;; Attachments from dired
+
+;;; Confirm on sending
+(setq message-confirm-send t)
 ;;; Maildirs extra
-(use-package mu4e-maildirs-extension
-  :straight t
-  :config
-  (mu4e-maildirs-extension)
-  (setq mu4e-maildirs-extension-use-bookmarks t))
+;; (use-package mu4e-maildirs-extension
+;;   :straight t
+;;   :config
+;;   (mu4e-maildirs-extension)
+;;   (setq mu4e-maildirs-extension-use-bookmarks nil))
 
 ;;; Org mode integration
 (require 'org-mu4e)
@@ -123,6 +131,20 @@
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
   )
+
+;;; mu4e goodies
+;; (use-package mu4e-goodies
+;;   :straight (:host github :repo "panjie/mu4e-goodies")
+;;   :config
+;;   (require 'mu4e-goodies))
+
+;;; mu4e conversation
+(use-package mu4e-conversation
+  :straight t)
+;;; Private settings (user settings, contexts)
+(let ((mu4e-private-settings (concat user-opt-directory "private/mu4e-private-settings.el")))
+  (if (file-exists-p mu4e-private-settings)
+      (load mu4e-private-settings)))
 
 ;;; Endnotes
 ;; Local Variables:
