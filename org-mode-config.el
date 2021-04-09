@@ -142,7 +142,8 @@
                                ,(concat org-default-directory "algtop.org"))))
   (setq org-gcal-up-days 7)
   (setq org-gcal-down-days 7)
-  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch))))
+  ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
+  )
 
 ;;; Encryption
 (use-package org-crypt
