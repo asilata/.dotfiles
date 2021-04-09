@@ -145,6 +145,10 @@
   ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
   )
 
+(setq calendar-latitude 149.13)
+(setq calendar-longitude -35.28)
+(setq calendar-location-name "Canberra")
+
 ;;; Encryption
 (use-package org-crypt
   :config
