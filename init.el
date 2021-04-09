@@ -216,6 +216,28 @@
   :straight t
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
+
+;;;; Prettify symbols
+(global-prettify-symbols-mode 1)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (push '("[ ]" . "⬜") prettify-symbols-alist)
+            (push '("[X]" . "✔") prettify-symbols-alist)
+            (push '("TODO" . "⬜") prettify-symbols-alist)
+            (push '("DONE" . "✔") prettify-symbols-alist)
+            (push '("CANCELLED" . "✘") prettify-symbols-alist)
+            (push '("WAITING" . "⏳") prettify-symbols-alist)
+            (push '("SHELVED" . "⭮") prettify-symbols-alist)
+            (push '("BORROWED" . "💰") prettify-symbols-alist)
+            (push '("RETURNED" . "✔") prettify-symbols-alist)
+            (push '("ONGOING" . "🏃") prettify-symbols-alist)))
+
+;;;; Beacon mode
+;; (use-package beacon-mode
+;;   :straight (:host github :repo "Malabarba/beacon")
+;;   :config
+;;   (beacon-mode 1))
+
 ;;; Editing
 (use-package smartparens
   :straight t
@@ -482,8 +504,10 @@
   (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
   (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
   (setq bibtex-completion-library-path '("~/Papers"))
-  (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
-
+  (ivy-set-display-transformer
+   'org-ref-ivy-insert-cite-link
+   'ivy-bibtex-display-transformer)
+  )
 
 ;;;;; Lean
 (use-package lean-mode
