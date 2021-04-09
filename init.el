@@ -55,6 +55,9 @@
         (load exwm-config-file)))
   (exwm-enable))
 
+(use-package exwm-edit
+  :straight t)
+
 ;;;; Ace-window
 (use-package ace-window
   :straight t
@@ -125,6 +128,11 @@
   :config
   (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 
+;;;; Calfw
+(use-package calfw
+  :straight t)
+(use-package calfw-org
+  :straight t)
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -247,6 +255,14 @@
   (use-package smartparens-config)
   (smartparens-global-mode 1)
   )
+
+(use-package parinfer
+  :straight t
+  :init
+  (progn
+    (setq parinfer-extensions
+          '(defaults))))
+
 
 (electric-indent-mode 1)
 (electric-layout-mode 1)
@@ -430,6 +446,10 @@
 (use-package conf-mode
   :mode ("rc$"))
 
+;;;;; Dokuwiki-mode
+(use-package dokuwiki-mode
+  :straight t)
+
 ;;;;; Flycheck
 (use-package flycheck
   :straight t
@@ -481,6 +501,9 @@
     (setq reftex-default-bibliography "~/Bibliography/math.bib"))
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2))
+
+(use-package cdlatex
+  :straight t)
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
@@ -536,6 +559,8 @@
             (lambda ()
               (orgtbl-mode 1))))
 
+;;;;; Ox-tufte
+(use-package ox-tufte :straight t)
 ;;;;; Sage
 (use-package sage-shell-mode
   :straight t
