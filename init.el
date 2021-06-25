@@ -493,12 +493,12 @@
     :straight t
     :config
     (auctex-latexmk-setup))
+  (use-package reftex :straight t
+    :config
+    (setq reftex-default-bibliography "~/Bibliography/math.bib"))  
   :defer t
   :bind (([f7] . TeX-error-overview))
   :config
-  (use-package reftex :straight t
-    :config
-    (setq reftex-default-bibliography "~/Bibliography/math.bib"))
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2))
 
