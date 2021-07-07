@@ -72,6 +72,8 @@
 ;;;; Winner-mode
 (use-package winner
   :straight t
+  :bind (("M-<left>" . winner-undo)
+         ("M-<right>" . winner-redo))
   :config
   (winner-mode t))
 
