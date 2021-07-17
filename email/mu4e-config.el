@@ -106,8 +106,8 @@
   (setq mu4e-maildirs-extension-use-bookmarks t))
 
 ;;; Org mode integration
-(require 'org-mu4e)
-(setq org-mu4e-link-query-in-headers-mode nil)
+;; (require 'org-mu4e)
+;; (setq org-mu4e-link-query-in-headers-mode nil)
 
 ;; Desktop notifications
 (use-package mu4e-alert

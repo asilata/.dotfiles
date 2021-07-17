@@ -20,11 +20,11 @@ Inbox ~/Mail/Gmail/INBOX
 SubFolders Verbatim
 
 Channel Gmail
-Master :Gmail-remote:
-Slave :Gmail-local:
+Far :Gmail-remote:
+Near :Gmail-local:
 Patterns "INBOX" "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Bin"
 Create Both
-Expunge Slave
+Expunge Near
 SyncState *
 
 #######
@@ -48,9 +48,9 @@ Path ~/Mail/ANU/
 Inbox ~/Mail/ANU/INBOX
 
 Channel ANU
-Master :ANU-remote:
-Slave :ANU-local:
+Far :ANU-remote:
+Near :ANU-local:
 Patterns "INBOX" "Sent Items" "Drafts" "Deleted Items" "Archive"
 Create Both
-Expunge Slave
+Expunge Near
 SyncState *
