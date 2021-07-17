@@ -142,7 +142,12 @@
                                ,(concat org-default-directory "algtop.org"))))
   (setq org-gcal-up-days 7)
   (setq org-gcal-down-days 7)
-  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch))))
+  ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
+  )
+
+(setq calendar-latitude 149.13)
+(setq calendar-longitude -35.28)
+(setq calendar-location-name "Canberra")
 
 ;;; Encryption
 (use-package org-crypt
@@ -150,6 +155,14 @@
   (setq org-crypt-key "D93ED1F5")
   (setq org-crypt-disable-auto-save t))
 
+;;; Org babel
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t)
+   (emacs-lisp . t)
+   (python . t)
+   (shell . t)))
+(setq org-confirm-babel-evaluate nil)
 ;;; Org journal
 (use-package org-journal
   :straight t
@@ -177,8 +190,8 @@
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph)
-               ("C-c n t" . org-roam-today))
+               ("C-c n g" . org-roam-graph)
+               ("C-c n t" . org-roam-dailies-capture-today))
               :map org-mode-map
               (("C-c n i" . org-roam-insert)))
   :custom
@@ -202,14 +215,27 @@
         :file-name "People/${slug}"
         :head ,(concat org-roam-common-head "#+roam_alias: %^{AKA}\n\n")
         :immediate-finish t))))
+  (org-roam-dailies-directory "Dailies/")
   (org-roam-dailies-capture-templates
    (let* ((daily-title-format "%<%Y-%m-%d>")
-          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n#+roam_tags: \n")))
-     `(("d" "daily" plain #'org-roam-capture--get-point
-        ""
-        :immediate-finish t
-        :file-name ,(concat "Dailies/" daily-title-format)
-        :head ,daily-front-matter))))
+          (daily-filename-format (concat org-roam-dailies-directory daily-title-format))
+          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n#+roam_tags: \n\n")))
+     `(("d" "daily" entry #'org-roam-capture--get-point
+        "* %?"
+        :file-name ,daily-filename-format
+        :head ,daily-front-matter
+        :olp ("Notes"))
+       ("c" "calculation" entry #'org-roam-capture--get-point
+        "* %?"
+        :file-name ,daily-filename-format
+        :head ,daily-front-matter
+        :olp ("Calculations"))
+       ("m" "meeting" entry #'org-roam-capture--get-point
+        "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
+        :file-name ,daily-filename-format
+        :head ,daily-front-matter
+        :olp ("Meetings")
+        :clock-in t :clock-resume t))))
   (org-roam-tag-sources '(prop all-directories))
   (require 'org-roam-protocol))
 

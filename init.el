@@ -55,6 +55,9 @@
         (load exwm-config-file)))
   (exwm-enable))
 
+(use-package exwm-edit
+  :straight t)
+
 ;;;; Ace-window
 (use-package ace-window
   :straight t
@@ -69,6 +72,8 @@
 ;;;; Winner-mode
 (use-package winner
   :straight t
+  :bind (("M-<left>" . winner-undo)
+         ("M-<right>" . winner-redo))
   :config
   (winner-mode t))
 
@@ -84,8 +89,11 @@
 ;;; Org-mode
 ;;;; Org
 (use-package org
+  :after counsel
   :straight t
-  :bind (("C-c a" . org-agenda))
+  :bind (("C-c a" . org-agenda)
+         (:map org-mode-map
+               ("C-c C-j" . counsel-outline)))
   :config
   (use-package org-bullets :straight t)
   (let ((org-config-file (concat user-opt-directory "org-mode-config.el")))
@@ -108,6 +116,10 @@
 (use-package org-chef
   :straight t)
 
+;;;; Org-mime
+(use-package org-mime
+  :straight t)
+
 ;;;; Org-noter
 (use-package org-noter
   :straight t)
@@ -118,6 +130,11 @@
   :config
   (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 
+;;;; Calfw
+(use-package calfw
+  :straight t)
+(use-package calfw-org
+  :straight t)
 ;;; Buffer customizations
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -209,6 +226,28 @@
   :straight t
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
+
+;;;; Prettify symbols
+(global-prettify-symbols-mode 1)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (push '("[ ]" . "⬜") prettify-symbols-alist)
+            (push '("[X]" . "✔") prettify-symbols-alist)
+            (push '("TODO" . "⬜") prettify-symbols-alist)
+            (push '("DONE" . "✔") prettify-symbols-alist)
+            (push '("CANCELLED" . "✘") prettify-symbols-alist)
+            (push '("WAITING" . "⏳") prettify-symbols-alist)
+            (push '("SHELVED" . "⭮") prettify-symbols-alist)
+            (push '("BORROWED" . "💰") prettify-symbols-alist)
+            (push '("RETURNED" . "✔") prettify-symbols-alist)
+            (push '("ONGOING" . "🏃") prettify-symbols-alist)))
+
+;;;; Beacon mode
+;; (use-package beacon-mode
+;;   :straight (:host github :repo "Malabarba/beacon")
+;;   :config
+;;   (beacon-mode 1))
+
 ;;; Editing
 (use-package smartparens
   :straight t
@@ -218,6 +257,14 @@
   (use-package smartparens-config)
   (smartparens-global-mode 1)
   )
+
+(use-package parinfer
+  :straight t
+  :init
+  (progn
+    (setq parinfer-extensions
+          '(defaults))))
+
 
 (electric-indent-mode 1)
 (electric-layout-mode 1)
@@ -401,6 +448,10 @@
 (use-package conf-mode
   :mode ("rc$"))
 
+;;;;; Dokuwiki-mode
+(use-package dokuwiki-mode
+  :straight t)
+
 ;;;;; Flycheck
 (use-package flycheck
   :straight t
@@ -453,6 +504,9 @@
   (use-package smartparens-latex)
   (set-default 'preview-scale-function 2))
 
+(use-package cdlatex
+  :straight t)
+
 (add-hook 'LaTeX-mode-hook
           (lambda ()
 	    (TeX-global-PDF-mode 1)
@@ -475,8 +529,10 @@
   (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
   (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
   (setq bibtex-completion-library-path '("~/Papers"))
-  (setq bibtex-completion-pdf-open-function (lambda (p) (call-process "okular" nil 0 nil p))))
-
+  (ivy-set-display-transformer
+   'org-ref-ivy-insert-cite-link
+   'ivy-bibtex-display-transformer)
+  )
 
 ;;;;; Lean
 (use-package lean-mode
@@ -505,6 +561,8 @@
             (lambda ()
               (orgtbl-mode 1))))
 
+;;;;; Ox-tufte
+(use-package ox-tufte :straight t)
 ;;;;; Sage
 (use-package sage-shell-mode
   :straight t
