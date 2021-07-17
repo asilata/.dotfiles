@@ -4,7 +4,7 @@
 ;;==============================================================================
 
 ;;; Initial boilerplate
-(require 'cl)
+(require 'cl-lib)
 
 (unless (boundp 'user-emacs-directory)
   (defvar user-emacs-directory "~/.emacs.d/"
