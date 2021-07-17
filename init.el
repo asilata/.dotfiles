@@ -576,10 +576,13 @@
 ;;; Email
 ;;;; mu4e
 (use-package mu4e
-  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
-  :demand t
+  :straight t
+  :defer nil
+  ;; :pre-build (("./autogen.sh") ("make"))
+  :custom   (mu4e-mu-binary (expand-file-name "mu/mu" (straight--repos-dir "mu4e")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
   :config
+  (require 'mu4e-contrib)
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
         (load mu4e-config-file))))
