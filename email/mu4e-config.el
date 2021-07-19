@@ -55,14 +55,6 @@
           :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
           :key ?l)
         ,(make-mu4e-bookmark
-          :name "ANU Inbox"
-          :query "maildir:\"/ANU/INBOX\""
-          :key ?a)
-        ,(make-mu4e-bookmark
-          :name "Gmail Inbox"
-          :query "maildir:\"/Gmail/INBOX\""
-          :key ?g)
-        ,(make-mu4e-bookmark
           :name "Today and untrashed"
           :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
           :key ?t)
@@ -98,16 +90,14 @@
           ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
           ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
 
-;;; Maildirs extra
-(use-package mu4e-maildirs-extension
-  :straight t
-  :config
-  (mu4e-maildirs-extension)
-  (setq mu4e-maildirs-extension-use-bookmarks t))
+;;; Maildirs shortcuts
+(setq mu4e-maildir-shortcuts
+      '((:maildir "/ANU/INBOX" :key ?a)
+        (:maildir "/Gmail/INBOX" :key ?g)))
 
 ;;; Org mode integration
-;; (require 'org-mu4e)
-;; (setq org-mu4e-link-query-in-headers-mode nil)
+(require 'mu4e-org)
+(setq org-mu4e-link-query-in-headers-mode nil)
 
 ;; Desktop notifications
 (use-package mu4e-alert
