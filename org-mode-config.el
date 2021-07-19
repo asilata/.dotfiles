@@ -185,58 +185,49 @@
 
 ;;; Org roam
 (use-package org-roam
-  :hook (after-init . org-roam-mode)
+  :hook (after-init . org-roam-setup)
   :straight (:host github :repo "org-roam/org-roam")
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph)
-               ("C-c n t" . org-roam-dailies-capture-today))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert)))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n t" . org-roam-dailies-capture-today)
+         ("C-c n i" . org-roam-node-insert))
   :custom
   (org-roam-directory (concat org-default-directory "Roam"))
   (org-roam-capture-templates
-   (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}")
-         (org-roam-common-head "#+title: ${title}\n#+created: %U\n#+roam_tags: \n")
+   (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
+         (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
          (org-roam-notes-head "\n- references :: \n\n"))
-     `(("d" "default" plain #'org-roam-capture--get-point
-        "* Notes%?"
-        :file-name ,org-roam-file-name-format
-        :head ,(concat org-roam-common-head org-roam-notes-head)
+     `(("d" "default" plain "* Notes\n%?"
+        :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
         :unnarrowed t)
-       ("l" "link" plain #'org-roam-capture--get-point
-        ""
-        :file-name ,org-roam-file-name-format
-        :head ,(concat org-roam-common-head org-roam-notes-head)
+       ("l" "link" plain ""
+        :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))        
         :immediate-finish t)
-       ("p" "person" plain #'org-roam-capture--get-point
-        "%?"
-        :file-name "People/${slug}"
-        :head ,(concat org-roam-common-head "#+roam_alias: %^{AKA}\n\n")
+       ("p" "person" plain "%?"
+        :if-new (file+head "People/${slug}.org" ,org-roam-common-head)
         :immediate-finish t))))
   (org-roam-dailies-directory "Dailies/")
   (org-roam-dailies-capture-templates
    (let* ((daily-title-format "%<%Y-%m-%d>")
-          (daily-filename-format (concat org-roam-dailies-directory daily-title-format))
-          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n#+roam_tags: \n\n")))
-     `(("d" "daily" entry #'org-roam-capture--get-point
-        "* %?"
-        :file-name ,daily-filename-format
-        :head ,daily-front-matter
+          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
+     `(("d" "daily" entry "* %?"
+        :if-new (file+head ,daily-title-format ,daily-front-matter)
         :olp ("Notes"))
-       ("c" "calculation" entry #'org-roam-capture--get-point
-        "* %?"
-        :file-name ,daily-filename-format
-        :head ,daily-front-matter
+       ("c" "calculation" entry "* %?"
+        :if-new (file+head ,daily-title-format ,daily-front-matter)
         :olp ("Calculations"))
-       ("m" "meeting" entry #'org-roam-capture--get-point
-        "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
-        :file-name ,daily-filename-format
-        :head ,daily-front-matter
+       ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
+        :if-new (file+head ,daily-title-format ,daily-front-matter)        
         :olp ("Meetings")
         :clock-in t :clock-resume t))))
   (org-roam-tag-sources '(prop all-directories))
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-at-bottom)
+                 (window-height . 10)                 
+                 (window-width . shrink-window-if-larger-than-buffer)
+                 ))
   (require 'org-roam-protocol))
 
 ;;;; org-roam-server
