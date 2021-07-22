@@ -47,6 +47,7 @@
 
 ;;; Window management
 ;;;; EXWM
+(server-start)
 (use-package exwm
   :straight t
   :config
