@@ -14,8 +14,8 @@
       (load mu4e-private-settings)))
 
 ;;; Indexing
-(setq mu4e-index-cleanup nil
-      mu4e-index-lazy-check t)
+(setq mu4e-index-cleanup t
+      mu4e-index-lazy-check nil)
 
 ;;; General view settings
 (setq mu4e-headers-date-format "  %_d %b %y"
@@ -41,6 +41,7 @@
             (local-set-key (kbd "<backtab>") 'shr-previous-link)))
 
 ;;; Message editing settings
+(setq mu4e-compose-format-flowed t)
 
 
 ;;; Bookmarks
