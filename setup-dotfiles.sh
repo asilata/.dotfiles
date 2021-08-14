@@ -15,8 +15,12 @@ ln -s $DOTFILES/org-mode-config.el ~/.emacs.d/opt/org-mode-config.el
 ln -s $DOTFILES/email/mu4e-config.el ~/.emacs.d/opt/mu4e-config.el
 ln -s $DOTFILES/email/mbsyncrc ~/.mbsyncrc
 
-# * ZSH
+# * ZSH etc
 ln -s $DOTFILES/zshrc ~/.zshrc
+if [ ! -d "$HOME/.config/"]; then
+    mkdir ~/.config/
+fi
+ln -s $DOTFILES/starship.toml ~/.config/starship.toml
 
 # * WM
 if [ ! -d "$HOME/.xmonad" ]; then

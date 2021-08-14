@@ -1,0 +1,12 @@
+format = "$all"
+
+[username]
+format="[$user]($style) on "
+show_always = true
+
+[hostname]
+ssh_only = false
+
+[directory]
+truncate_to_repo = false
+format = "[$path]($style) [$read_only]($read_only_style) "
