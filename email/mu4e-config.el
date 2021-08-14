@@ -14,8 +14,8 @@
       (load mu4e-private-settings)))
 
 ;;; Indexing
-(setq mu4e-index-cleanup nil
-      mu4e-index-lazy-check t)
+(setq mu4e-index-cleanup t
+      mu4e-index-lazy-check nil)
 
 ;;; General view settings
 (setq mu4e-headers-date-format "  %_d %b %y"
@@ -32,7 +32,6 @@
 (setq mu4e-split-view 'horizontal)
 
 ;;; Message view settings
-(setq mu4e-view-use-gnus nil)
 (setq mu4e-view-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq mu4e-attachment-dir "/tmp")
@@ -42,13 +41,14 @@
             (local-set-key (kbd "<backtab>") 'shr-previous-link)))
 
 ;;; Message editing settings
+(setq mu4e-compose-format-flowed t)
 
 
 ;;; Bookmarks
 (setq mu4e-bookmarks
       `(,(make-mu4e-bookmark
           :name  "Reasonable recent messages"
-          :query "date:12m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
+          :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
           :key ?r)
         ,(make-mu4e-bookmark
           :name "Mailing lists"
@@ -105,9 +105,11 @@
   :config
   (setq mu4e-alert-interesting-mail-query
         (concat
-         "flag:unread"
-         " AND NOT maildir:\"/Gmail/[Gmail]/Bin\""
-         " AND NOT maildir:\"/ANU/Deleted Items\""))
+         "date:6m..now"
+         "flag:unread"         
+         "AND to:asilata"
+         "AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\\\\\Important)"
+         ))
   (mu4e-alert-set-default-style 'libnotify)
   (setq mu4e-alert-email-notification-types '(subjects))
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
