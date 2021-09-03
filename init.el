@@ -635,10 +635,10 @@
 ;;; Email
 ;;;; mu4e
 (use-package mu4e
-  :straight (:files (:defaults "mu4e/*"))
+  :straight (:files (:defaults "build/mu4e/*"))
   :defer nil
   ;; :pre-build (("./autogen.sh") ("make"))
-  :custom   (mu4e-mu-binary (expand-file-name "mu/mu" (straight--repos-dir "mu")))
+  :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
   :config
   (require 'mu4e-contrib)
