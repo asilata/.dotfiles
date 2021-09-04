@@ -428,6 +428,16 @@
   :straight t
   :bind (([f6] . magit-status)))
 
+;;;; Diff-hl
+(use-package diff-hl
+  :straight t
+  :custom
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  :config
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode 1))
+
 ;;; Programming
 ;;;; Projects and jumping
 (use-package counsel-projectile
