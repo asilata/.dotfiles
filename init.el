@@ -87,6 +87,20 @@
           (select-frame-set-input-focus (window-frame win))
           (select-window win))
       (mode-line-other-buffer))))
+;;;; Tab-bar-mode
+(defun ab/tab-bar-name ()
+    (let ((project-name (projectile-project-name))
+          (old-name (tab-bar-tab-name-current-with-count)))
+      (if (string= "-" project-name)
+          old-name
+        (concat project-name ": " old-name))))
+
+(use-package tab-bar-mode
+  :bind (("s-n" . tab-next)
+         ("s-p" . tab-previous))
+  :config
+  (setq tab-bar-tab-name-function 'ab/tab-bar-name))
+
 ;;; Org-mode
 ;;;; Org
 (use-package org
