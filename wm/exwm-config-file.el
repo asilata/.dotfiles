@@ -19,6 +19,9 @@
                      (interactive (list (read-shell-command "$ ")))
                      (start-process-shell-command command nil command)))
         ([?\s-s] . flip-window)))
+
+(push '?\s-n exwm-input-prefix-keys)
+(push '?\s-p exwm-input-prefix-keys)
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars callargs)
 ;; End:

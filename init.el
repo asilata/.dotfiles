@@ -87,6 +87,20 @@
           (select-frame-set-input-focus (window-frame win))
           (select-window win))
       (mode-line-other-buffer))))
+;;;; Tab-bar-mode
+(defun ab/tab-bar-name ()
+    (let ((project-name (projectile-project-name))
+          (old-name (tab-bar-tab-name-current-with-count)))
+      (if (string= "-" project-name)
+          old-name
+        (concat project-name ": " old-name))))
+
+(use-package tab-bar-mode
+  :bind (("s-n" . tab-next)
+         ("s-p" . tab-previous))
+  :config
+  (setq tab-bar-tab-name-function 'ab/tab-bar-name))
+
 ;;; Org-mode
 ;;;; Org
 (use-package org
@@ -427,6 +441,16 @@
 (use-package magit
   :straight t
   :bind (([f6] . magit-status)))
+
+;;;; Diff-hl
+(use-package diff-hl
+  :straight t
+  :custom
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  :config
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode 1))
 
 ;;; Programming
 ;;;; Projects and jumping
