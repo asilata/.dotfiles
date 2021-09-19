@@ -637,7 +637,6 @@
 (use-package mu4e
   :straight (:files (:defaults "build/mu4e/*"))
   :defer nil
-  ;; :pre-build (("./autogen.sh") ("make"))
   :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
   :config
@@ -648,6 +647,7 @@
 
 ;;;; GPG
 (setq epg-gpg-program "gpg2")
+(setq epa-pinentry-mode 'loopback)
 
 ;;; Elfeed
 (use-package elfeed
