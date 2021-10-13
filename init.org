@@ -60,6 +60,7 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 #+end_src
 
 * Window management
+** EXWM
 I use [[https://github.com/ch11ng/exwm][exwm]] as my window manager.
 Begin by starting the emacs server.
 #+begin_src emacs-lisp
@@ -82,6 +83,7 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
   :straight t)
 #+end_src
 
+** Ace-window
 At some point I had installed [[https://github.com/abo-abo/ace-window][ace-window]]. I don't seem to be using it anymore, so I have commented it out.
 *** TODO Finish configuration or delete
 #+begin_src emacs-lisp
@@ -96,6 +98,7 @@ At some point I had installed [[https://github.com/abo-abo/ace-window][ace-windo
   ;;   )
 #+end_src
 
+** Winner mode
 Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and forth between windo configurations.
 *** TODO Finish configuration
 #+begin_src emacs-lisp
@@ -108,6 +111,7 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
 #+end_src
 
 ** Popper
+Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows as "popups".
 #+begin_src emacs-lisp
 (use-package popper
   :straight t
@@ -127,7 +131,8 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
   (popper-echo-mode +1))
 #+end_src
 
-** Flip window
+** Miscellaneous
+Function to jump to the other window. Currently not used very much.
 #+begin_src emacs-lisp
 (defun flip-window ()
   (interactive)
@@ -138,7 +143,8 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
           (select-window win))
       (mode-line-other-buffer))))
 #+end_src
-** Tab-bar-mode
+
+Use tab-bar-mode, and display the project name in the tab bar.
 #+begin_src emacs-lisp
 (defun ab/tab-bar-name ()
     (let ((project-name (projectile-project-name))
@@ -154,8 +160,60 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
   (setq tab-bar-tab-name-function 'ab/tab-bar-name))
 #+end_src
 
+* Buffer customizations
+Remove all bells and whistles. This code is /old/, from back when I first started seriously customising emacs. I might revisit this at some point.
+#+begin_src emacs-lisp
+  (setq inhibit-startup-screen t)
+  (setq initial-scratch-message nil)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (blink-cursor-mode -1)
+  (line-number-mode 1)
+  (column-number-mode 1)
+  (size-indication-mode 1)
+  (setq fill-column 90)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (setq visible-bell t)
+  
+  (if (fboundp 'fringe-mode) (fringe-mode 4))
+  (setq scroll-margin 0
+        scroll-conservatively 100000
+        scroll-preserve-screen-position 1)
+  (setq frame-title-format
+        '("" invocation-name " - " (:eval (if (buffer-file-name)
+                                              (abbreviate-file-name (buffer-file-name))
+                                            (buffer-name))
+                                          "%b")))
+#+end_src
+
+Auto-revert buffers from files.
+#+begin_src emacs-lisp
+  (setq global-auto-revert-mode 1)
+  (setq auto-revert-interval 3600)
+#+end_src
+
+Uniquify buffer names.
+#+begin_src emacs-lisp
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward
+        uniquify-separator "/"
+        uniquify-after-kill-buffer-p t ; rename after killing uniquified
+        uniquify-ignore-buffers-re "^\\*" ; don't mess with special buffers
+        )
+  )
+#+end_src
+
+** iBuffer mode
+Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterable list of all open buffers. Similar to dired.
+#+begin_src emacs-lisp
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer)))
+#+end_src
+
 * Org-mode
-** Org
+Install [[https://orgmode.org/][org-mode]]. Configuration file is currently in a separate directory.
 #+begin_src emacs-lisp
 (use-package org
   :after counsel
@@ -176,6 +234,7 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
 #+end_src
 
 ** Org-reveal
+Convert org-mode files to [[https://revealjs.com/][revealjs]] presentations via [[https://github.com/yjwen/org-reveal][org-reveal]].
 #+begin_src emacs-lisp
 (use-package ox-reveal
   :straight t
@@ -185,24 +244,30 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
 #+end_src
 
 ** Org-chef
+Manage local recipes via [[https://github.com/Chobbes/org-chef][org-chef]].
 #+begin_src emacs-lisp
 (use-package org-chef
   :straight t)
 #+end_src
 
 ** Org-mime
+At some point I had installed [[https://github.com/org-mime/org-mime][org-mime]], but maybe it is obsolete now? I am not sure.
+*** TODO Figure out if we really need this.
 #+begin_src emacs-lisp
 (use-package org-mime
   :straight t)
 #+end_src
 
-** Org-noter
+** Org-noter and org-pdftools
+At some point I had installed org-pdftools but I am not sure if I use it any more.
+*** TODO Figure out if we really need this.
 #+begin_src emacs-lisp
 (use-package org-noter
   :straight t)
 #+end_src
 
-** Org-pdfview
+I used to use org-pdfview but apparently it is unmaintained.
+*** TODO Figure out if we really need this.
 #+begin_src emacs-lisp
 (use-package org-pdfview
   :straight t
@@ -211,62 +276,16 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
 #+end_src
 
 ** Calfw
+I don't use this anymore.
 #+begin_src emacs-lisp
-(use-package calfw
-  :straight t)
-(use-package calfw-org
-  :straight t)
-#+end_src
-* Buffer customizations
-#+begin_src emacs-lisp
-(setq inhibit-startup-screen t)
-(setq initial-scratch-message nil)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(blink-cursor-mode -1)
-(line-number-mode 1)
-(column-number-mode 1)
-(size-indication-mode 1)
-(setq fill-column 90)
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq visible-bell t)
-
-(if (fboundp 'fringe-mode) (fringe-mode 4))
-(setq scroll-margin 0
-      scroll-conservatively 100000
-      scroll-preserve-screen-position 1)
-(setq frame-title-format
-      '("" invocation-name " - " (:eval (if (buffer-file-name)
-                                            (abbreviate-file-name (buffer-file-name))
-                                          (buffer-name))
-                                        "%b")))
-#+end_src
-** Auto-revert buffers from files
-#+begin_src emacs-lisp
-(setq global-auto-revert-mode 1)
-(setq auto-revert-interval 3600)
-#+end_src
-
-** Uniquify buffer names
-#+begin_src emacs-lisp
-(use-package uniquify
-  :config
-  (setq uniquify-buffer-name-style 'forward
-        uniquify-separator "/"
-        uniquify-after-kill-buffer-p t ; rename after killing uniquified
-        uniquify-ignore-buffers-re "^\\*" ; don't muck with special buffers
-        )
-  )
-#+end_src
-
-** iBuffer mode
-#+begin_src emacs-lisp
-(use-package ibuffer
-  :bind (("C-x C-b" . ibuffer)))
+  ;; (use-package calfw
+  ;;   :straight t)
+  ;; (use-package calfw-org
+  ;;   :straight t)
 #+end_src
 
 * Colour themes and prettification
+Use Zenburn as the colour theme.
 #+begin_src emacs-lisp
 (use-package zenburn-theme
   :straight t
@@ -279,7 +298,10 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
      `(hl-line ((t (:background ,zenburn-bg-2))))))
   (load-theme 'zenburn t)
   )
+#+end_src
 
+Use [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
+#+begin_src emacs-lisp
 (use-package all-the-icons
   :straight t)
 
@@ -292,35 +314,42 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
   :straight t
   :config
   (all-the-icons-ivy-setup))
-
+#+end_src
+Use [[https://elpa.gnu.org/packages/rainbow-mode.html][rainbow-mode]] to show colours under colour names.
+#+begin_src emacs-lisp
 (use-package rainbow-mode
   :straight t
   :mode "\\.\\(el|scss|sass\\)")
-
-(use-package dired-sidebar
-  :straight t
-  :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
-  :commands
-  (dired-sidebar-toggle-sidebar))
-
-(use-package treemacs
-  :straight t
-  :bind (:map global-map
-              ([f8] . treemacs-select-window))
-  :custom
-  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?))
-
-(use-package treemacs-magit
-  :after treemacs magit
-  :straight t)
-
-(use-package dired-narrow
-  :straight t
-  :bind (:map dired-mode-map
-              ("/" . dired-narrow)))
+#+end_src
+Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
+#+begin_src emacs-lisp
+  (use-package dired-sidebar
+    :straight t
+    :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
+    :commands
+    (dired-sidebar-toggle-sidebar))
+  
+  (use-package dired-narrow
+    :straight t
+    :bind (:map dired-mode-map
+                ("/" . dired-narrow)))
+#+end_src
+Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this as much anymore.
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :straight t
+    :bind (:map global-map
+                ([f8] . treemacs-select-window))
+    :custom
+    (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?))
+  
+  (use-package treemacs-magit
+    :after treemacs magit
+    :straight t)
 #+end_src
 
-** Prettify symbols
+Prettify various symbols.
+*** TODO Revisit prettified symbols.
 #+begin_src emacs-lisp
 (global-prettify-symbols-mode 1)
 (add-hook 'org-mode-hook
@@ -337,11 +366,14 @@ Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and f
             (push '("ONGOING" . "🏃") prettify-symbols-alist)))
 #+end_src
 
-** Beacon mode
-(use-package beacon-mode
-  :straight (:host github :repo "Malabarba/beacon")
-  :config
-  (beacon-mode 1))
+Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the cursor is. Does not seem to work at the moment.
+*** TODO Fix beacon-mode.
+#+begin_src emacs-lisp
+  ;; (use-package beacon-mode
+  ;;   :straight (:host github :repo "Malabarba/beacon")
+  ;;   :config
+  ;;   (beacon-mode 1))
+#+end_src
 
 * Editing
 #+begin_src emacs-lisp
