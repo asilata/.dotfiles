@@ -1,5 +1,6 @@
 #+title: Emacs init file
 #+author: Asilata Bapat
+#+property: header-args :tangle "~/.emacs.d/init.el"
 
 * Initial boilerplate
 Define values for the top-level emacs directory (~.emacs.d~), as well as the subdirectories for optional packages and machine-local configuration.
@@ -27,9 +28,12 @@ Create the above directories if they don't exist.
   (normal-top-level-add-subdirs-to-load-path))
 #+end_src
 
-** To fix cursor colour bug...
+I have forgotten why I had added the following bit of code.
+It seems to have been a relic of the past, something about the colour of my cursor.
+I am commenting it for now and may remove it later on.
+*** TODO Finish configuration or delete
 #+begin_src emacs-lisp
-(setq inhibit-x-resources 't)
+  ;; (setq inhibit-x-resources 't)
 #+end_src
 
 * Package management
@@ -56,9 +60,14 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 #+end_src
 
 * Window management
-** EXWM
+I use [[https://github.com/ch11ng/exwm][exwm]] as my window manager.
+Begin by starting the emacs server.
 #+begin_src emacs-lisp
 (server-start)
+#+end_src
+
+Install exwm and load its configuration file (currently external).
+#+begin_src emacs-lisp
 (use-package exwm
   :straight t
   :config
@@ -66,25 +75,29 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
     (if (file-exists-p exwm-config-file)
         (load exwm-config-file)))
   (exwm-enable))
-
+#+end_src
+Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit text blocks from other programs in emacs.
+#+begin_src emacs-lisp
 (use-package exwm-edit
   :straight t)
 #+end_src
 
-** Ace-window
+At some point I had installed [[https://github.com/abo-abo/ace-window][ace-window]]. I don't seem to be using it anymore, so I have commented it out.
+*** TODO Finish configuration or delete
 #+begin_src emacs-lisp
-(use-package ace-window
-  :straight t
-  :bind (("C-x o" . ace-window))
-  :custom
-  (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
-  (aw-minibuffer-flag t)
-  :custom-face
-  (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
-  )
+  ;; (use-package ace-window
+  ;;   :straight t
+  ;;   :bind (("C-x o" . ace-window))
+  ;;   :custom
+  ;;   (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
+  ;;   (aw-minibuffer-flag t)
+  ;;   :custom-face
+  ;;   (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
+  ;;   )
 #+end_src
 
-** Winner-mode
+Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and forth between windo configurations.
+*** TODO Finish configuration
 #+begin_src emacs-lisp
 (use-package winner
   :straight t
@@ -204,7 +217,6 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 (use-package calfw-org
   :straight t)
 #+end_src
-
 * Buffer customizations
 #+begin_src emacs-lisp
 (setq inhibit-startup-screen t)
@@ -437,7 +449,6 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 (use-package browse-kill-ring
   :straight t)
 #+end_src
-
 * Minibuffer and search
 ** Ivy, etc
 #+begin_src emacs-lisp
@@ -827,9 +838,12 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 ** mu4e
 #+begin_src emacs-lisp
 (use-package mu4e
-  :straight (:host github :repo "djcb/mu" :branch "release/1.6" :files (:defaults "build/mu4e/*"))
+  :straight
+  (:host github :repo "djcb/mu" :branch "release/1.6"
+         :pre-build
+         (("meson" "build") ("ninja" "-C" "build"))
+         :files (:defaults "build/mu4e/*"))
   :defer nil
-  ;; :pre-build (("./autogen.sh") ("make"))
   :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
   :config
@@ -900,6 +914,13 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 #+end_src
 
 ** Local variables
-Local Variables:
-byte-compile-warnings: (not free-vars callargs cl-functions)
-End:
+#+begin_src emacs-lisp
+  ;; Local Variables:
+  ;; byte-compile-warnings: (not free-vars callargs cl-functions)  
+  ;; End:
+#+end_src
+
+# Local Variables: 
+# eval: (add-hook 'after-save-hook (lambda () (if (y-or-n-p "Reload?") (load-file user-init-file))) nil t) 
+# eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
+# End:
