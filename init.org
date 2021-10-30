@@ -128,6 +128,8 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             compilation-mode
             "magit-log"
             ("magit-diff" . hide)
+            "Zoom:chat"
+            "\\*org-roam\\*"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
