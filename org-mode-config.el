@@ -158,10 +158,13 @@
 ;;; Org babel
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((dot . t)
+ '((latex . t)
+   (dot . t)
    (emacs-lisp . t)
    (python . t)
-   (shell . t)))
+   (shell . t)
+   (org . t)
+   (sass . t)))
 (setq org-confirm-babel-evaluate nil)
 ;;; Org journal
 (use-package org-journal
