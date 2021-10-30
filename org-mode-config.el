@@ -13,7 +13,9 @@
 (setq org-log-done t)
 (setq org-log-state-notes-insert-after-drawers t)
 (setq org-refile-targets
-      '((org-agenda-files :maxlevel . 5)))
+      `((org-agenda-files :maxlevel . 5)
+        (,(concat org-roam-directory "meetings.org") :maxlevel . 5)
+        (,(concat org-roam-directory "calculations.org") :maxlevel . 5)))
 (setq org-refile-use-outline-path 'file)
 (setq org-outline-path-complete-in-steps nil)
 
@@ -196,15 +198,15 @@
          ("C-c n t" . org-roam-dailies-capture-today)
          ("C-c n i" . org-roam-node-insert))
   :custom
-  (org-roam-directory (concat org-default-directory "Roam"))
+  (org-roam-directory (concat org-default-directory "Roam/"))
   (org-roam-capture-templates
    (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
          (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
-         (org-roam-notes-head "\n- references :: \n\n"))
+         (org-roam-notes-head "\n* References\n\n"))
      `(("d" "default" plain "* Notes\n%?"
         :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
         :unnarrowed t)
-       ("l" "link" plain ""
+       ("l" "link" plain "* Notes\n"
         :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))        
         :immediate-finish t)
        ("p" "person" plain "%?"
@@ -233,17 +235,17 @@
                  ))
   (require 'org-roam-protocol))
 
-;;;; org-roam-server
-(use-package org-roam-server
-  :straight t
-  :config
-  (setq org-roam-server-host "127.0.0.1"
-        org-roam-server-port 8080
-        org-roam-server-export-inline-images t
-        org-roam-server-authenticate nil
-        org-roam-server-label-truncate t
-        org-roam-server-label-truncate-length 60
-        org-roam-server-label-wrap-length 20))
+;;;; org-roam-ui
+(use-package org-roam-ui
+  :straight
+  (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 ;;;; org-roam-bibtex
 (use-package org-roam-bibtex
@@ -290,13 +292,6 @@
   (deft-default-extension "org")
   (deft-directory org-roam-directory)
   )
-
-;;;; company-org-roam
-(use-package company-org-roam
-  :after org-roam company org
-  :straight (:host github :repo "org-roam/company-org-roam")
-  :config
-  (push 'company-org-roam company-backends))
 
 
 ;;; Org-brain
