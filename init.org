@@ -840,6 +840,7 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 
 
 ** RYO modal
+#+begin_src emacs-lisp
 (use-package ryo-modal
   :straight t
   :commands ryo-modal-mode
@@ -850,6 +851,7 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
    ("n" org-next-visible-heading)
    ("p" org-previous-visible-heading))
   )
+#+end_src
 ** Objed
 #+begin_src emacs-lisp
 (use-package objed
