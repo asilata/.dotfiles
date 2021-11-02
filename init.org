@@ -228,16 +228,21 @@ The configuration is written in the next section, and shows up in place of ~<<or
            (:map org-mode-map
                  ("C-c C-j" . counsel-outline)))
     :config
-    (use-package org-bullets :straight t)
     <<org-mode-config>>
     (add-hook 'org-mode-hook
               (lambda ()
-                (visual-line-mode 1)
-                (org-bullets-mode 1)))
+                (visual-line-mode 1)))
     (setq org-use-speed-commands t))
 #+end_src
 
 Here are some org-related packages.
+*** Org superstar
+#+begin_src emacs-lisp
+  (use-package org-superstar
+    :straight t
+    :custom
+    (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+#+end_src
 *** Org-reveal
 Convert org-mode files to [[https://revealjs.com/][revealjs]] presentations via [[https://github.com/yjwen/org-reveal][org-reveal]].
 #+begin_src emacs-lisp
