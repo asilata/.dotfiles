@@ -423,34 +423,35 @@ More updates and documentation coming soon.
 
 **** Custom agendas
 #+begin_src emacs-lisp
-(setq org-agenda-custom-commands
-      '(("c" "Comprehensive view"
-         ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
-                      (org-agenda-span 'day)
-                      (org-agenda-ndays 1)
-                      (org-agenda-start-on-weekday nil)
-                      (org-agenda-start-day "+0d")
-                      (org-agenda-todo-ignore-deadlines nil)))
-          (todo "TODO"
-                ((org-agenda-overriding-header "Unscheduled tasks:")
-                 (org-agenda-todo-ignore-deadlines 'all)
-                 (org-agenda-todo-ignore-scheduled 'all)))
-          (todo "ONGOING"
-                ((org-agenda-overriding-header "Ongoing tasks:")
-                 (org-agenda-todo-ignore-deadlines 'all)
-                 (org-agenda-todo-ignore-scheduled 'all)))
-          (agenda "" ((org-agenda-overriding-header "Upcoming week:")
-                      (org-agenda-span 'week)
-                      (org-agenda-start-day "+1d")
-                      (org-agenda-start-on-weekday nil)
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
-                      ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
-                      ))
-          (todo "WAITING|SHELVED"
-                ((org-agenda-overriding-header "Waiting or shelved tasks:")
-                 (org-agenda-todo-ignore-deadlines 'all)
-                 (org-agenda-todo-ignore-scheduled 'all)))
-          ))))
+  (setq org-agenda-custom-commands
+        '(("c" "Comprehensive view"
+           ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
+                        (org-agenda-span 'day)
+                        (org-agenda-ndays 1)
+                        (org-agenda-start-on-weekday nil)
+                        (org-agenda-start-day "+0d")
+                        (org-agenda-todo-ignore-deadlines nil)))
+            (agenda "" ((org-agenda-overriding-header "Upcoming week:")
+                        (org-agenda-span 'week)
+                        (org-agenda-start-day "+1d")
+                        (org-agenda-start-on-weekday nil)
+                        (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
+                        ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
+                        ))
+            (todo "TODO"
+                  ((org-agenda-overriding-header "Unscheduled tasks:")
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-scheduled 'all)))
+            (todo "ONGOING"
+                  ((org-agenda-overriding-header "Ongoing tasks:")
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-scheduled 'all)))
+  
+            (todo "WAITING|SHELVED"
+                  ((org-agenda-overriding-header "Waiting or shelved tasks:")
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-scheduled 'all)))
+            ))))
 #+end_src
 
 *** Google calendar integration
