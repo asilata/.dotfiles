@@ -1,6 +1,6 @@
 #+title: Emacs init file
 #+author: Asilata Bapat
-#+property: header-args :tangle "~/.emacs.d/init.el" :results silent
+#+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
 #+startup: overview
 
 * Initial boilerplate
@@ -541,40 +541,48 @@ More updates and documentation coming soon.
     :custom
     (setq org-roam-v2-ack t)
     (org-roam-capture-templates
-     (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
-           (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
-           (org-roam-notes-head "\n* References\n\n"))
+     (let* ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
+            (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
+            (org-roam-notes-head "\n* References\n\n")
+            (orb-title-format "${title} (${author})")
+            (orb-file-name-format "Bibnotes/${citekey}.org")
+            (orb-front-matter "#+roam_key: ${ref}\n#+created: %U\n\n")
+            (orb-common-head (concat "#+title: " orb-title-format "\n" orb-front-matter)))
        `(("d" "default" plain "* Notes\n%?"
-          :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
+          :target (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
           :unnarrowed t)
          ("l" "link" plain "* Notes\n"
-          :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))        
+          :target (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))        
           :immediate-finish t)
          ("p" "person" plain "%?"
-          :if-new (file+head "People/${slug}.org" ,org-roam-common-head)
-          :immediate-finish t))))
-    (org-roam-dailies-directory "Dailies/")
-    (org-roam-dailies-capture-templates
-     (let* ((daily-title-format "%<%Y-%m-%d>")
-            (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
-       `(("d" "daily" entry "* %?"
-          :if-new (file+head ,daily-title-format ,daily-front-matter)
-          :olp ("Notes"))
-         ("c" "calculation" entry "* %?"
-          :if-new (file+head ,daily-title-format ,daily-front-matter)
-          :olp ("Calculations"))
-         ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
-          :if-new (file+head ,daily-title-format ,daily-front-matter)        
-          :olp ("Meetings")
-          :clock-in t :clock-resume t))))
-    (org-roam-tag-sources '(prop all-directories))
-    (add-to-list 'display-buffer-alist
-                 '("\\*org-roam\\*"
-                   (display-buffer-at-bottom)
-                   (window-height . 10)                 
-                   (window-width . shrink-window-if-larger-than-buffer)
-                   ))
-    (require 'org-roam-protocol))
+          :target (file+head "People/${slug}.org" ,org-roam-common-head)
+          :immediate-finish t)
+         ("r" "ref" plain "* Notes\n%?"
+          :target (file+head ,orb-file-name-format ,orb-common-head)
+          :unnarrowed t)
+         )))
+  (org-roam-dailies-directory "Dailies/")
+  (org-roam-dailies-capture-templates
+   (let* ((daily-title-format "%<%Y-%m-%d>")
+          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
+     `(("d" "daily" entry "* %?"
+        :if-new (file+head ,daily-title-format ,daily-front-matter)
+        :olp ("Notes"))
+       ("c" "calculation" entry "* %?"
+        :if-new (file+head ,daily-title-format ,daily-front-matter)
+        :olp ("Calculations"))
+       ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
+        :if-new (file+head ,daily-title-format ,daily-front-matter)        
+        :olp ("Meetings")
+        :clock-in t :clock-resume t))))
+  (org-roam-tag-sources '(prop all-directories))
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-at-bottom)
+                 (window-height . 10)                 
+                 (window-width . shrink-window-if-larger-than-buffer)
+                 ))
+  (require 'org-roam-protocol))
 #+end_src
 
 **** org-roam-ui
@@ -592,39 +600,15 @@ More updates and documentation coming soon.
 #+end_src
 
 **** org-roam-bibtex
+See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-bibtex]] and [[https://github.com/org-roam/org-roam-bibtex/blob/master/doc/orb-manual.org][the manual]].
 #+begin_src emacs-lisp
-(use-package org-roam-bibtex
-  :after org-roam ivy-bibtex
-  :straight (:host github :repo "org-roam/org-roam-bibtex")
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-              (("C-c n a" . orb-note-actions)))
-  :init
-  :custom
-  (orb-templates
-   (let* ((orb-title-format "${title} (${author})")
-          (orb-file-name-format "Bibnotes/${citekey}")
-          (orb-front-matter "#+roam_key: ${ref}\n#+created: %U\n\n")
-          (orb-common-head (concat "#+title: " orb-title-format "\n" orb-front-matter)))
-     `(("r" "ref" plain #'org-roam-capture--get-point
-        "%?"
-        :file-name ,orb-file-name-format
-        :head ,(concat orb-common-head "* Notes")
-        :unnarrowed t
-        :immediate-finish t)
-       ("n" "ref + org-noter" plain #'org-roam-capture--get-point
-        "%?"
-        :file-name ,orb-file-name-format
-        :head ,(s-join "\n" (list orb-common-head
-                                  "* Notes"
-                                  "* Org-noter notes :noter:"
-                                  "  :PROPERTIES:"
-                                  "  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
-                                  "  :NOTER_PAGE:"
-                                  "  :END:\n\n"))
-        :unnarrowed t
-        :immediate-finish t)
-       ))))
+  (use-package org-roam-bibtex
+    :after org-roam ivy-bibtex
+    :straight t
+    :bind (:map org-mode-map
+                (("C-c n a" . orb-note-actions)))
+    :custom
+    (org-roam-bibtex-mode 1))
 #+end_src
   
 **** deft
