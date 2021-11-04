@@ -305,15 +305,18 @@ Currently this has just been copied over from the older ~org-mode-config.el~ fil
 More updates and documentation coming soon.
 *** Org files locations
 #+begin_src emacs-lisp
-(setq org-default-directory "~/Org/")
-(setq org-shared-directory "~/Org-shared/")
-(setq org-default-notes-file (concat org-default-directory "todo.org"))
-(setq org-agenda-files
-      (append (file-expand-wildcards (concat org-default-directory "*.org"))
-              (file-expand-wildcards (concat org-shared-directory "*.org"))
-              (directory-files-recursively (concat org-default-directory "Projects") org-agenda-file-regexp)
-              (directory-files-recursively (concat org-default-directory "Teaching") org-agenda-file-regexp)
-              ))
+  (setq org-default-directory "~/Org/"
+        org-shared-directory "~/Org-shared/")
+  (setq org-roam-directory (concat org-default-directory "Roam/"))
+  (setq org-default-notes-file (concat org-default-directory "todo.org"))
+  (setq org-agenda-files
+        (append (file-expand-wildcards (concat org-default-directory "*.org"))
+                (file-expand-wildcards (concat org-shared-directory "*.org"))
+                (directory-files-recursively (concat org-default-directory "Projects") org-agenda-file-regexp)
+                (directory-files-recursively (concat org-default-directory "Teaching") org-agenda-file-regexp)
+                `(,(concat org-roam-directory "meetings.org")
+                  ,(concat org-roam-directory "calculations.org"))
+                ))
 #+end_src
 
 *** Global options for notes and refiling
@@ -527,51 +530,51 @@ More updates and documentation coming soon.
 
 *** Org roam
 #+begin_src emacs-lisp
-(use-package org-roam
-  :hook (after-init . org-roam-setup)
-  :straight (:host github :repo "org-roam/org-roam")
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-graph)
-         ("C-c n t" . org-roam-dailies-capture-today)
-         ("C-c n i" . org-roam-node-insert))
-  :custom
-  (org-roam-directory (concat org-default-directory "Roam/"))
-  (org-roam-capture-templates
-   (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
-         (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
-         (org-roam-notes-head "\n* References\n\n"))
-     `(("d" "default" plain "* Notes\n%?"
-        :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
-        :unnarrowed t)
-       ("l" "link" plain "* Notes\n"
-        :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))        
-        :immediate-finish t)
-       ("p" "person" plain "%?"
-        :if-new (file+head "People/${slug}.org" ,org-roam-common-head)
-        :immediate-finish t))))
-  (org-roam-dailies-directory "Dailies/")
-  (org-roam-dailies-capture-templates
-   (let* ((daily-title-format "%<%Y-%m-%d>")
-          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
-     `(("d" "daily" entry "* %?"
-        :if-new (file+head ,daily-title-format ,daily-front-matter)
-        :olp ("Notes"))
-       ("c" "calculation" entry "* %?"
-        :if-new (file+head ,daily-title-format ,daily-front-matter)
-        :olp ("Calculations"))
-       ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
-        :if-new (file+head ,daily-title-format ,daily-front-matter)        
-        :olp ("Meetings")
-        :clock-in t :clock-resume t))))
-  (org-roam-tag-sources '(prop all-directories))
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-at-bottom)
-                 (window-height . 10)                 
-                 (window-width . shrink-window-if-larger-than-buffer)
-                 ))
-  (require 'org-roam-protocol))
+  (use-package org-roam
+    :hook (after-init . org-roam-setup)
+    :straight (:host github :repo "org-roam/org-roam")
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n t" . org-roam-dailies-capture-today)
+           ("C-c n i" . org-roam-node-insert))
+    :custom
+    (setq org-roam-v2-ack t)
+    (org-roam-capture-templates
+     (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
+           (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
+           (org-roam-notes-head "\n* References\n\n"))
+       `(("d" "default" plain "* Notes\n%?"
+          :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
+          :unnarrowed t)
+         ("l" "link" plain "* Notes\n"
+          :if-new (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))        
+          :immediate-finish t)
+         ("p" "person" plain "%?"
+          :if-new (file+head "People/${slug}.org" ,org-roam-common-head)
+          :immediate-finish t))))
+    (org-roam-dailies-directory "Dailies/")
+    (org-roam-dailies-capture-templates
+     (let* ((daily-title-format "%<%Y-%m-%d>")
+            (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
+       `(("d" "daily" entry "* %?"
+          :if-new (file+head ,daily-title-format ,daily-front-matter)
+          :olp ("Notes"))
+         ("c" "calculation" entry "* %?"
+          :if-new (file+head ,daily-title-format ,daily-front-matter)
+          :olp ("Calculations"))
+         ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
+          :if-new (file+head ,daily-title-format ,daily-front-matter)        
+          :olp ("Meetings")
+          :clock-in t :clock-resume t))))
+    (org-roam-tag-sources '(prop all-directories))
+    (add-to-list 'display-buffer-alist
+                 '("\\*org-roam\\*"
+                   (display-buffer-at-bottom)
+                   (window-height . 10)                 
+                   (window-width . shrink-window-if-larger-than-buffer)
+                   ))
+    (require 'org-roam-protocol))
 #+end_src
 
 **** org-roam-ui
