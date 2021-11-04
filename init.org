@@ -1311,22 +1311,173 @@ I don't use this anymore.
 
 * Email
 ** mu4e
-#+begin_src emacs-lisp
-(use-package mu4e
-  :straight
-  (:host github :repo "djcb/mu" :branch "release/1.6"
-         :pre-build
-         (("meson" "build") ("ninja" "-C" "build"))
-         :files (:defaults "build/mu4e/*"))
-  :defer nil
-  :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
-  :bind (("C-c p" . mml-secure-message-sign-pgpmime))
-  :config
-  (require 'mu4e-contrib)
-  (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
-    (if (file-exists-p mu4e-config-file)
-        (load mu4e-config-file))))
+#+begin_src emacs-lisp :noweb no-export
+  (use-package mu4e
+    :straight
+    (:host github :repo "djcb/mu" :branch "release/1.6"
+           :pre-build
+           (("meson" "build") ("ninja" "-C" "build"))
+           :files (:defaults "build/mu4e/*"))
+    :defer nil
+    :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
+    :bind (("C-c p" . mml-secure-message-sign-pgpmime))
+    :config
+    (require 'mu4e-contrib)
+    <<mu4e-config>>
+    )
 #+end_src
+** mu4e configuration
+:PROPERTIES:
+:header-args: :noweb-ref mu4e-config :tangle no
+:END:
+Currently copied over from the old mu4e configuration file. To be updated.
+*** Getting mail
+#+begin_src emacs-lisp
+(setq mu4e-get-mail-command "mbsync -a"
+      mu4e-update-interval (* 60 15))
+(setq mu4e-change-filenames-when-moving t)
+#+end_src
+
+*** Sending mail
+#+begin_src emacs-lisp
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-smtp-service 587
+      message-kill-buffer-on-exit t)
+#+end_src
+
+*** Private settings (user settings, contexts)
+#+begin_src emacs-lisp
+(let ((mu4e-private-settings (concat user-opt-directory "private/mu4e-private-settings.el")))
+  (if (file-exists-p mu4e-private-settings)
+      (load mu4e-private-settings)))
+#+end_src
+
+*** Indexing
+#+begin_src emacs-lisp
+(setq mu4e-index-cleanup t
+      mu4e-index-lazy-check nil)
+#+end_src
+
+*** General view settings
+#+begin_src emacs-lisp
+(setq mu4e-headers-date-format "  %_d %b %y"
+      mu4e-headers-time-format "%_l:%M %P"
+      mu4e-headers-fields
+      '((:human-date . 12)
+        (:flags . 4)
+        (:size . 8)
+        (:from-or-to . 20)
+        (:thread-subject . nil))
+      mu4e-headers-skip-duplicates t)
+(setq message-kill-buffer-on-exit t)
+(setq mu4e-use-fancy-chars t)
+(setq mu4e-split-view 'horizontal)
+#+end_src
+
+*** Message view settings
+#+begin_src emacs-lisp
+(setq mu4e-view-show-images t)
+(setq mu4e-html2text-command 'mu4e-shr2text)
+(setq mu4e-attachment-dir "/tmp")
+(add-hook 'mu4e-view-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<tab>") 'shr-next-link)
+            (local-set-key (kbd "<backtab>") 'shr-previous-link)))
+#+end_src
+
+*** Message editing settings
+#+begin_src emacs-lisp
+(setq mu4e-compose-format-flowed t)
+#+end_src
+
+
+*** Bookmarks
+#+begin_src emacs-lisp
+(setq mu4e-bookmarks
+      `(,(make-mu4e-bookmark
+          :name  "Reasonable recent messages"
+          :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
+          :key ?r)
+        ,(make-mu4e-bookmark
+          :name "Mailing lists"
+          :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
+          :key ?l)
+        ,(make-mu4e-bookmark
+          :name "Today and untrashed"
+          :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+          :key ?t)
+        ,(make-mu4e-bookmark
+          :name "Last week and untrashed"
+          :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+          :key ?w)
+        ))
+#+end_src
+
+*** Custom functions
+(defun my/delete-without-trashing ()
+  (let (tfolder (mu4e-get-trash-folder (mu4e-message-at-point)))
+    (mu4e-mark-set refile tfolder)))
+(define-key mu4e-headers-mode-map (kbd "C-!") 'my/delete-without-trashing)
+
+*** Various hooks
+#+begin_src emacs-lisp
+(add-hook 'mu4e-headers-found-hook
+          (lambda () (setq truncate-lines t)))
+
+(add-to-list 'mu4e-view-actions
+             '("retag message" . mu4e-action-retag-message) t)
+(add-to-list 'mu4e-headers-actions
+             '("retag message" . mu4e-action-retag-message) t)
+
+(add-hook 'mu4e-compose-mode-hook
+          (lambda ()
+            (turn-off-auto-fill)
+            (visual-line-mode 1)))
+
+(add-hook 'mu4e-mark-execute-pre-hook
+  (lambda (mark msg)
+    (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\\\Inbox"))
+          ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
+          ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
+#+end_src
+
+*** Maildirs shortcuts
+#+begin_src emacs-lisp
+(setq mu4e-maildir-shortcuts
+      '((:maildir "/ANU/INBOX" :key ?a)
+        (:maildir "/Gmail/INBOX" :key ?g)))
+#+end_src
+
+*** Org mode integration
+#+begin_src emacs-lisp
+(require 'mu4e-org)
+(setq org-mu4e-link-query-in-headers-mode nil)
+#+end_src
+
+Desktop notifications
+#+begin_src emacs-lisp
+(use-package mu4e-alert
+  :straight t
+  :config
+  (setq mu4e-alert-interesting-mail-query
+        (concat
+         "date:6m..now"
+         "flag:unread"         
+         "AND to:asilata"
+         "AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\\\\\Important)"
+         ))
+  (mu4e-alert-set-default-style 'libnotify)
+  (setq mu4e-alert-email-notification-types '(subjects))
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+  )
+#+end_src
+
+*** Endnotes
+Local Variables:
+byte-compile-warnings: (not free-vars callargs cl-functions)
+End:
+
 
 ** GPG
 #+begin_src emacs-lisp
