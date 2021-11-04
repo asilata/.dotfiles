@@ -1,6 +1,6 @@
 #+title: Emacs init file
 #+author: Asilata Bapat
-#+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
+#+property: header-args :tangle "~/.emacs.d/init.el" :results silent
 #+startup: overview
 
 * Initial boilerplate
@@ -65,7 +65,7 @@ Install [[https://github.com/jwiegley/use-package][use-package]] if not installe
 I use [[https://github.com/ch11ng/exwm][exwm]] as my window manager.
 Begin by starting the emacs server.
 #+begin_src emacs-lisp
-(server-start)
+(unless (server-running-p) (server-start))
 #+end_src
 
 Install exwm and load its configuration file (currently external).
