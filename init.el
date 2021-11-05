@@ -668,7 +668,7 @@
 ;;; Email
 ;;;; mu4e
 (use-package mu4e
-  :straight (:files (:defaults "build/mu4e/*"))
+  :straight (:host github :repo "djcb/mu" :branch "release/1.6" :files (:defaults "build/mu4e/*"))
   :defer nil
   :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
@@ -676,11 +676,17 @@
   (require 'mu4e-contrib)
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
-        (load mu4e-config-file))))
+        (load mu4e-config-file)))
+  )
 
 ;;;; GPG
+(setenv "GPG_AGENT_INFO" nil)
+(setq auth-source-debug t)
 (setq epg-gpg-program "gpg2")
+(require 'epa-file)
+(epa-file-enable)
 (setq epa-pinentry-mode 'loopback)
+(setq epg-pinentry-mode 'loopback)
 
 ;;; Elfeed
 (use-package elfeed
