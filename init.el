@@ -51,10 +51,19 @@
 (use-package exwm
   :straight t
   :config
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist '(1 "DP-1"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (defun ab/exwm-randr ()
+              (start-process-shell-command
+               "xrandr" nil "xrandr --output eDP-1 --output DP-1")))
+  (exwm-randr-enable)  
   (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
     (if (file-exists-p exwm-config-file)
         (load exwm-config-file)))
   (exwm-enable))
+
+
 
 (use-package exwm-edit
   :straight t)
@@ -127,6 +136,21 @@
   (use-package htmlize :straight t)
   (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
 
+;;;; Org-present
+(use-package org-present
+  :straight t
+  :config
+  (eval-after-load "org-present"
+    '(progn
+       (add-hook 'org-present-mode-hook
+                 (lambda ()
+                   (org-present-big)
+                   (org-display-inline-images)
+                   ))
+       (add-hook 'org-present-quit-hook
+                 (lambda ()
+                   (org-present-small)
+                   (org-remove-inline-images))))))
 ;;;; Org-chef
 (use-package org-chef
   :straight t)
@@ -659,19 +683,25 @@
 ;;; Email
 ;;;; mu4e
 (use-package mu4e
-  :straight (:files (:defaults "build/mu4e/*"))
+  :straight (:host github :repo "djcb/mu" :branch "release/1.6" :files (:defaults "build/mu4e/*"))
   :defer nil
-  ;; :pre-build (("./autogen.sh") ("make"))
   :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
   :config
   (require 'mu4e-contrib)
   (let ((mu4e-config-file (concat user-opt-directory "mu4e-config.el")))
     (if (file-exists-p mu4e-config-file)
-        (load mu4e-config-file))))
+        (load mu4e-config-file)))
+  )
 
 ;;;; GPG
+(setenv "GPG_AGENT_INFO" nil)
+(setq auth-source-debug t)
 (setq epg-gpg-program "gpg2")
+(require 'epa-file)
+(epa-file-enable)
+(setq epa-pinentry-mode 'loopback)
+(setq epg-pinentry-mode 'loopback)
 
 ;;; Elfeed
 (use-package elfeed

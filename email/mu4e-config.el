@@ -8,6 +8,22 @@
       smtpmail-smtp-service 587
       message-kill-buffer-on-exit t)
 
+;;;; Org-msg
+(setq mail-user-agent 'mu4e-user-agent)
+(use-package org-msg
+  :straight t
+  :config
+  (setq org-msg-options "toc: nil html-postamble: nil H:5 num:nil ^:{}")
+  (setq org-msg-startup "hidestart indent inlineimages")
+  (setq org-msg-greeting-fmt "Hi%s,\n\n")
+  (setq org-msg-greeting-fmt-mailto t)
+  (setq org-msg-signature "
+#+begin_signature
+Best,
+Asilata
+#+end_signature")
+  )
+
 ;;; Private settings (user settings, contexts)
 (let ((mu4e-private-settings (concat user-opt-directory "private/mu4e-private-settings.el")))
   (if (file-exists-p mu4e-private-settings)

@@ -198,6 +198,7 @@
          ("C-c n t" . org-roam-dailies-capture-today)
          ("C-c n i" . org-roam-node-insert))
   :custom
+  (setq org-roam-v2-ack t)  
   (org-roam-directory (concat org-default-directory "Roam/"))
   (org-roam-capture-templates
    (let ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
