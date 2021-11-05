@@ -97,7 +97,7 @@ Asilata
 
 (add-hook 'mu4e-compose-mode-hook
           (lambda ()
-            (auto-fill-mode 0)
+            (turn-off-auto-fill)
             (visual-line-mode 1)))
 
 (add-hook 'mu4e-mark-execute-pre-hook
