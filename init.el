@@ -136,6 +136,21 @@
   (use-package htmlize :straight t)
   (setq org-reveal-root (concat "file://" (expand-file-name "~/opt/revealjs"))))
 
+;;;; Org-present
+(use-package org-present
+  :straight t
+  :config
+  (eval-after-load "org-present"
+    '(progn
+       (add-hook 'org-present-mode-hook
+                 (lambda ()
+                   (org-present-big)
+                   (org-display-inline-images)
+                   ))
+       (add-hook 'org-present-quit-hook
+                 (lambda ()
+                   (org-present-small)
+                   (org-remove-inline-images))))))
 ;;;; Org-chef
 (use-package org-chef
   :straight t)
