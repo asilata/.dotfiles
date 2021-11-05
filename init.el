@@ -51,10 +51,19 @@
 (use-package exwm
   :straight t
   :config
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist '(1 "DP-1"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (defun ab/exwm-randr ()
+              (start-process-shell-command
+               "xrandr" nil "xrandr --output eDP-1 --output DP-1")))
+  (exwm-randr-enable)  
   (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
     (if (file-exists-p exwm-config-file)
         (load exwm-config-file)))
   (exwm-enable))
+
+
 
 (use-package exwm-edit
   :straight t)
