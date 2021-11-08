@@ -247,7 +247,7 @@ Here are some org-related packages.
 #+begin_src emacs-lisp
   (use-package org-superstar
     :straight t
-    :custom
+    :config
     (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 #+end_src
 *** Org-reveal
@@ -546,7 +546,7 @@ More updates and documentation coming soon.
            ("C-c n t" . org-roam-dailies-capture-today)
            ("C-c n i" . org-roam-node-insert))
     :custom
-    (setq org-roam-v2-ack t)
+    (org-roam-v2-ack t)
     (org-roam-capture-templates
      (let* ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
             (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
@@ -583,12 +583,7 @@ More updates and documentation coming soon.
         :olp ("Meetings")
         :clock-in t :clock-resume t))))
   (org-roam-tag-sources '(prop all-directories))
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-at-bottom)
-                 (window-height . 10)                 
-                 (window-width . shrink-window-if-larger-than-buffer)
-                 ))
+  :config
   (require 'org-roam-protocol))
 #+end_src
 
@@ -743,7 +738,7 @@ Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this
     :straight t
     :bind (:map global-map
                 ([f8] . treemacs-select-window))
-    :custom
+    :config
     (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?))
   
   (use-package treemacs-magit
@@ -1043,14 +1038,13 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 
 ** Diff-hl
 #+begin_src emacs-lisp
-(use-package diff-hl
-  :straight t
-  :custom
-  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-  :config
-  (global-diff-hl-mode)
-  (diff-hl-flydiff-mode 1))
+  (use-package diff-hl
+    :straight t
+    :config
+    (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+    (global-diff-hl-mode)
+    (diff-hl-flydiff-mode 1))
 #+end_src
 
 * Programming
