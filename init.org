@@ -537,6 +537,7 @@ More updates and documentation coming soon.
 #+end_src
 
 *** Org roam
+See the [[https://www.orgroam.com/][org-roam website]].
 #+begin_src emacs-lisp
   (use-package org-roam
     :hook (after-init . org-roam-setup)
