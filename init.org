@@ -1,3 +1,4 @@
+# -*- eval: (add-hook 'after-save-hook 'org-babel-tangle nil t) -*-
 #+title: Emacs init file
 #+author: Asilata Bapat
 #+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
@@ -1537,11 +1538,6 @@ I don't use elfeed as much as I should these days.
 #+end_src
 
 [[elisp:(reload-init)][Click to reload init file.]]
-
-# Local variables:
-# eval: (add-hook 'after-save-hook 'org-babel-tangle nil t)
-# End:
-
 
 ** Local variables
 #+begin_src emacs-lisp
