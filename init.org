@@ -4,6 +4,8 @@
 #+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
 #+startup: overview
 
+[[elisp:(progn (org-babel-tangle) (org-babel-ref-resolve "reload-init") (reload-init))][Click to tangle and reload init file.]]
+
 * Initial boilerplate
 Define values for the top-level emacs directory (~.emacs.d~), as well as the  subdirectories for optional packages and machine-local configuration.
 #+begin_src emacs-lisp
@@ -1537,8 +1539,6 @@ I don't use elfeed as much as I should these days.
   (defun reload-init ()
     (load-file user-init-file))
 #+end_src
-
-[[elisp:(reload-init)][Click to reload init file.]]
 
 ** Local variables
 #+begin_src emacs-lisp
