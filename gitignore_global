@@ -65,6 +65,7 @@ _region_.tex
 *.mpeg
 *.png
 *.wav
+*.webm
 *.xpm
 
 # Directories and metadata
