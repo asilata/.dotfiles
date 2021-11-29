@@ -4,6 +4,8 @@
 #+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
 #+startup: overview
 
+[[elisp:(progn (org-babel-tangle) (load-file user-init-file))][Click to tangle and reload init file.]]
+
 * Initial boilerplate
 Define values for the top-level emacs directory (~.emacs.d~), as well as the  subdirectories for optional packages and machine-local configuration.
 #+begin_src emacs-lisp
@@ -548,7 +550,6 @@ See the [[https://www.orgroam.com/][org-roam website]].
            ("C-c n t" . org-roam-dailies-capture-today)
            ("C-c n i" . org-roam-node-insert))
     :custom
-    (org-roam-v2-ack t)
     (org-roam-capture-templates
      (let* ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
             (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
@@ -586,7 +587,9 @@ See the [[https://www.orgroam.com/][org-roam website]].
         :clock-in t :clock-resume t))))
   (org-roam-tag-sources '(prop all-directories))
   :config
-  (require 'org-roam-protocol))
+  (require 'org-roam-protocol)
+  :init
+  (setq org-roam-v2-ack t))
 #+end_src
 
 **** org-roam-ui
@@ -1537,15 +1540,6 @@ I don't use elfeed as much as I should these days.
              '("melpa" . "https://melpa.org/packages/"))
 #+end_src
 
-
-* Setup
-#+name: reload-init
-#+begin_src emacs-lisp :tangle no
-  (defun reload-init ()
-    (load-file user-init-file))
-#+end_src
-
-[[elisp:(reload-init)][Click to reload init file.]]
 
 ** Local variables
 #+begin_src emacs-lisp
