@@ -533,8 +533,7 @@ More updates and documentation coming soon.
    org-ref-default-bibliography '("~/Bibliography/math.bib")
    org-ref-pdf-directory "~/Papers/"
    org-ref-completion-library 'org-ref-ivy-cite
-   org-ref-notes-function 'org-ref-notes-function-many-files
-   ))
+   org-ref-notes-function 'org-ref-notes-function-many-files))
 #+end_src
 
 *** Org roam
@@ -1051,6 +1050,80 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 #+end_src
 
 * Programming
+
+** LaTeX etc
+*** Bibliography
+At the moment I am using bibretrieve, but this may change soon.
+I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][ivy-bibtex]]. This may change soon.
+#+begin_src emacs-lisp
+  (defun ab/normalise-bib ()
+    (interactive)
+    (shell-command-on-region
+     (point-min) (point-max)
+     "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))
+
+  (use-package bibretrieve
+    :straight (:host github :repo "asilata/bibretrieve")
+    :config
+    (add-hook
+     'bibretrieve-pre-write-bib-items-hook
+     'ab/normalise-bib))
+
+  (use-package ivy-bibtex
+    :straight t
+    :config
+    (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
+                                  (t . ivy--regex-plus)))
+    (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
+    (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
+    (setq bibtex-completion-library-path '("~/Papers"))
+    (ivy-set-display-transformer
+     'org-ref-ivy-insert-cite-link
+     'ivy-bibtex-display-transformer))
+#+end_src
+
+*** Auctex
+#+begin_src emacs-lisp
+  (use-package auctex
+    :straight t
+    :init
+    (use-package auctex-latexmk
+      :straight t
+      :config
+      (auctex-latexmk-setup))
+    :defer t
+    :bind (([f7] . TeX-error-overview))
+    :config
+    (use-package smartparens-latex)
+    (set-default 'preview-scale-function 2))
+#+end_src
+
+*** Reftex
+#+begin_src emacs-lisp
+  (use-package reftex :straight t
+               :config
+               (setq reftex-default-bibliography "~/Bibliography/math.bib"))
+
+  (use-package cdlatex
+    :straight t)
+
+  (add-hook 'LaTeX-mode-hook
+            (lambda ()
+              (TeX-global-PDF-mode 1)
+              (flyspell-mode 1)
+              (auto-fill-mode 0)
+              (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+              (TeX-source-correlate-mode 1)
+              (visual-line-mode 1)
+              (yas-minor-mode 0)
+              (reftex-mode 1)
+              (cdlatex-mode 1)
+              ))
+
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+
+#+end_src
+  
 ** Projects and jumping
 #+begin_src emacs-lisp
 (use-package counsel-projectile
@@ -1107,71 +1180,6 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 #+end_src
-
-*** LaTeX etc
-
-#+begin_src emacs-lisp
-  (defun ab/normalise-bib ()
-    (interactive)
-    (shell-command-on-region
-     (point-min) (point-max)
-     "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))
-
-  (use-package auctex
-    :straight t
-    :init
-    (use-package bibretrieve
-      :straight (:host github :repo "asilata/bibretrieve")
-      :config
-      (add-hook
-       'bibretrieve-pre-write-bib-items-hook
-       'ab/normalise-bib
-       ))
-    (use-package auctex-latexmk
-      :straight t
-      :config
-      (auctex-latexmk-setup))
-    :defer t
-    :bind (([f7] . TeX-error-overview))
-    :config
-    (use-package reftex :straight t
-      :config
-      (setq reftex-default-bibliography "~/Bibliography/math.bib"))
-    (use-package smartparens-latex)
-    (set-default 'preview-scale-function 2))
-
-  (use-package cdlatex
-    :straight t)
-
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (TeX-global-PDF-mode 1)
-              (flyspell-mode 1)
-              (auto-fill-mode 0)
-              (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-              (TeX-source-correlate-mode 1)
-              (visual-line-mode 1)
-              (yas-minor-mode 0)
-              (reftex-mode 1)
-              (cdlatex-mode 1)
-              ))
-
-  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-
-  (use-package ivy-bibtex
-    :straight t
-    :config
-    (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
-                                  (t . ivy--regex-plus)))
-    (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
-    (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
-    (setq bibtex-completion-library-path '("~/Papers"))
-    (ivy-set-display-transformer
-     'org-ref-ivy-insert-cite-link
-     'ivy-bibtex-display-transformer)
-    )
-#+end_src
-
 *** Lean
 #+begin_src emacs-lisp
 (use-package lean-mode
