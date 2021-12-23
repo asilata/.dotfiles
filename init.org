@@ -537,6 +537,13 @@ More updates and documentation coming soon.
    org-ref-notes-function 'org-ref-notes-function-many-files))
 #+end_src
 
+*** Org-cite
+#+begin_src emacs-lisp
+  (use-package citeproc
+    :straight t)
+  (setq org-cite-global-bibliography '("/home/asilata/Bibliography/math.bib"))
+#+end_src
+
 *** Org roam
 See the [[https://www.orgroam.com/][org-roam website]].
 #+begin_src emacs-lisp
