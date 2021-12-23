@@ -1304,7 +1304,10 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
                (setq reftex-default-bibliography "~/Bibliography/math.bib"))
 
   (use-package cdlatex
-    :straight t)
+    :straight t
+    :custom
+    (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
+    (cdlatex-math-modify-alist '((?o "\\operatorname" nil t nil nil))))
 
   (add-hook 'LaTeX-mode-hook
             (lambda ()
