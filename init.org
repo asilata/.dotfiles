@@ -2,7 +2,7 @@
 #+title: Emacs init file
 #+author: Asilata Bapat
 #+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
-#+startup: overview
+#+startup: overview hideblocks
 
 [[elisp:(progn (org-babel-tangle) (load-file user-init-file))][Click to tangle and reload init file.]]
 
@@ -725,16 +725,16 @@ Use [[https://elpa.gnu.org/packages/rainbow-mode.html][rainbow-mode]] to show co
 #+end_src
 Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
 #+begin_src emacs-lisp
-  (use-package dired-sidebar
-    :straight t
-    :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
-    :commands
-    (dired-sidebar-toggle-sidebar))
-  
+  ;; (use-package dired-sidebar
+  ;;   :straight t
+  ;;   :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
+  ;;   :commands
+  ;;   (dired-sidebar-toggle-sidebar))
+
   (use-package dired-narrow
     :straight t
     :bind (:map dired-mode-map
-                ("/" . dired-narrow)))
+		("/" . dired-narrow)))
 #+end_src
 Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this as much anymore.
 #+begin_src emacs-lisp
@@ -1148,6 +1148,19 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
                    (window-parameters (mode-line-format . none)))))
 #+end_src
 
+** Other goodies
+#+begin_src emacs-lisp
+(use-package which-key :straight t
+  :config
+  (which-key-mode 1))
+
+(use-package smart-mode-line
+  :straight t
+  :config
+  (progn (sml/setup)))
+#+end_src
+
+
 * Global keybindings
 #+begin_src emacs-lisp
   (global-set-key [f1]          'revert-buffer)
@@ -1358,6 +1371,7 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 #+end_src
+
 *** Lean
 #+begin_src emacs-lisp
 (use-package lean-mode
@@ -1657,6 +1671,7 @@ End:
 ** GPG
 #+begin_src emacs-lisp
   (setq epg-gpg-program "gpg2")
+  (setq epg-pinentry-mode 'loopback)
 #+end_src
 
 * Elfeed
