@@ -305,6 +305,15 @@ I don't use this anymore.
 #+end_src
 
 
+*** Org-download
+#+begin_src emacs-lisp
+  (use-package org-download
+    :straight t
+    :custom
+    (org-download-screenshot-method "spectacle -b -n -r -o %s")
+    (org-download-image-dir "assets/"))
+#+end_src
+
 ** TODO Org-mode configuration
 :PROPERTIES:
 :header-args: :noweb-ref org-mode-config
