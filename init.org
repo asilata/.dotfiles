@@ -77,7 +77,7 @@ Install exwm and load its configuration file (currently external).
     :straight t
     :config
     (require 'exwm-randr)
-    (setq exwm-randr-workspace-output-plist '(1 "DP-1"))
+    (setq exwm-randr-workspace-output-plist '(1 "HDMI-1"))
     (add-hook 'exwm-randr-screen-change-hook
               (defun ab/exwm-randr ()
                 (start-process-shell-command
