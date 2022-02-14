@@ -2,7 +2,7 @@
 #+title: Emacs init file
 #+author: Asilata Bapat
 #+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
-#+startup: overview
+#+startup: overview hideblocks
 
 [[elisp:(progn (org-babel-tangle) (load-file user-init-file))][Click to tangle and reload init file.]]
 
@@ -226,7 +226,6 @@ Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterabl
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer)))
 #+end_src
-
 * Org-mode
 Install [[https://orgmode.org/][org-mode]].
 The configuration is written in the next section, and shows up in place of ~<<org-mode-config>>~ in the snippet below.
@@ -236,7 +235,7 @@ The configuration is written in the next section, and shows up in place of ~<<or
     :straight t
     :bind (("C-c a" . org-agenda)
            (:map org-mode-map
-                 ("C-c C-j" . counsel-outline)))
+                 ("C-c C-j" . consult-outline)))
     :config
     <<org-mode-config>>
     (add-hook 'org-mode-hook
@@ -305,6 +304,15 @@ I don't use this anymore.
   ;;   :straight t)
 #+end_src
 
+
+*** Org-download
+#+begin_src emacs-lisp
+  (use-package org-download
+    :straight t
+    :custom
+    (org-download-screenshot-method "spectacle -b -n -r -o %s")
+    (org-download-image-dir "assets/"))
+#+end_src
 
 ** TODO Org-mode configuration
 :PROPERTIES:
@@ -538,6 +546,13 @@ More updates and documentation coming soon.
    org-ref-notes-function 'org-ref-notes-function-many-files))
 #+end_src
 
+*** Org-cite
+#+begin_src emacs-lisp
+  (use-package citeproc
+    :straight t)
+  (setq org-cite-global-bibliography '("/home/asilata/Bibliography/math.bib"))
+#+end_src
+
 *** Org roam
 See the [[https://www.orgroam.com/][org-roam website]].
 #+begin_src emacs-lisp
@@ -726,16 +741,16 @@ Use [[https://elpa.gnu.org/packages/rainbow-mode.html][rainbow-mode]] to show co
 #+end_src
 Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
 #+begin_src emacs-lisp
-  (use-package dired-sidebar
-    :straight t
-    :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
-    :commands
-    (dired-sidebar-toggle-sidebar))
-  
+  ;; (use-package dired-sidebar
+  ;;   :straight t
+  ;;   :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
+  ;;   :commands
+  ;;   (dired-sidebar-toggle-sidebar))
+
   (use-package dired-narrow
     :straight t
     :bind (:map dired-mode-map
-                ("/" . dired-narrow)))
+		("/" . dired-narrow)))
 #+end_src
 Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this as much anymore.
 #+begin_src emacs-lisp
@@ -901,62 +916,239 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 * Minibuffer and search
 ** Ivy, etc
 #+begin_src emacs-lisp
-  (use-package avy
-    :straight t
-    :bind (("M-s" . avy-goto-char-timer)))
-  
-  (use-package ivy
-    :straight t
-    :bind (("C-c C-r" . ivy-resume)
-           ("C-c v" . ivy-push-view)
-           ("C-c V" . ivy-pop-view))
-    :config
-    (use-package ivy-hydra :straight t)
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t))
-  
-  (use-package swiper
-    :straight t
-    :bind (("C-s" . swiper-isearch)))
-  
-  (use-package counsel
-    :straight t
-    :bind (("M-x" . counsel-M-x)
-           ("C-x C-f" . counsel-find-file)
-           ("C-x C-g" . counsel-git)
-           ("C-h v" . counsel-describe-variable)
-           ("C-h f" . counsel-describe-function)))
-  
-  (use-package ivy-prescient
-    :straight t
-    :config
-    (ivy-prescient-mode))
-  
-  (use-package ivy-rich
-    :straight t
-    :after ivy
-    :config
-    (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
-    (ivy-rich-mode 1))
-  
-  (use-package wgrep
-    :straight t
-    :after ivy)
+  ;; (use-package avy
+  ;;   :straight t
+  ;;   :bind (("M-s" . avy-goto-char-timer)))
+
+  ;; (use-
+  ;;  package ivy
+  ;;  :straight t
+  ;;  :bind (("C-c C-r" . ivy-resume)
+  ;;         ("C-c v" . ivy-push-view)
+  ;;         ("C-c V" . ivy-pop-view))
+  ;;  :config
+  ;;  (use-package ivy-hydra :straight t)
+  ;;  (ivy-mode 1)
+  ;;  (setq ivy-use-virtual-buffers t))
+
+  ;; (use-package swiper
+  ;;   :straight t
+  ;;   :bind (("C-s" . swiper-isearch)))
+
+  ;; (use-package counsel
+  ;;   :straight t
+  ;;   :bind (("M-x" . counsel-M-x)
+  ;;          ("C-x C-f" . counsel-find-file)
+  ;;          ("C-x C-g" . counsel-git)
+  ;;          ("C-h v" . counsel-describe-variable)
+  ;;          ("C-h f" . counsel-describe-function)))
+
+  ;; (use-package ivy-prescient
+  ;;   :straight t
+  ;;   :config
+  ;;   (ivy-prescient-mode))
+
+  ;; (use-package ivy-rich
+  ;;   :straight t
+  ;;   :after ivy
+  ;;   :config
+  ;;   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
+  ;;   (ivy-rich-mode 1))
+
+  ;; (use-package wgrep
+  ;;   :straight t
+  ;;   :after ivy)
 #+end_src
 
-** Other goodies
+** Selectrum
 #+begin_src emacs-lisp
-(use-package which-key :straight t
-  :config
-  (which-key-mode 1))
-
-(use-package smart-mode-line
-  :straight t
-  :config
-  (progn (sml/setup)))
+  ;; (use-package selectrum
+  ;;   :straight t
+  ;;   :config
+  ;;   (use-package selectrum-prescient :straight t)
+  ;;   :custom
+  ;;   (selectrum-prescient-mode +1)
+  ;;   (prescient-persist-mode +1)
+  ;;   :init
+  ;;   (selectrum-mode +1))
 #+end_src
 
+** Vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+    :straight t
+    :init
+    (vertico-mode))
+#+end_src
 
+** Consult
+At the moment this is taken straight from the [[https://github.com/minad/consult][consult readme example]]. Will be tweaked later.
+#+begin_src emacs-lisp
+  (use-package consult
+    :straight t
+    ;; Replace bindings. Lazily loaded due by `use-package'.
+    :bind (;; C-c bindings (mode-specific-map)
+           ;;("C-c h" . consult-history)
+           ;;("C-c m" . consult-mode-command)
+           ;;("C-c b" . consult-bookmark)
+           ;;("C-c k" . consult-kmacro)
+           ;; C-x bindings (ctl-x-map)
+           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ;; Custom M-# bindings for fast register access
+           ;;("M-#" . consult-register-load)
+           ;;("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ;;("C-M-#" . consult-register)
+           ;; Other custom bindings
+           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ("<help> a" . consult-apropos)            ;; orig. apropos-command
+           ;; M-g bindings (goto-map)
+           ("M-g e" . consult-compile-error)
+           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+           ("M-g g" . consult-goto-line)             ;; orig. goto-line
+           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ("M-g m" . consult-mark)
+           ("M-g k" . consult-global-mark)
+           ("M-g i" . consult-imenu)
+           ("M-g I" . consult-imenu-multi)
+           ;; M-s bindings (search-map)
+           ("M-s f" . consult-find)
+           ("M-s F" . consult-locate)
+           ("M-s g" . consult-grep)
+           ("M-s G" . consult-git-grep)
+           ("M-s r" . consult-ripgrep)
+           ("M-s l" . consult-line)
+           ("C-s"   . consult-line)                    ;; isearch alternative
+           ("M-s L" . consult-line-multi)
+           ("M-s m" . consult-multi-occur)
+           ("M-s k" . consult-keep-lines)
+           ("M-s u" . consult-focus-lines)
+           ;; Isearch integration
+           ("M-s e" . consult-isearch-history)
+           :map isearch-mode-map
+           ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+           ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+           ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+           ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+
+    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI. You may want to also
+    ;; enable `consult-preview-at-point-mode` in Embark Collect buffers.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+
+    ;; The :init configuration is always executed (Not lazy)
+    :init
+
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0
+          register-preview-function #'consult-register-format)
+
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Optionally replace `completing-read-multiple' with an enhanced version.
+    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
+
+    ;; Configure other variables and modes in the :config section,
+    ;; after lazily loading the package.
+    :config
+
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key (kbd "M-."))
+    ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme
+     :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+     :preview-key (kbd "M-."))
+
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+    ;; Optionally configure a function which returns the project root directory.
+    ;; There are multiple reasonable alternatives to chose from.
+    ;;;; 1. project.el (project-roots)
+    ;;(setq consult-project-root-function
+    ;; (lambda ()
+    ;;   (when-let (project (project-current))
+    ;;     (car (project-roots project)))))
+    ;;;; 2. projectile.el (projectile-project-root)
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-root-function #'projectile-project-root)
+    ;;;; 3. vc.el (vc-root-dir)
+    ;; (setq consult-project-root-function #'vc-root-dir)
+    ;;;; 4. locate-dominating-file
+    ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+  )
+
+#+end_src
+
+*** Consult reftex
+#+begin_src emacs-lisp
+  (use-package consult-reftex
+    :straight (:host github :repo "karthink/consult-reftex"))
+#+end_src
+
+*** Citar
+#+begin_src emacs-lisp
+  (use-package citar
+    :straight t
+    :bind (("C-c b" . citar-insert-citation)
+           :map minibuffer-local-map
+           ("M-b" . citar-insert-preset))
+    :custom
+    (citar-bibliography '("~/Bibliography/math.bib")))
+#+end_src
+
+** Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :straight t
+    :bind (("M-A" . marginalia-cycle)
+           :map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+#+end_src
+
+** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :straight t
+    :custom
+    (completion-styles '(orderless))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+** Savehist
+#+begin_src emacs-lisp
+  (use-package savehist
+    :straight t
+    :init
+    (savehist-mode))
+#+end_src
 ** Embark
 #+begin_src emacs-lisp
   (use-package embark
@@ -971,6 +1163,19 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
                    nil
                    (window-parameters (mode-line-format . none)))))
 #+end_src
+
+** Other goodies
+#+begin_src emacs-lisp
+(use-package which-key :straight t
+  :config
+  (which-key-mode 1))
+
+(use-package smart-mode-line
+  :straight t
+  :config
+  (progn (sml/setup)))
+#+end_src
+
 
 * Global keybindings
 #+begin_src emacs-lisp
@@ -1108,7 +1313,10 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
                (setq reftex-default-bibliography "~/Bibliography/math.bib"))
 
   (use-package cdlatex
-    :straight t)
+    :straight t
+    :custom
+    (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
+    (cdlatex-math-modify-alist '((?o "\\operatorname" nil t nil nil))))
 
   (add-hook 'LaTeX-mode-hook
             (lambda ()
@@ -1129,19 +1337,18 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   
 ** Projects and jumping
 #+begin_src emacs-lisp
-(use-package counsel-projectile
-  :straight t
-  :config
-  (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
-  (counsel-projectile-mode 1))
+  (use-package counsel-projectile
+    :straight t
+    :config
+    (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
+    (counsel-projectile-mode 1))
 
-(use-package dumb-jump
-  :straight t
-  :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-g j" . dumb-jump-go)
-         ("M-g b" . dumb-jump-back))
-  :config
-  (setq dumb-jump-selector 'ivy))
+  (use-package dumb-jump
+    :straight t
+    :bind (("M-g o" . dumb-jump-go-other-window)
+           ("M-g j" . dumb-jump-go)
+           ("M-g b" . dumb-jump-back))
+    )
 #+end_src
 
 ** Assorted packages
@@ -1183,6 +1390,7 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   (add-hook 'haskell-mode-hook
             'turn-on-haskell-indentation))
 #+end_src
+
 *** Lean
 #+begin_src emacs-lisp
 (use-package lean-mode
@@ -1482,6 +1690,7 @@ End:
 ** GPG
 #+begin_src emacs-lisp
   (setq epg-gpg-program "gpg2")
+  (setq epg-pinentry-mode 'loopback)
 #+end_src
 
 * Elfeed
