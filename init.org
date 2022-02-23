@@ -1629,24 +1629,25 @@ Currently copied over from the old mu4e configuration file. To be updated.
 
 *** Various hooks
 #+begin_src emacs-lisp
-(add-hook 'mu4e-headers-found-hook
-          (lambda () (setq truncate-lines t)))
+  (add-hook 'mu4e-headers-found-hook
+            (lambda () (setq truncate-lines t)))
 
-(add-to-list 'mu4e-view-actions
-             '("retag message" . mu4e-action-retag-message) t)
-(add-to-list 'mu4e-headers-actions
-             '("retag message" . mu4e-action-retag-message) t)
+  (add-to-list 'mu4e-view-actions
+               '("retag message" . mu4e-action-retag-message) t)
+  (add-to-list 'mu4e-headers-actions
+               '("retag message" . mu4e-action-retag-message) t)
 
-(add-hook 'mu4e-compose-mode-hook
-          (lambda ()
-            (turn-off-auto-fill)
-            (visual-line-mode 1)))
+  (add-hook 'mu4e-compose-mode-hook
+            (lambda ()
+              (turn-off-auto-fill)
+              (visual-line-mode 1)
+              (use-hard-newlines -1)))
 
-(add-hook 'mu4e-mark-execute-pre-hook
-  (lambda (mark msg)
-    (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\\\Inbox"))
-          ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
-          ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
+  (add-hook 'mu4e-mark-execute-pre-hook
+    (lambda (mark msg)
+      (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\\\Inbox"))
+            ((equal mark 'flag) (mu4e-action-retag-message msg "\\\\Starred"))
+            ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\\\Starred")))))
 #+end_src
 
 *** Maildirs shortcuts
