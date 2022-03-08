@@ -95,18 +95,18 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
 #+end_src
 
 ** Ace-window
-At some point I had installed [[https://github.com/abo-abo/ace-window][ace-window]]. I don't seem to be using it anymore, so I have commented it out.
-*** TODO Finish configuration or delete
+[[https://github.com/abo-abo/ace-window][Ace-window]] is good for navigating between windows quickly, as well as switching windows.
 #+begin_src emacs-lisp
-  ;; (use-package ace-window
-  ;;   :straight t
-  ;;   :bind (("C-x o" . ace-window))
-  ;;   :custom
-  ;;   (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
-  ;;   (aw-minibuffer-flag t)
-  ;;   :custom-face
-  ;;   (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
-  ;;   )
+  (use-package ace-window
+    :straight t
+    :bind (("C-x o" . ace-window))
+    :custom
+    (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
+    (aw-minibuffer-flag t)
+    (ace-window-display-mode t)
+    :custom-face
+    (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
+    )
 #+end_src
 
 ** Winner mode
@@ -667,6 +667,16 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
   (setq org-brain-file-from-input-function
         (lambda (x) (if (cdr x) (car x) (concat org-brain-path "default"))))
   )
+#+end_src
+
+*** Links and frames
+#+begin_src emacs-lisp
+  (setq org-link-frame-setup
+        '((vm . vm-visit-folder-other-frame)
+          (vm-imap . vm-visit-imap-folder-other-frame)
+          (gnus . org-gnus-no-new-news)
+          (file . find-file)
+          (wl . wl-other-frame))))
 #+end_src
 
 *** Custom functions
