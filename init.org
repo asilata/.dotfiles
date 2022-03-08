@@ -511,16 +511,16 @@ More updates and documentation coming soon.
 
 *** Org babel
 #+begin_src emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((latex . t)
-   (dot . t)
-   (emacs-lisp . t)
-   (python . t)
-   (shell . t)
-   (org . t)
-   (sass . t)))
-(setq org-confirm-babel-evaluate nil)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((latex . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (python . t)
+     (shell . t)
+     (org . t)
+     (sass . t)))
+  (setq org-confirm-babel-evaluate nil)
 #+end_src
 
 *** Org journal
@@ -1448,6 +1448,19 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   (setq sage-shell:sage-executable (substring (shell-command-to-string "which sage") 0 -1))
   (sage-shell:define-alias)
   (setq sage-shell:use-prompt-toolkit t))
+#+end_src
+
+Add support for sage in org-mode.
+#+begin_src emacs-lisp
+  (use-package ob-sagemath
+    :straight t
+    :config
+    ;; Ob-sagemath supports only evaluating with a session.
+    (setq org-babel-default-header-args:sage '((:session . t)
+                                               (:results . "output")))
+    ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
+    (with-eval-after-load "org"
+      (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async)))
 #+end_src
 
 *** Scratch
