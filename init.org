@@ -584,10 +584,10 @@ See the [[https://www.orgroam.com/][org-roam website]].
     (org-roam-capture-templates
      (let* ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
             (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
-            (org-roam-notes-head "\n* References\n\n")
+            (org-roam-notes-head "\n* Comments\n\n* References\n\n")
             (orb-title-format "${title} (${author})")
             (orb-file-name-format "Bibnotes/${citekey}.org")
-            (orb-front-matter "#+roam_key: ${ref}\n#+created: %U\n\n")
+            (orb-front-matter "#+created: %U\n\n")
             (orb-common-head (concat "#+title: " orb-title-format "\n" orb-front-matter)))
        `(("d" "default" plain "* Notes\n%?"
           :target (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
