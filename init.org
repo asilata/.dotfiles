@@ -492,6 +492,20 @@ More updates and documentation coming soon.
             ))))
 #+end_src
 
+**** Org super agenda
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :straight t
+    :init
+    (org-super-agenda-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq org-super-agenda-groups
+        '((:discard (:category "fun"))
+          (:auto-category t)))
+#+end_src
+
 *** Google calendar integration
 #+begin_src emacs-lisp
 (use-package org-gcal
