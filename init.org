@@ -246,12 +246,12 @@ The configuration is written in the next section, and shows up in place of ~<<or
 #+end_src
 
 Here are some org-related packages.
-*** Org superstar
+*** Org-modern
 #+begin_src emacs-lisp
-  (use-package org-superstar
+  (use-package org-modern
     :straight t
     :config
-    (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+    (add-hook 'org-mode-hook #'org-modern-mode))
 #+end_src
 *** Org-reveal
 Convert org-mode files to [[https://revealjs.com/][revealjs]] presentations via [[https://github.com/yjwen/org-reveal][org-reveal]].
