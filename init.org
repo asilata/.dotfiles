@@ -416,14 +416,30 @@ More updates and documentation coming soon.
 *** Syntax highlighting
 #+begin_src emacs-lisp
 (setq org-highlight-latex-and-related '(latex))
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-               '("amsart" "\\documentclass[a4paper]{amsart}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+*** Global export options
+#+begin_src emacs-lisp
+  (setq org-export-with-toc nil
+        org-export-with-smart-quotes t)
+#+end_src
+
+*** LaTeX
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("amsart" "\\documentclass[a4paper]{amsart}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+  (setq org-latex-listings 'minted
+        org-latex-packages-alist '(("" "minted")))
 #+end_src
 
 *** Agenda customization
