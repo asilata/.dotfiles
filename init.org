@@ -140,7 +140,6 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "magit-log"
             ("magit-diff" . hide)
             "Zoom:chat"
-            "\\*org-roam\\*"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
@@ -226,6 +225,7 @@ Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterabl
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer)))
 #+end_src
+
 * Org-mode
 Install [[https://orgmode.org/][org-mode]].
 The configuration is written in the next section, and shows up in place of ~<<org-mode-config>>~ in the snippet below.
@@ -551,6 +551,7 @@ More updates and documentation coming soon.
      (org . t)
      (sass . t)))
   (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 #+end_src
 
 *** Org journal
@@ -705,7 +706,7 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
         '((vm . vm-visit-folder-other-frame)
           (vm-imap . vm-visit-imap-folder-other-frame)
           (gnus . org-gnus-no-new-news)
-          (file . find-file)
+          (file . find-file-other-window)
           (wl . wl-other-frame)))
 #+end_src
 
@@ -745,17 +746,17 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
 * Colour themes and prettification
 Use Zenburn as the colour theme.
 #+begin_src emacs-lisp
-(use-package zenburn-theme
-  :straight t
-  :config
-  (zenburn-with-color-variables
-    (custom-theme-set-faces
-     'zenburn
-     `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))
-     `(hl-line-face ((t (:background ,zenburn-bg-2))))
-     `(hl-line ((t (:background ,zenburn-bg-2))))))
-  (load-theme 'zenburn t)
-  )
+  (use-package zenburn-theme
+    :straight t
+    :config
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))
+       `(hl-line-face ((t (:background ,zenburn-bg-2))))
+       `(hl-line ((t (:background ,zenburn-bg-2))))))
+    (load-theme 'zenburn t)
+    )
 #+end_src
 
 Use [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
@@ -1490,7 +1491,7 @@ Add support for sage in org-mode.
                                                (:results . "output")))
     ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
     (with-eval-after-load "org"
-      (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async)))
+      (define-key org-mode-map (kbd "C-c x") 'ob-sagemath-execute-async)))
 #+end_src
 
 *** Scratch
