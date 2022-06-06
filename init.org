@@ -1357,7 +1357,10 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
     :straight t
     :custom
     (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
-    (cdlatex-math-modify-alist '((?o "\\operatorname" nil t nil nil))))
+    (cdlatex-math-modify-alist '((?b "\\mathbb" nil t nil nil)
+                                 (?f "\\mathfrak" "\\frak" t nil nil)
+                                 (?o "\\operatorname" nil t nil nil)
+                                 (?s "\\mathscr" "\\textscr" t nil nil))))
 
   (add-hook 'LaTeX-mode-hook
             (lambda ()
