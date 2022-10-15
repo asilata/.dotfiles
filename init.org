@@ -1709,9 +1709,10 @@ Currently copied over from the old mu4e configuration file. To be updated.
 
 *** Maildirs shortcuts
 #+begin_src emacs-lisp
-(setq mu4e-maildir-shortcuts
-      '((:maildir "/ANU/INBOX" :key ?a)
-        (:maildir "/Gmail/INBOX" :key ?g)))
+  (setq mu4e-maildir-shortcuts
+        '((:maildir "/ANU/INBOX" :key ?a)
+          (:maildir "/Gmail/INBOX" :key ?g)
+          (:maildir "/MIT" :key ?m)))
 #+end_src
 
 *** Org mode integration
