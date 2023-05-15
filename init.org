@@ -1654,24 +1654,21 @@ Currently copied over from the old mu4e configuration file. To be updated.
 
 *** Bookmarks
 #+begin_src emacs-lisp
-(setq mu4e-bookmarks
-      `(,(make-mu4e-bookmark
-          :name  "Reasonable recent messages"
-          :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
-          :key ?r)
-        ,(make-mu4e-bookmark
-          :name "Mailing lists"
-          :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
-          :key ?l)
-        ,(make-mu4e-bookmark
-          :name "Today and untrashed"
-          :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
-          :key ?t)
-        ,(make-mu4e-bookmark
-          :name "Last week and untrashed"
-          :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
-          :key ?w)
-        ))
+  (setq mu4e-bookmarks
+        '((:name  "Reasonable recent messages"
+                  :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
+                  :key ?r
+                  :favorite t)
+          (:name "Today and untrashed"
+                 :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+                 :key ?t)
+          (:name "Last week and untrashed"
+                 :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+                 :key ?w)            
+          (:name "Mailing lists"
+               :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
+               :key ?l)
+          (:name "Messages with images" :query "mime:image/*" :key ?p :hide t)))
 #+end_src
 
 *** Custom functions
