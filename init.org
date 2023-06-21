@@ -1356,6 +1356,7 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   (use-package cdlatex
     :straight t
     :custom
+    (cdlatex-takeover-parenthesis nil)
     (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
     (cdlatex-math-modify-alist '((?b "\\mathbb" nil t nil nil)
                                  (?f "\\mathfrak" "\\frak" t nil nil)
