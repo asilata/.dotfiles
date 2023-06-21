@@ -1659,6 +1659,9 @@ Currently copied over from the old mu4e configuration file. To be updated.
                   :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
                   :key ?r
                   :favorite t)
+          (:name "Flagged"
+                 :query "flag:flagged AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+                 :key ?f)          
           (:name "Today and untrashed"
                  :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
                  :key ?t)
@@ -1666,8 +1669,8 @@ Currently copied over from the old mu4e configuration file. To be updated.
                  :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
                  :key ?w)            
           (:name "Mailing lists"
-               :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
-               :key ?l)
+                 :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
+                 :key ?l)
           (:name "Messages with images" :query "mime:image/*" :key ?p :hide t)))
 #+end_src
 
