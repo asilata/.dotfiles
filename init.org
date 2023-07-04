@@ -788,10 +788,22 @@ Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
   ;;   :commands
   ;;   (dired-sidebar-toggle-sidebar))
 
+  (setq dired-listing-switches "-alh")
+
   (use-package dired-narrow
     :straight t
     :bind (:map dired-mode-map
-		("/" . dired-narrow)))
+                ("/" . dired-narrow)))
+  (use-package dired-collapse
+    :straight t
+    :custom
+    (dired-collapse-mode t))
+  
+  (use-package dired-subtree
+    :straight t
+    :bind
+    (:map dired-mode-map
+          ("i" . dired-subtree-toggle)))
 #+end_src
 Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this as much anymore.
 #+begin_src emacs-lisp
