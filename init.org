@@ -1,7 +1,7 @@
 # -*- eval: (add-hook 'after-save-hook 'org-babel-tangle nil t) -*-
 #+title: Emacs init file
 #+author: Asilata Bapat
-#+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
+#+property: header-args:emacs-lisp :tangle "init.el" :results silent
 #+startup: overview hideblocks
 
 [[elisp:(progn (org-babel-tangle) (load-file user-init-file))][Click to tangle and reload init file.]]
