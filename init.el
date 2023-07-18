@@ -1490,7 +1490,7 @@
 ;;     (markdown-mode)))
 
 (use-package mu4e
-  :straight (:host github :repo "djcb/mu" :files (:defaults "build/mu4e/*"))
+  :straight (:files (:defaults "build/mu4e/*"))
   :defer nil
   :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
   :bind (("C-c p" . mml-secure-message-sign-pgpmime))
