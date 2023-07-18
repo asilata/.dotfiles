@@ -1,7 +1,7 @@
 # -*- eval: (add-hook 'after-save-hook 'org-babel-tangle nil t) -*-
 #+title: Emacs init file
 #+author: Asilata Bapat
-#+property: header-args:emacs-lisp :tangle "~/.emacs.d/init.el" :results silent
+#+property: header-args:emacs-lisp :tangle "init.el" :results silent
 #+startup: overview hideblocks
 
 [[elisp:(progn (org-babel-tangle) (load-file user-init-file))][Click to tangle and reload init file.]]
@@ -81,7 +81,7 @@ Install exwm and load its configuration file (currently external).
     (add-hook 'exwm-randr-screen-change-hook
               (defun ab/exwm-randr ()
                 (start-process-shell-command
-                 "xrandr" nil "xrandr --output eDP-1 --output DP-1")))
+                 "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
     (exwm-randr-enable)
     (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
       (if (file-exists-p exwm-config-file)
@@ -140,7 +140,6 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "magit-log"
             ("magit-diff" . hide)
             "Zoom:chat"
-            "\\*org-roam\\*"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
@@ -247,12 +246,12 @@ The configuration is written in the next section, and shows up in place of ~<<or
 #+end_src
 
 Here are some org-related packages.
-*** Org superstar
+*** Org-modern
 #+begin_src emacs-lisp
-  (use-package org-superstar
+  (use-package org-modern
     :straight t
     :config
-    (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+    (add-hook 'org-mode-hook #'org-modern-mode))
 #+end_src
 *** Org-reveal
 Convert org-mode files to [[https://revealjs.com/][revealjs]] presentations via [[https://github.com/yjwen/org-reveal][org-reveal]].
@@ -417,14 +416,30 @@ More updates and documentation coming soon.
 *** Syntax highlighting
 #+begin_src emacs-lisp
 (setq org-highlight-latex-and-related '(latex))
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-               '("amsart" "\\documentclass[a4paper]{amsart}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+*** Global export options
+#+begin_src emacs-lisp
+  (setq org-export-with-toc nil
+        org-export-with-smart-quotes t)
+#+end_src
+
+*** LaTeX
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("amsart" "\\documentclass[a4paper]{amsart}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+  (setq org-latex-listings 'minted
+        org-latex-packages-alist '(("" "minted")))
 #+end_src
 
 *** Agenda customization
@@ -477,6 +492,20 @@ More updates and documentation coming soon.
             ))))
 #+end_src
 
+**** Org super agenda
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :straight t
+    :init
+    (org-super-agenda-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq org-super-agenda-groups
+        '((:discard (:category "fun"))
+          (:auto-category t)))
+#+end_src
+
 *** Google calendar integration
 #+begin_src emacs-lisp
 (use-package org-gcal
@@ -522,6 +551,7 @@ More updates and documentation coming soon.
      (org . t)
      (sass . t)))
   (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 #+end_src
 
 *** Org journal
@@ -569,10 +599,10 @@ See the [[https://www.orgroam.com/][org-roam website]].
     (org-roam-capture-templates
      (let* ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
             (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
-            (org-roam-notes-head "\n* References\n\n")
+            (org-roam-notes-head "\n* Comments\n\n* References\n\n")
             (orb-title-format "${title} (${author})")
             (orb-file-name-format "Bibnotes/${citekey}.org")
-            (orb-front-matter "#+roam_key: ${ref}\n#+created: %U\n\n")
+            (orb-front-matter "#+created: %U\n\n")
             (orb-common-head (concat "#+title: " orb-title-format "\n" orb-front-matter)))
        `(("d" "default" plain "* Notes\n%?"
           :target (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
@@ -716,17 +746,17 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
 * Colour themes and prettification
 Use Zenburn as the colour theme.
 #+begin_src emacs-lisp
-(use-package zenburn-theme
-  :straight t
-  :config
-  (zenburn-with-color-variables
-    (custom-theme-set-faces
-     'zenburn
-     `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))
-     `(hl-line-face ((t (:background ,zenburn-bg-2))))
-     `(hl-line ((t (:background ,zenburn-bg-2))))))
-  (load-theme 'zenburn t)
-  )
+  (use-package zenburn-theme
+    :straight t
+    :config
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(mu4e-replied-face ((t (:foreground ,zenburn-fg))))
+       `(hl-line-face ((t (:background ,zenburn-bg-2))))
+       `(hl-line ((t (:background ,zenburn-bg-2))))))
+    (load-theme 'zenburn t)
+    )
 #+end_src
 
 Use [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
@@ -758,10 +788,22 @@ Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
   ;;   :commands
   ;;   (dired-sidebar-toggle-sidebar))
 
+  (setq dired-listing-switches "-alh")
+
   (use-package dired-narrow
     :straight t
     :bind (:map dired-mode-map
-		("/" . dired-narrow)))
+                ("/" . dired-narrow)))
+  (use-package dired-collapse
+    :straight t
+    :custom
+    (dired-collapse-mode t))
+  
+  (use-package dired-subtree
+    :straight t
+    :bind
+    (:map dired-mode-map
+          ("i" . dired-subtree-toggle)))
 #+end_src
 Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this as much anymore.
 #+begin_src emacs-lisp
@@ -1326,8 +1368,12 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   (use-package cdlatex
     :straight t
     :custom
+    (cdlatex-takeover-parenthesis nil)
     (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
-    (cdlatex-math-modify-alist '((?o "\\operatorname" nil t nil nil))))
+    (cdlatex-math-modify-alist '((?b "\\mathbb" nil t nil nil)
+                                 (?f "\\mathfrak" "\\frak" t nil nil)
+                                 (?o "\\operatorname" nil t nil nil)
+                                 (?s "\\mathscr" "\\textscr" t nil nil))))
 
   (add-hook 'LaTeX-mode-hook
             (lambda ()
@@ -1472,7 +1518,7 @@ Add support for sage in org-mode.
                                                (:results . "output")))
     ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
     (with-eval-after-load "org"
-      (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async)))
+      (define-key org-mode-map (kbd "C-c x") 'ob-sagemath-execute-async)))
 #+end_src
 
 *** Scratch
@@ -1556,11 +1602,7 @@ I don't use this anymore.
 ** mu4e
 #+begin_src emacs-lisp :noweb no-export
   (use-package mu4e
-    :straight
-    (:host github :repo "djcb/mu" :branch "release/1.6"
-           :pre-build
-           (("meson" "build") ("ninja" "-C" "build"))
-           :files (:defaults "build/mu4e/*"))
+    :straight (:files (:defaults "build/mu4e/*"))
     :defer nil
     :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
     :bind (("C-c p" . mml-secure-message-sign-pgpmime))
@@ -1603,18 +1645,21 @@ Currently copied over from the old mu4e configuration file. To be updated.
 
 *** General view settings
 #+begin_src emacs-lisp
-(setq mu4e-headers-date-format "  %_d %b %y"
-      mu4e-headers-time-format "%_l:%M %P"
-      mu4e-headers-fields
-      '((:human-date . 12)
-        (:flags . 4)
-        (:size . 8)
-        (:from-or-to . 20)
-        (:thread-subject . nil))
-      mu4e-headers-skip-duplicates t)
-(setq message-kill-buffer-on-exit t)
-(setq mu4e-use-fancy-chars t)
-(setq mu4e-split-view 'horizontal)
+  (setq mu4e-headers-date-format "  %_d %b %y"
+        mu4e-headers-time-format "%_l:%M %P"
+        mu4e-headers-fields
+        '((:human-date . 12)
+          (:flags . 4)
+          (:size . 8)
+          (:from-or-to . 20)
+          (:thread-subject . nil))
+        mu4e-headers-skip-duplicates t)
+  (setq message-kill-buffer-on-exit t)
+  (setq mu4e-use-fancy-chars t)
+  (setq mu4e-split-view 'horizontal)
+  (add-to-list 'display-buffer-alist
+               `(,(regexp-quote mu4e-main-buffer-name)
+                 display-buffer-same-window))
 #+end_src
 
 *** Message view settings
@@ -1636,24 +1681,24 @@ Currently copied over from the old mu4e configuration file. To be updated.
 
 *** Bookmarks
 #+begin_src emacs-lisp
-(setq mu4e-bookmarks
-      `(,(make-mu4e-bookmark
-          :name  "Reasonable recent messages"
-          :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
-          :key ?r)
-        ,(make-mu4e-bookmark
-          :name "Mailing lists"
-          :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
-          :key ?l)
-        ,(make-mu4e-bookmark
-          :name "Today and untrashed"
-          :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
-          :key ?t)
-        ,(make-mu4e-bookmark
-          :name "Last week and untrashed"
-          :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
-          :key ?w)
-        ))
+  (setq mu4e-bookmarks
+        '((:name  "Reasonable recent messages"
+                  :query "date:6m..now AND to:asilata AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX OR tag:\\\\Important) AND NOT flag:list"
+                  :key ?r
+                  :favorite t)
+          (:name "Flagged"
+                 :query "flag:flagged AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+                 :key ?f)          
+          (:name "Today and untrashed"
+                 :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+                 :key ?t)
+          (:name "Last week and untrashed"
+                 :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+                 :key ?w)            
+          (:name "Mailing lists"
+                 :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
+                 :key ?l)
+          (:name "Messages with images" :query "mime:image/*" :key ?p :hide t)))
 #+end_src
 
 *** Custom functions
@@ -1687,9 +1732,10 @@ Currently copied over from the old mu4e configuration file. To be updated.
 
 *** Maildirs shortcuts
 #+begin_src emacs-lisp
-(setq mu4e-maildir-shortcuts
-      '((:maildir "/ANU/INBOX" :key ?a)
-        (:maildir "/Gmail/INBOX" :key ?g)))
+  (setq mu4e-maildir-shortcuts
+        '((:maildir "/ANU/INBOX" :key ?a)
+          (:maildir "/Gmail/INBOX" :key ?g)
+          (:maildir "/MIT" :key ?m)))
 #+end_src
 
 *** Org mode integration
