@@ -7,7 +7,7 @@
 [[elisp:(progn (org-babel-tangle) (load-file user-init-file))][Click to tangle and reload init file.]]
 
 * Initial boilerplate
-Define values for the top-level emacs directory (~.emacs.d~), as well as the  subdirectories for optional packages and machine-local configuration.
+Define values for the top-level emacs directory (~.emacs.d~), as well as the subdirectories for optional packages and machine-local configuration.
 #+begin_src emacs-lisp
   (require 'cl-lib)
   
@@ -110,7 +110,7 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
 #+end_src
 
 ** Winner mode
-Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and forth between windo configurations.
+Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and forth between window configurations.
 *** TODO Finish configuration
 #+begin_src emacs-lisp
   (use-package winner
@@ -147,7 +147,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
 #+end_src
 
 ** Miscellaneous
-Function to jump to the other window. Currently not used very much.
+Function to jump to the other window. Currently not used much.
 #+begin_src emacs-lisp
 (defun flip-window ()
   (interactive)
@@ -226,6 +226,7 @@ Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterabl
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer)))
 #+end_src
+
 * Org-mode
 Install [[https://orgmode.org/][org-mode]].
 The configuration is written in the next section, and shows up in place of ~<<org-mode-config>>~ in the snippet below.
@@ -675,7 +676,7 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
         '((vm . vm-visit-folder-other-frame)
           (vm-imap . vm-visit-imap-folder-other-frame)
           (gnus . org-gnus-no-new-news)
-          (file . find-file)
+          (file . find-file-other-window)
           (wl . wl-other-frame)))
 #+end_src
 
@@ -1376,11 +1377,22 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
 
 *** Flycheck
 #+begin_src emacs-lisp
-(use-package flycheck
-  :straight t
-  :config
-  (global-flycheck-mode)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+  (use-package flycheck
+    :straight t
+    :config
+    (global-flycheck-mode)
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+  (flycheck-define-checker vale
+    "A checker for prose"
+    :command ("vale" "--output" "line"
+              source)
+    :standard-input nil
+    :error-patterns
+    ((error line-start (file-name) ":" line ":" column ":" (id (one-or-more (not (any ":")))) ":" (message) line-end))
+    :modes (markdown-mode org-mode text-mode)
+    )
+  (add-to-list 'flycheck-checkers 'vale 'append)
 #+end_src
 
 *** Graphviz
