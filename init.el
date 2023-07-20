@@ -17,8 +17,6 @@
 (let ((default-directory user-opt-directory))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; (setq inhibit-x-resources 't)
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -83,13 +81,6 @@
   :custom-face
   (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
   )
-
-(use-package winner
-  :straight t
-  :bind (("M-<left>" . winner-undo)
-         ("M-<right>" . winner-redo))
-  :config
-  (winner-mode t))
 
 (use-package popper
   :straight t

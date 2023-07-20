@@ -32,14 +32,6 @@ Create the above directories if they don't exist.
     (normal-top-level-add-subdirs-to-load-path))
 #+end_src
 
-I have forgotten why I had added the following bit of code.
-It seems to have been a relic of the past, something about the colour of my cursor.
-I am commenting it for now and may remove it later on.
-*** TODO Finish configuration or delete
-#+begin_src emacs-lisp
-  ;; (setq inhibit-x-resources 't)
-#+end_src
-
 * Package management
 I manage my emacs packages with [[https://github.com/raxod502/straight.el][straight]].
 First, download and bootstrap straight as per the instructions [[https://github.com/raxod502/straight.el#getting-started][here]].
@@ -141,18 +133,6 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
     :custom-face
     (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
     )
-#+end_src
-
-** Winner mode
-Use [[https://www.emacswiki.org/emacs/WinnerMode][winner mode]] to go back and forth between window configurations.
-*** TODO Finish configuration
-#+begin_src emacs-lisp
-  (use-package winner
-    :straight t
-    :bind (("M-<left>" . winner-undo)
-           ("M-<right>" . winner-redo))
-    :config
-    (winner-mode t))
 #+end_src
 
 ** Popper
