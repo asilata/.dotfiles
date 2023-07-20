@@ -71,8 +71,8 @@ Begin by starting the emacs server.
   (unless (and (fboundp 'server-running-p) (server-running-p)) (server-start))
 #+end_src
 
-Install exwm and load its configuration file (currently external).
-#+begin_src emacs-lisp
+Install exwm and load its configuration. The configuration is written below, and shows up in place of ~<<exwm-config>>~.
+#+begin_src emacs-lisp :noweb no-export
   (use-package exwm
     :straight t
     :config
@@ -83,10 +83,44 @@ Install exwm and load its configuration file (currently external).
                 (start-process-shell-command
                  "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
     (exwm-randr-enable)
-    (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
-      (if (file-exists-p exwm-config-file)
-          (load exwm-config-file)))
+    <<exwm-config>>
     (exwm-enable))
+#+end_src
+
+*** EXWM configuration
+:properties:
+:header-args:emacs-lisp: :noweb-ref exwm-config :tangle no
+:end:
+
+Code for better (?) buffer names.
+#+begin_src emacs-lisp
+(defun exwm-rename-buffer ()
+  (interactive)
+  (exwm-workspace-rename-buffer
+   (concat exwm-class-name ":"
+           (if (<= (length exwm-title) 50) exwm-title
+             (concat (substring exwm-title 0 49) "...")))))
+
+(add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
+(add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
+      #+end_src
+
+Useful keybindings.
+      #+begin_src emacs-lisp
+(setq exwm-input-global-keys
+      `(
+        ;; 's-q': Reset (to line-mode).
+        ([?\s-q] . exwm-reset)
+        ;; 's-w': Switch workspace.
+        ([?\s-w] . exwm-workspace-switch)
+        ;; 's-r': Launch application.
+        ([?\s-r] . (lambda (command)
+                     (interactive (list (read-shell-command "$ ")))
+                     (start-process-shell-command command nil command)))
+        ([?\s-f] . flip-window)))
+
+(push '?\s-n exwm-input-prefix-keys)
+(push '?\s-p exwm-input-prefix-keys)
 #+end_src
 Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit text blocks from other programs in emacs.
 #+begin_src emacs-lisp

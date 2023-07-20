@@ -46,13 +46,32 @@
               (start-process-shell-command
                "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
   (exwm-randr-enable)
-  (let ((exwm-config-file (concat user-opt-directory "exwm-config-file.el")))
-    (if (file-exists-p exwm-config-file)
-        (load exwm-config-file)))
+  (defun exwm-rename-buffer ()
+    (interactive)
+    (exwm-workspace-rename-buffer
+     (concat exwm-class-name ":"
+             (if (<= (length exwm-title) 50) exwm-title
+               (concat (substring exwm-title 0 49) "...")))))
+  
+  (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
+  (add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
+  (setq exwm-input-global-keys
+        `(
+          ;; 's-q': Reset (to line-mode).
+          ([?\s-q] . exwm-reset)
+          ;; 's-w': Switch workspace.
+          ([?\s-w] . exwm-workspace-switch)
+          ;; 's-r': Launch application.
+          ([?\s-r] . (lambda (command)
+                       (interactive (list (read-shell-command "$ ")))
+                       (start-process-shell-command command nil command)))
+          ([?\s-f] . flip-window)))
+  
+  (push '?\s-n exwm-input-prefix-keys)
+  (push '?\s-p exwm-input-prefix-keys)
+  (use-package exwm-edit
+    :straight t)
   (exwm-enable))
-
-(use-package exwm-edit
-  :straight t)
 
 (use-package ace-window
   :straight t
