@@ -350,7 +350,9 @@ More updates and documentation coming soon.
                 `(,(concat org-roam-directory "meetings.org")
                   ,(concat org-roam-directory "calculations.org"))
                 ))
+  (setq org-attach-id-dir "~/Org/data")
 #+end_src
+
 
 *** Global options for notes and refiling
 #+begin_src emacs-lisp
