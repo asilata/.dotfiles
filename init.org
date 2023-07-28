@@ -1705,11 +1705,11 @@ Currently copied over from the old mu4e configuration file. To be updated.
           (:name "Flagged"
                  :query "flag:flagged AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
                  :key ?f)          
-          (:name "Today and untrashed"
-                 :query "date:today..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+          (:name "Today and unactioned"
+                 :query "date:today..now AND (maildir:ANU/INBOX OR maildir:/Gmail/INBOX)"
                  :key ?t)
-          (:name "Last week and untrashed"
-                 :query "date:7d..now AND NOT (flag:trashed  OR maildir:\"ANU/Deleted Items\" OR maildir:\"/Gmail/[Gmail]/Bin\")"
+          (:name "Last week and unactioned"
+                 :query "date:7d..now AND (maildir:ANU/INBOX OR maildir:/Gmail/INBOX)"
                  :key ?w)            
           (:name "Mailing lists"
                  :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
