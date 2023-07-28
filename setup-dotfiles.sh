@@ -8,7 +8,6 @@ if [ ! -d "$HOME/.emacs.d/" ]; then
     mkdir ~/.emacs.d
     mkdir ~/.emacs.d/opt
 fi
-ln -s $DOTFILES/init.el ~/.emacs.d/init.el
 
 # * Email stuff
 ln -s $DOTFILES/email/mbsyncrc ~/.mbsyncrc

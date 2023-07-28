@@ -461,19 +461,21 @@ More updates and documentation coming soon.
 *** Agenda customization
 **** Viewing options
 #+begin_src emacs-lisp
-(setq org-agenda-window-setup 'current-window)
-(setq org-deadline-warning-days 3)
-(setq org-agenda-span 'fortnight)
-(setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
-(setq org-agenda-todo-ignore-deadlines 'all)
-(setq org-agenda-todo-ignore-scheduled 'all)
-(setq org-agenda-todo-list-sublevels nil)
-(setq org-log-done t)
-(setq org-pretty-entities t)
-(setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-deadline-warning-days 3)
+  (setq org-agenda-span 'fortnight)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
+  (setq org-agenda-todo-ignore-deadlines 'all)
+  (setq org-agenda-todo-ignore-scheduled 'all)
+  (setq org-agenda-todo-list-sublevels nil)
+  (setq org-log-done t)
+  (setq org-pretty-entities t)
+  (setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
 #+end_src
+
 
 **** Custom agendas
 #+begin_src emacs-lisp
@@ -485,6 +487,12 @@ More updates and documentation coming soon.
                         (org-agenda-start-on-weekday nil)
                         (org-agenda-start-day "+0d")
                         (org-agenda-todo-ignore-deadlines nil)))
+
+            (todo "ONGOING|WAITING|TODO"
+                  ((org-agenda-overriding-header "Unscheduled tasks:")
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-scheduled 'all)))
+
             (agenda "" ((org-agenda-overriding-header "Upcoming week:")
                         (org-agenda-span 'week)
                         (org-agenda-start-day "+1d")
@@ -492,21 +500,15 @@ More updates and documentation coming soon.
                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
                         ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
                         ))
-            (todo "TODO"
-                  ((org-agenda-overriding-header "Unscheduled tasks:")
-                   (org-agenda-todo-ignore-deadlines 'all)
-                   (org-agenda-todo-ignore-scheduled 'all)))
-            (todo "ONGOING"
-                  ((org-agenda-overriding-header "Ongoing tasks:")
-                   (org-agenda-todo-ignore-deadlines 'all)
-                   (org-agenda-todo-ignore-scheduled 'all)))
-  
-            (todo "WAITING|SHELVED"
-                  ((org-agenda-overriding-header "Waiting or shelved tasks:")
+            (todo "SHELVED"
+                  ((org-agenda-overriding-header "Shelved tasks:")
                    (org-agenda-todo-ignore-deadlines 'all)
                    (org-agenda-todo-ignore-scheduled 'all)))
             ))))
 #+end_src
+
+#+RESULTS:
+| c | Comprehensive view | ((agenda  ((org-agenda-overriding-header Today's Schedule:) (org-agenda-span 'day) (org-agenda-ndays 1) (org-agenda-start-on-weekday nil) (org-agenda-start-day +0d) (org-agenda-todo-ignore-deadlines nil))) (todo ONGOING | WAITING | TODO ((org-agenda-overriding-header Unscheduled tasks:) (org-agenda-todo-ignore-deadlines 'all) (org-agenda-todo-ignore-scheduled 'all))) (agenda  ((org-agenda-overriding-header Upcoming week:) (org-agenda-span 'week) (org-agenda-start-day +1d) (org-agenda-start-on-weekday nil) (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '(WAITING DONE))))) (todo SHELVED ((org-agenda-overriding-header Shelved tasks:) (org-agenda-todo-ignore-deadlines 'all) (org-agenda-todo-ignore-scheduled 'all)))) |
 
 **** Org super agenda
 #+begin_src emacs-lisp
@@ -519,7 +521,10 @@ More updates and documentation coming soon.
 #+begin_src emacs-lisp
   (setq org-super-agenda-groups
         '((:discard (:category "fun"))
-          (:auto-category t)))
+          (:todo "ONGOING")          
+          (:todo "TODO")
+          (:auto-todo t)
+          ))
 #+end_src
 
 *** Google calendar integration
