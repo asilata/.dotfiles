@@ -988,12 +988,11 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 * Minibuffer and search
 ** Ivy, etc
 #+begin_src emacs-lisp
-  ;; (use-package avy
-  ;;   :straight t
-  ;;   :bind (("M-s" . avy-goto-char-timer)))
+  (use-package avy
+    :straight t
+    :bind (("M-j" . avy-goto-char-timer)))
 
-  ;; (use-
-  ;;  package ivy
+  ;;(use-package ivy
   ;;  :straight t
   ;;  :bind (("C-c C-r" . ivy-resume)
   ;;         ("C-c v" . ivy-push-view)
