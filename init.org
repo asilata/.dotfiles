@@ -155,6 +155,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             ("magit-diff" . hide)
             "Zoom:chat"
             "\\*ednc-log\\*"
+            "\\*Calendar\\*"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
