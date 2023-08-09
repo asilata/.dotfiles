@@ -242,6 +242,14 @@ Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterabl
   :bind (("C-x C-b" . ibuffer)))
 #+end_src
 
+** Explain pauses
+Use [[https://github.com/lastquestion/explain-pause-mode][explain-pause-mode]] to explain slowness in emacs.
+#+begin_src emacs-lisp
+  (use-package explain-pause-mode
+    :straight t
+    :config
+    (explain-pause-mode))
+#+end_src
 * Org-mode
 Install [[https://orgmode.org/][org-mode]].
 The configuration is written in the next section, and shows up in place of ~<<org-mode-config>>~ in the snippet below.
