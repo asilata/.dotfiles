@@ -1525,6 +1525,11 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
 (load "emacs-Macaulay2.el" t)
 #+end_src
 
+*** Magma
+#+begin_src emacs-lisp
+  (use-package magma-mode
+    :straight t)
+#+end_src
 *** Markdown
 #+begin_src emacs-lisp
 (use-package markdown-mode
