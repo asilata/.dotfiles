@@ -1195,6 +1195,15 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
     (citar-bibliography '("~/Bibliography/math.bib")))
 #+end_src
 
+*** Consult dir
+#+begin_src emacs-lisp
+  (use-package consult-dir
+    :straight t
+    :bind (("C-x C-d" . consult-dir)
+           :map minibuffer-local-completion-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file)))
+#+end_src
 ** Marginalia
 #+begin_src emacs-lisp
   (use-package marginalia
