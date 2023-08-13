@@ -259,7 +259,7 @@ The configuration is written in the next section, and shows up in place of ~<<or
     :straight t
     :bind (("C-c a" . org-agenda)
            (:map org-mode-map
-                 ("C-c C-j" . consult-outline)))
+                 ("C-c C-j" . consult-org-heading)))
     :config
     <<org-mode-config>>
     (add-hook 'org-mode-hook
@@ -1249,6 +1249,7 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
      ("M-." . embark-dwim)
      ("C-h B" . embark-bindings))
     :config
+    (use-package embark-consult :straight t)
     (add-to-list 'display-buffer-alist
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
