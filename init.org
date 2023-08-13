@@ -1662,7 +1662,10 @@ I don't use this anymore.
     :straight (:files (:defaults "build/mu4e/*"))
     :defer nil
     :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
-    :bind (("C-c p" . mml-secure-message-sign-pgpmime))
+    :bind
+    (:map mu4e-compose-mode-map
+          ("C-c p" . mml-secure-message-sign-pgpmime)
+          ("C-c r" . ab/mu4e-write-email-skeleton))
     :config
     (require 'mu4e-contrib)
     <<mu4e-config>>
@@ -1685,6 +1688,52 @@ Currently copied over from the old mu4e configuration file. To be updated.
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-smtp-service 587
       message-kill-buffer-on-exit t)
+#+end_src
+
+*** Email writing goodies
+#+begin_src emacs-lisp
+  (defun ab/mu4e-message-fetch-field (field-name)
+    "Return the value of the header field whose type is FIELD-NAME."
+    (save-excursion
+      (save-restriction
+        (message-narrow-to-headers)
+        (message-fetch-field field-name))))
+
+  (defun ab/recipient-to-name (name-email)
+    "Convert the recipient name-email entry to a name."
+    (cl-multiple-value-bind (name email) name-email
+      (when name
+        (let* ((split (split-string name ", " t))
+               (first-name (if (= (length split) 2)
+                               (cadr split)
+                             (car (split-string name " " t)))))
+          (capitalize first-name)))))
+
+  (defun ab/join-strings-with-comma-and (strings &optional ox-comma)
+    "Join a list of strings using comma, using an and for the last one."
+    (cond ((= (length strings) 0)
+           "")
+          ((= (length strings) 1)
+           (car strings))
+          ((= (length strings) 2)
+           (format "%s%s and %s" (car strings) (if ox-comma "," "")(cadr strings)))
+          (t
+           (format "%s, %s" (car strings) (ab/join-strings-with-comma-and (cdr strings) t)))
+          )
+    )
+  (defun ab/mu4e-write-email-skeleton ()
+    "Write the skeleton of an email message."
+    (interactive)
+    (let* ((recipients (mail-extract-address-components (ab/mu4e-message-fetch-field "to") t))
+           (recipient-names (ab/join-strings-with-comma-and (remove nil (mapcar #'ab/recipient-to-name recipients)))))
+      (message-goto-body)
+      (insert "Hi ")
+      (insert recipient-names)
+      (insert ",\n\n")
+      (save-excursion
+        (insert "\n\nBest,\nAsilata\n\n")
+        )
+      ))
 #+end_src
 
 *** Private settings (user settings, contexts)
