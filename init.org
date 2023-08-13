@@ -447,6 +447,15 @@ More updates and documentation coming soon.
 #+begin_src emacs-lisp
   (setq org-export-with-toc nil
         org-export-with-smart-quotes t)
+  (defun ab/org-export-dwim ()
+      (interactive)
+    (save-excursion
+      (while (and (not (org-before-first-heading-p))
+                  (not (org-entry-get nil "export_file_name")))
+        (org-previous-visible-heading 1))
+      (org-latex-export-to-pdf t (org-get-heading))))
+  
+  (define-key org-mode-map (kbd "C-c e") 'ab/org-export-dwim)
 #+end_src
 
 *** LaTeX
