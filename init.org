@@ -1684,6 +1684,46 @@ Currently copied over from the old mu4e configuration file. To be updated.
 #+end_src
 
 *** Sending mail
+After a recent change, Office365 requires smtp to authenticate via xoauth2 to send email.
+The code in this section is adapted from [[https://github.com/UvA-FNWI/M365-IMAP/issues/3#issuecomment-1309706315][this comment on github]].
+
+The following function takes a username and token file and using the external command ~mutt_oauth2.py~ (see [[https://gitlab.com/muttmua/mutt/-/blob/master/contrib/mutt_oauth2.py.README][README]]), creates a base-64 encoded smtp token.
+#+begin_src emacs-lisp
+  (defun b64-encoded-smtp-token (user tokenfile)
+    "Encode access token according to https://tinyurl.com/2s6ymrv6"
+    (let ((access-token
+           (substring (shell-command-to-string
+                       (concat "mutt_oauth2.py " tokenfile)) 0 -1)))
+      (base64-encode-string
+       (concat "user=" user "auth=Bearer " access-token "") t)))
+#+end_src
+
+We create an association list containing user names and token files.
+#+begin_src emacs-lisp
+  (defvar token-files
+  '(("u1055856@anu.edu.au" . "~/.local/u1055856@anu.edu.au.tokens")))
+#+end_src
+
+We add the xoauth2 method to the supported methods.
+#+begin_src emacs-lisp
+  (add-to-list 'smtpmail-auth-supported 'xoauth2)
+#+end_src
+
+But to make it meaningful, we need to add a corresponding handler function.
+#+begin_src emacs-lisp
+  (cl-defmethod smtpmail-try-auth-method
+    (process (_mech (eql xoauth2)) user password)
+    (when-let* ((user-tokenfile (assoc user token-files))
+                (smtp-token (b64-encoded-smtp-token user (cdr user-tokenfile))))
+      (smtpmail-command-or-throw
+       process (concat "AUTH XOAUTH2 " smtp-token) 235)))
+#+end_src
+
+Finally, we tell smtpmail about the servers that require authentication.
+#+begin_src emacs-lisp
+  (setq smtpmail-servers-requiring-authorization "office365")
+#+end_src
+
 #+begin_src emacs-lisp
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-smtp-service 587
