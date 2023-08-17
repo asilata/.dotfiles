@@ -1701,7 +1701,8 @@ The following function takes a username and token file and using the external co
 We create an association list containing user names and token files.
 #+begin_src emacs-lisp
   (defvar token-files
-  '(("u1055856@anu.edu.au" . "~/.local/u1055856@anu.edu.au.tokens")))
+  '(("u1055856@anu.edu.au" . "~/.local/u1055856@anu.edu.au.tokens")
+    ("asilata@gmail.com" . "~/.local/asilata@gmail.com.tokens")))
 #+end_src
 
 We add the xoauth2 method to the supported methods.
@@ -1721,7 +1722,7 @@ But to make it meaningful, we need to add a corresponding handler function.
 
 Finally, we tell smtpmail about the servers that require authentication.
 #+begin_src emacs-lisp
-  (setq smtpmail-servers-requiring-authorization "office365")
+  (setq smtpmail-servers-requiring-authorization "")
 #+end_src
 
 #+begin_src emacs-lisp
