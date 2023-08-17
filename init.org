@@ -1451,13 +1451,6 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
     :config
     (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
     (counsel-projectile-mode 1))
-
-  (use-package dumb-jump
-    :straight t
-    :bind (("M-g o" . dumb-jump-go-other-window)
-           ("M-g j" . dumb-jump-go)
-           ("M-g b" . dumb-jump-back))
-    )
 #+end_src
 
 ** Assorted packages
