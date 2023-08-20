@@ -783,6 +783,7 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
 
 
 * Colour themes and prettification
+** Zenburn
 Use Zenburn as the colour theme.
 #+begin_src emacs-lisp
   (use-package zenburn-theme
@@ -798,6 +799,7 @@ Use Zenburn as the colour theme.
     )
 #+end_src
 
+** All the icons
 Use [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
 #+begin_src emacs-lisp
 (use-package all-the-icons
@@ -813,21 +815,18 @@ Use [[https://github.com/domtronn/all-the-icons.el][all-the-icons]].
   :config
   (all-the-icons-ivy-setup))
 #+end_src
+** Rainbow mode
 Use [[https://elpa.gnu.org/packages/rainbow-mode.html][rainbow-mode]] to show colours under colour names.
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :straight t
   :mode "\\.\\(el|scss|sass\\)")
 #+end_src
+** Dired
 Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
 #+begin_src emacs-lisp
-  ;; (use-package dired-sidebar
-  ;;   :straight t
-  ;;   :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
-  ;;   :commands
-  ;;   (dired-sidebar-toggle-sidebar))
-
   (setq dired-listing-switches "-alh")
+  (setq dired-mouse-drag-files t)
 
   (use-package dired-narrow
     :straight t
@@ -837,7 +836,7 @@ Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
     :straight t
     :custom
     (dired-collapse-mode t))
-  
+
   (use-package dired-subtree
     :straight t
     :bind
