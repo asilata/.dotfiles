@@ -320,16 +320,6 @@ I used to use org-pdfview but apparently it is unmaintained.
   (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 #+end_src
 
-*** Calfw
-I don't use this anymore.
-#+begin_src emacs-lisp
-  ;; (use-package calfw
-  ;;   :straight t)
-  ;; (use-package calfw-org
-  ;;   :straight t)
-#+end_src
-
-
 *** Org-download
 #+begin_src emacs-lisp
   (use-package org-download
