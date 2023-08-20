@@ -311,7 +311,7 @@ At some point I had installed org-pdftools but I am not sure if I use it any mor
   :straight t)
 #+end_src
 
-I used to use org-pdfview but apparently it is unmaintained.
+I used to use org-pdfview but apparently it is unmaintained. Replace with [[https://github.com/fuxialexander/org-pdftools][org-pdftools]]?
 **** TODO Figure out if we really need this.
 #+begin_src emacs-lisp
 (use-package org-pdfview
@@ -955,6 +955,7 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 
 * Minibuffer and search
 ** Ivy, etc
+Currently I only use [[https://github.com/abo-abo/avy][avy]] out of all the packages in the ivy ecosystem.
 #+begin_src emacs-lisp
   (use-package avy
     :straight t
