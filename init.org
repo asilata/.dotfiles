@@ -250,6 +250,7 @@ Use [[https://github.com/lastquestion/explain-pause-mode][explain-pause-mode]] t
     :config
     (explain-pause-mode))
 #+end_src
+
 * Org-mode
 Install [[https://orgmode.org/][org-mode]].
 The configuration is written in the next section, and shows up in place of ~<<org-mode-config>>~ in the snippet below.
@@ -968,40 +969,6 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
   (use-package avy
     :straight t
     :bind (("M-j" . avy-goto-char-timer)))
-
-  ;;(use-package ivy
-  ;;  :straight t
-  ;;  :bind (("C-c C-r" . ivy-resume)
-  ;;         ("C-c v" . ivy-push-view)
-  ;;         ("C-c V" . ivy-pop-view))
-  ;;  :config
-  ;;  (use-package ivy-hydra :straight t)
-  ;;  (ivy-mode 1)
-  ;;  (setq ivy-use-virtual-buffers t))
-
-  ;; (use-package swiper
-  ;;   :straight t
-  ;;   :bind (("C-s" . swiper-isearch)))
-
-  ;; (use-package counsel
-  ;;   :straight t
-  ;;   :bind (("M-x" . counsel-M-x)
-  ;;          ("C-x C-f" . counsel-find-file)
-  ;;          ("C-x C-g" . counsel-git)
-  ;;          ("C-h v" . counsel-describe-variable)
-  ;;          ("C-h f" . counsel-describe-function)))
-
-  ;; (use-package ivy-prescient
-  ;;   :straight t
-  ;;   :config
-  ;;   (ivy-prescient-mode))
-
-  ;; (use-package ivy-rich
-  ;;   :straight t
-  ;;   :after ivy
-  ;;   :config
-  ;;   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich--ivy-switch-buffer-transformer)
-  ;;   (ivy-rich-mode 1))
 
   ;; (use-package wgrep
   ;;   :straight t
