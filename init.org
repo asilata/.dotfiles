@@ -844,19 +844,6 @@ Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
     (:map dired-mode-map
           ("i" . dired-subtree-toggle)))
 #+end_src
-Use [[https://github.com/Alexander-Miller/treemacs][treemacs]]. I don't use this as much anymore.
-#+begin_src emacs-lisp
-  (use-package treemacs
-    :straight t
-    :bind (:map global-map
-                ([f8] . treemacs-select-window))
-    :config
-    (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?))
-  
-  (use-package treemacs-magit
-    :after treemacs magit
-    :straight t)
-#+end_src
 
 Prettify various symbols.
 *** TODO Revisit prettified symbols.
