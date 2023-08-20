@@ -917,35 +917,6 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
 #+end_src
 
-** God mode
-#+begin_src emacs-lisp
-(use-package god-mode
-  :straight t
-  :bind ("<escape>" . god-mode-all)
-  :config
-  (god-mode)
-  (add-hook 'post-command-hook #'ab/god-mode-update-cursor-type))
-
-(defun ab/god-mode-update-cursor-type ()
-  (setq cursor-type
-        (if (or god-local-mode buffer-read-only) 'bar 'box)))
-#+end_src
-
-
-
-** RYO modal
-#+begin_src emacs-lisp
-(use-package ryo-modal
-  :straight t
-  :commands ryo-modal-mode
-  :bind ("C-c SPC" . ryo-modal-mode)
-  :config
-  (ryo-modal-keys
-   (:mode 'org-mode)
-   ("n" org-next-visible-heading)
-   ("p" org-previous-visible-heading))
-  )
-#+end_src
 ** Objed
 #+begin_src emacs-lisp
 (use-package objed
