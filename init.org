@@ -1561,23 +1561,6 @@ Add support for sage in org-mode.
   (yas-global-mode 1))
 #+end_src
 
-** Jekyll stuff (new post function, modified from hyde-mode's version)
-I don't use this anymore.
-#+begin_src emacs-lisp
-  ;; (defun jekyll-new-post (title directory)
-  ;;   "Create a new post titled TITLE in DIRECTORY."
-  ;;   (interactive "MEnter post title: \nDEnter directory to save in: ")
-  ;;   (let ((post-file-name (expand-file-name (format "%s/%s.markdown"
-  ;;                                                   directory
-  ;;                                                   (concat (format-time-string "%Y-%m-%d-") (downcase (replace-regexp-in-string " " "-" title)))))))
-  ;;     (find-file post-file-name)
-  ;;     (insert "---\n")
-  ;;     (insert (format "title: \"%s\"\n" title))
-  ;;     (insert (format "date: \"%s\"\n" (format-time-string "%Y-%m-%d %H:%M:%S %z")))
-  ;;     (insert "---\n\n")
-  ;;     (markdown-mode)))
-#+end_src
-
 * Email
 ** mu4e
 #+begin_src emacs-lisp :noweb no-export
