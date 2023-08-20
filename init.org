@@ -1165,6 +1165,12 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
     :bind (("C-c b" . citar-insert-citation)
            :map minibuffer-local-map
            ("M-b" . citar-insert-preset))
+    :config
+    (use-package citar-embark
+      :straight t
+      :after citar embark
+      :no-require
+      :config (citar-embark-mode))
     :custom
     (citar-bibliography '("~/Bibliography/math.bib")))
 #+end_src
