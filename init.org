@@ -1364,7 +1364,20 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 
 #+end_src
-  
+
+*** Math delimiters
+The [[https://github.com/oantolin/math-delimiters][math-delimiters]] package for smart insertion of delimiters.
+#+begin_src emacs-lisp
+  (use-package math-delimiters
+    :straight t
+    :config
+    (with-eval-after-load 'org
+      (define-key org-mode-map "$" #'math-delimiters-insert))
+    (with-eval-after-load 'tex
+      (define-key TeX-mode-map "$" #'math-delimiters-insert))
+    (with-eval-after-load 'cdlatex
+      (define-key cdlatex-mode-map "$" nil))))
+#+end_src
 ** Projects and jumping
 #+begin_src emacs-lisp
   (use-package counsel-projectile
