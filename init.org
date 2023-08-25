@@ -135,6 +135,11 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
     )
 #+end_src
 
+** Buffer actions, etc
+Work in progress, following some ideas from [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][Mastering Emacs' post]].
+#+begin_src emacs-lisp
+  (setq switch-to-buffer-obey-display-actions t)
+#+end_src
 ** Popper
 Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows as "popups".
 #+begin_src emacs-lisp
@@ -154,7 +159,6 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "magit-log"
             ("magit-diff" . hide)
             "Zoom:chat"
-            "\\*ednc-log\\*"
             "\\*Calendar\\*"
             ))
     (popper-mode +1)
