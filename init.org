@@ -588,6 +588,11 @@ More updates and documentation coming soon.
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 #+end_src
 
+Source code editing setup.
+#+begin_src emacs-lisp
+  (setq org-src-window-setup 'split-window-below)
+#+end_src
+
 *** Org journal
 #+begin_src emacs-lisp
 (use-package org-journal
