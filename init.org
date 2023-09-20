@@ -140,6 +140,7 @@ Work in progress, following some ideas from [[https://www.masteringemacs.org/art
 #+begin_src emacs-lisp
   (setq switch-to-buffer-obey-display-actions t)
 #+end_src
+
 ** Popper
 Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows as "popups".
 #+begin_src emacs-lisp
@@ -160,6 +161,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             ("magit-diff" . hide)
             "Zoom:chat"
             "\\*Calendar\\*"
+            "Plasmashell"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
