@@ -1426,7 +1426,7 @@ The [[https://github.com/oantolin/math-delimiters][math-delimiters]] package for
     (with-eval-after-load 'tex
       (define-key TeX-mode-map "$" #'math-delimiters-insert))
     (with-eval-after-load 'cdlatex
-      (define-key cdlatex-mode-map "$" nil))))
+      (define-key cdlatex-mode-map "$" nil)))
 #+end_src
 ** Projects and jumping
 #+begin_src emacs-lisp
