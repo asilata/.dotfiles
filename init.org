@@ -1334,6 +1334,10 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
 #+end_src
 
 * Programming
+** Eglot
+#+begin_src emacs-lisp
+  (use-package eglot :straight t)
+#+end_src
 
 ** LaTeX etc
 *** Bibliography
