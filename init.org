@@ -160,6 +160,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             ("magit-diff" . hide)
             "Zoom:chat"
             "\\*Calendar\\*"
+            "\\*Agenda Commands\\*"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
@@ -306,7 +307,19 @@ At some point I had installed [[https://github.com/org-mime/org-mime][org-mime]]
 (use-package org-mime
   :straight t)
 #+end_src
-
+*** Org-msg
+More in the [[https://github.com/jeremy-compostella/org-msg][org-msg repository]].
+#+begin_src emacs-lisp
+    (setq mail-user-agent 'mu4e-user-agent)
+    (use-package org-msg :straight t
+      :custom
+      (org-msg-options "html-postamble:nil num:nil toc:nil author:nil email:nil tex:dvipng")
+      (org-msg-greeting-fmt "\nHi%s,\n\n")
+      (org-msg-default-alternatives '((new		. (text html))
+                                      (reply-to-html	. (text html))
+                                      (reply-to-text	. (text))))
+      )
+#+end_src
 *** Org-noter and org-pdftools
 At some point I had installed org-pdftools but I am not sure if I use it any more.
 **** TODO Figure out if we really need this.
@@ -440,6 +453,7 @@ More updates and documentation coming soon.
 
 *** Global export options
 #+begin_src emacs-lisp
+  (use-package ox-pandoc :straight t)
   (setq org-export-with-toc nil
         org-export-with-smart-quotes t)
   (defun ab/org-export-dwim ()
@@ -672,6 +686,7 @@ See the [[https://www.orgroam.com/][org-roam website]].
         :clock-in t :clock-resume t))))
   (org-roam-tag-sources '(prop all-directories))
   :config
+  (org-roam-db-autosync-mode)
   (require 'org-roam-protocol)
   :init
   (setq org-roam-v2-ack t))
