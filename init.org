@@ -1439,7 +1439,7 @@ The [[https://github.com/oantolin/math-delimiters][math-delimiters]] package for
     (with-eval-after-load 'tex
       (define-key TeX-mode-map "$" #'math-delimiters-insert))
     (with-eval-after-load 'cdlatex
-      (define-key cdlatex-mode-map "$" nil))))
+      (define-key cdlatex-mode-map "$" nil)))
 #+end_src
 ** Projects and jumping
 #+begin_src emacs-lisp
@@ -1488,7 +1488,6 @@ The [[https://github.com/oantolin/math-delimiters][math-delimiters]] package for
 (use-package graphviz-dot-mode
   :straight t
   :config
-  (use-package company-graphviz-dot)
   (setq graphviz-dot-indent-width 4))
 #+end_src
 
