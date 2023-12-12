@@ -140,6 +140,7 @@ Work in progress, following some ideas from [[https://www.masteringemacs.org/art
 #+begin_src emacs-lisp
   (setq switch-to-buffer-obey-display-actions t)
 #+end_src
+
 ** Popper
 Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows as "popups".
 #+begin_src emacs-lisp
@@ -161,6 +162,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "Zoom:chat"
             "\\*Calendar\\*"
             "\\*Agenda Commands\\*"
+            "Plasmashell"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
@@ -1347,6 +1349,10 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
 #+end_src
 
 * Programming
+** Eglot
+#+begin_src emacs-lisp
+  (use-package eglot :straight t)
+#+end_src
 
 ** LaTeX etc
 *** Bibliography
@@ -1398,8 +1404,9 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
 *** Reftex
 #+begin_src emacs-lisp
   (use-package reftex :straight t
-               :config
-               (setq reftex-default-bibliography "~/Bibliography/math.bib"))
+               :custom
+               (reftex-default-bibliography "~/Bibliography/math.bib")
+               (reftex-ref-style-default-list '("Cleveref" "Default")))
 
   (use-package cdlatex
     :straight t
