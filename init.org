@@ -313,8 +313,8 @@ At some point I had installed [[https://github.com/org-mime/org-mime][org-mime]]
 At some point I had installed org-pdftools but I am not sure if I use it any more.
 **** TODO Figure out if we really need this.
 #+begin_src emacs-lisp
-(use-package org-noter
-  :straight t)
+  ;; (use-package org-noter
+  ;;   :straight t)
 #+end_src
 
 I used to use org-pdfview but apparently it is unmaintained. Replace with [[https://github.com/fuxialexander/org-pdftools][org-pdftools]]?
@@ -544,28 +544,31 @@ More updates and documentation coming soon.
 
 *** Google calendar integration
 #+begin_src emacs-lisp
-(use-package org-gcal
-  :straight t
-  :config
-  (setq org-gcal-client-id
-        (string-trim
-         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-id.gpg")))
-  (setq org-gcal-client-secret
-        (string-trim
-         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg")))
-  (setq org-gcal-file-alist `(("asilata@gmail.com" .
-                               ,(concat org-default-directory "calendar.org"))
-                              ("es2hibml3t2m5le9nl83lq0boo@group.calendar.google.com" .
-                               ,(concat org-default-directory "algtop.org"))))
-  (setq org-gcal-up-days 7)
-  (setq org-gcal-down-days 7)
-  ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
-  )
+  ;; (use-package org-gcal
+  ;;   :straight t
+  ;;   :config
+  ;;   (setq org-gcal-client-id
+  ;;         (string-trim
+  ;;          (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-id.gpg")))
+  ;;   (setq org-gcal-client-secret
+  ;;         (string-trim
+  ;;          (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg")))
+  ;;   (setq org-gcal-file-alist `(("asilata@gmail.com" .
+  ;;                                ,(concat org-default-directory "calendar.org"))
+  ;;                               ("es2hibml3t2m5le9nl83lq0boo@group.calendar.google.com" .
+  ;;                                ,(concat org-default-directory "algtop.org"))))
+  ;;   (setq org-gcal-up-days 7)
+  ;;   (setq org-gcal-down-days 7)
+  ;;   ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
+  ;;   )
 
-(setq calendar-latitude 149.13)
-(setq calendar-longitude -35.28)
-(setq calendar-location-name "Canberra")
+  (setq calendar-latitude 149.13)
+  (setq calendar-longitude -35.28)
+  (setq calendar-location-name "Canberra")
 #+end_src
+
+#+RESULTS:
+: Canberra
 
 *** Encryption
 #+begin_src emacs-lisp
@@ -1238,14 +1241,17 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
 
 ** Other goodies
 #+begin_src emacs-lisp
-(use-package which-key :straight t
-  :config
-  (which-key-mode 1))
+  (use-package which-key :straight t
+    :config
+    (which-key-mode 1))
 
-(use-package smart-mode-line
-  :straight t
-  :config
-  (progn (sml/setup)))
+  (use-package smart-mode-line
+    :straight t
+    :custom
+    (sml/name-width 40)
+    (sml/mode-width 'full)
+    :config
+    (progn (sml/setup)))
 #+end_src
 
 
