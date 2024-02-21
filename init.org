@@ -491,25 +491,75 @@ More updates and documentation coming soon.
 **** Viewing options
 #+begin_src emacs-lisp
   (setq org-agenda-window-setup 'current-window)
-  (setq org-deadline-warning-days 3)
-  (setq org-agenda-span 'fortnight)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-deadline-warning-days 7)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
-  (setq org-agenda-todo-ignore-deadlines 'all)
-  (setq org-agenda-todo-ignore-scheduled 'all)
-  (setq org-agenda-todo-list-sublevels nil)
   (setq org-log-done t)
   (setq org-pretty-entities t)
   (setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
 #+end_src
 
-
 **** Custom agendas
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
   (setq org-agenda-custom-commands
-        '(("c" "Comprehensive view"
+        '(("w" "Work view"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '((:discard (:tag "personal"))
+                           (:order-multi (2 (:name "Email" :tag "email")
+                                            (:name "Red tape" :tag "redtape")))
+                           (:name "Today's schedule"
+                                  :time-grid t
+                                  :todo "TODO")
+                           (:auto-planning t)))))
+            (agenda "" ((org-agenda-span 'week)
+                        (org-agenda-start-day "+1d")
+                        (org-agenda-start-on-weekday nil)                        
+                        (org-super-agenda-groups
+                         '((:discard (:tag "personal"))
+                           (:discard (:tag "email"))
+                           (:anything t)))))
+            (todo "ONGOING|WAITING|TODO|SHELVED"
+                  ((org-agenda-overriding-header "Other tasks:")
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-scheduled 'all)
+                   (org-super-agenda-groups
+                    '((:discard (:tag "personal"))
+                      (:todo "WAITING")                    
+                      (:todo "ONGOING")
+                      (:todo "TODO")
+                      (:todo "SHELVED")
+                      (:auto-todo t)))))
+            ))
+          ("p" "Personal view"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '((:discard (:not (:tag "personal")))
+                           (:order-multi (2 (:name "Email" :tag "email")
+                                            (:name "Red tape" :tag "redtape")))
+                           (:name "Today's schedule"
+                                  :time-grid t
+                                  :todo "TODO")
+                           (:auto-planning t)))))
+            (agenda "" ((org-agenda-span 'week)
+                      (org-agenda-start-day "+1d")
+                      (org-agenda-start-on-weekday nil)                        
+                      (org-super-agenda-groups
+                       '((:discard (:not (:tag "personal")))
+                         (:anything t)))))
+            (tags-todo ".*"
+                ((org-agenda-overriding-header "Other tasks:")
+                 (org-agenda-todo-ignore-deadlines 'all)
+                 (org-agenda-todo-ignore-scheduled 'all)
+                 (org-super-agenda-groups
+                  '((:discard (:not (:tag "personal")))
+                    (:todo "WAITING")                    
+                    (:todo "ONGOING")
+                    (:todo "TODO")
+                    (:todo "SHELVED")
+                    (:auto-todo t)))))))
+          ("c" "Comprehensive view"
            ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
                         (org-agenda-span 'day)
                         (org-agenda-ndays 1)
@@ -533,11 +583,9 @@ More updates and documentation coming soon.
                   ((org-agenda-overriding-header "Shelved tasks:")
                    (org-agenda-todo-ignore-deadlines 'all)
                    (org-agenda-todo-ignore-scheduled 'all)))
-            ))))
+            ))
+          ))
 #+end_src
-
-#+RESULTS:
-| c | Comprehensive view | ((agenda  ((org-agenda-overriding-header Today's Schedule:) (org-agenda-span 'day) (org-agenda-ndays 1) (org-agenda-start-on-weekday nil) (org-agenda-start-day +0d) (org-agenda-todo-ignore-deadlines nil))) (todo ONGOING | WAITING | TODO ((org-agenda-overriding-header Unscheduled tasks:) (org-agenda-todo-ignore-deadlines 'all) (org-agenda-todo-ignore-scheduled 'all))) (agenda  ((org-agenda-overriding-header Upcoming week:) (org-agenda-span 'week) (org-agenda-start-day +1d) (org-agenda-start-on-weekday nil) (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '(WAITING DONE))))) (todo SHELVED ((org-agenda-overriding-header Shelved tasks:) (org-agenda-todo-ignore-deadlines 'all) (org-agenda-todo-ignore-scheduled 'all)))) |
 
 **** Org super agenda
 #+begin_src emacs-lisp
