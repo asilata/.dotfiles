@@ -508,7 +508,6 @@ More updates and documentation coming soon.
                         (org-super-agenda-groups
                          '((:discard (:tag "personal"))
                            (:name "Important"
-                                  :time-grid t
                                   :priority "A"
                                   :order 2)
                            (:order-multi (3 (:name "Email" :tag "email")
