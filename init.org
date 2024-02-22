@@ -492,7 +492,7 @@ More updates and documentation coming soon.
 #+begin_src emacs-lisp
   (setq org-agenda-window-setup 'current-window)
   (setq org-deadline-warning-days 7)
-  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-scheduled-if-done nil)
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
   (setq org-log-done t)
@@ -507,7 +507,11 @@ More updates and documentation coming soon.
            ((agenda "" ((org-agenda-span 'day)
                         (org-super-agenda-groups
                          '((:discard (:tag "personal"))
-                           (:order-multi (2 (:name "Email" :tag "email")
+                           (:name "Important"
+                                  :time-grid t
+                                  :priority "A"
+                                  :order 2)
+                           (:order-multi (3 (:name "Email" :tag "email")
                                             (:name "Red tape" :tag "redtape")))
                            (:name "Today's schedule"
                                   :time-grid t
