@@ -1636,6 +1636,19 @@ Add support for sage in org-mode.
       (define-key org-mode-map (kbd "C-c x") 'ob-sagemath-execute-async)))
 #+end_src
 
+Docstring support
+#+begin_src emacs-lisp
+  (use-package poporg
+    :straight (:host github :repo "asilata/poporg")
+    :config
+    (defun ab/poporg-edit-set-major-mode ()
+      "Set the major mode of the poporg edit buffer. This function is intended to be called from within `poporg-edit-hook'. The variable `original-major-mode' is set locally by `poporg.el' before the `poporg-edit-hook' is run."
+      (if (and original-major-mode (eq original-major-mode 'sage-shell:sage-mode))
+            (rst-mode)
+          (org-mode)))
+    :custom
+    (poporg-edit-hook '(ab/poporg-edit-set-major-mode)))
+#+end_src
 *** Scratch
 #+begin_src emacs-lisp
 (use-package scratch
