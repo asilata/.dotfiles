@@ -326,8 +326,8 @@ More in the [[https://github.com/jeremy-compostella/org-msg][org-msg repository]
 At some point I had installed org-pdftools but I am not sure if I use it any more.
 **** TODO Figure out if we really need this.
 #+begin_src emacs-lisp
-(use-package org-noter
-  :straight t)
+  ;; (use-package org-noter
+  ;;   :straight t)
 #+end_src
 
 I used to use org-pdfview but apparently it is unmaintained. Replace with [[https://github.com/fuxialexander/org-pdftools][org-pdftools]]?
@@ -492,74 +492,99 @@ More updates and documentation coming soon.
 #+begin_src emacs-lisp :results silent
   (setq org-agenda-window-setup 'current-window)
   (setq org-deadline-warning-days 7)
-  (setq org-agenda-span 'day)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
-  (setq org-agenda-todo-ignore-deadlines 'all)
-  (setq org-agenda-todo-ignore-scheduled 'all)
-  (setq org-agenda-todo-list-sublevels nil)
   (setq org-log-done t)
   (setq org-pretty-entities nil)
   (setq org-columns-default-format "%50ITEM(Task) %9TODO %10CLOCKSUM_T(Time today) %10CLOCKSUM(Time total) %10EFFORT(Effort)")
 #+end_src
 
 **** Custom agendas
-#+begin_src emacs-lisp :results silent
-                   (setq org-agenda-custom-commands
-                         '(("c" "Comprehensive view"
-                            ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
-                                         (org-agenda-span 'day)
-                                         (org-agenda-ndays 1)
-                                         (org-agenda-start-on-weekday nil)
-                                         (org-agenda-start-day "+0d")
-                                         (org-agenda-todo-ignore-deadlines nil)))
+#+begin_src emacs-lisp :results none
+    (setq org-agenda-custom-commands
+          '(("w" "Work view"
+             ((agenda "" ((org-agenda-span 'day)
+                          (org-super-agenda-groups
+                           '((:discard (:tag "personal"))
+                             (:name "Important"
+                                    :priority "A"
+                                    :order 2)
+                             (:order-multi (3 (:name "Email" :tag "email")
+                                              (:name "Red tape" :tag "redtape")))
+                             (:name "Today's schedule"
+                                    :time-grid t
+                                    :todo "TODO")
+                             (:auto-planning t)))))
+              (agenda "" ((org-agenda-span 'week)
+                          (org-agenda-start-day "+1d")
+                          (org-agenda-start-on-weekday nil)                        
+                          (org-super-agenda-groups
+                           '((:discard (:tag "personal"))
+                             (:discard (:tag "email"))
+                             (:anything t)))))
+              (todo "ONGOING|WAITING|TODO|SHELVED"
+                    ((org-agenda-overriding-header "Other tasks:")
+                     (org-agenda-todo-ignore-deadlines 'all)
+                     (org-agenda-todo-ignore-scheduled 'all)
+                     (org-super-agenda-groups
+                      '((:discard (:tag "personal"))
+                        (:todo "WAITING")                    
+                        (:todo "ONGOING")
+                        (:todo "TODO")
+                        (:todo "SHELVED")
+                        (:auto-todo t)))))
+              ))
+            ("p" "Personal view"
+             ((agenda "" ((org-agenda-span 'day)
+                          (org-super-agenda-groups
+                           '((:discard (:not (:tag "personal")))
+                             (:order-multi (2 (:name "Email" :tag "email")
+                                              (:name "Red tape" :tag "redtape")))
+                             (:name "Today's schedule"
+                                    :time-grid t
+                                    :todo "TODO")
+                             (:auto-planning t)))))
+              (agenda "" ((org-agenda-span 'week)
+                        (org-agenda-start-day "+1d")
+                        (org-agenda-start-on-weekday nil)                        
+                        (org-super-agenda-groups
+                         '((:discard (:not (:tag "personal")))
+                           (:anything t)))))
+              (tags-todo ".*"
+                  ((org-agenda-overriding-header "Other tasks:")
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-scheduled 'all)
+                   (org-super-agenda-groups
+                    '((:discard (:not (:tag "personal")))
+                      (:todo "WAITING")                    
+                      (:todo "ONGOING")
+                      (:todo "TODO")
+                      (:todo "SHELVED")
+                      (:auto-todo t)))))))
+            ("c" "Comprehensive view"
+             ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
+                          (org-agenda-span 'day)
+                          (org-agenda-ndays 1)
+                          (org-agenda-start-on-weekday nil)
+                          (org-agenda-start-day "+0d")
+                          (org-agenda-todo-ignore-deadlines nil)))
+              (todo "ONGOING|WAITING|TODO"
+                    ((org-agenda-overriding-header "Unscheduled tasks:")
+                     (org-agenda-todo-ignore-deadlines 'all)
+                     (org-agenda-todo-ignore-scheduled 'all)))
 
-                             (todo "ONGOING|WAITING|TODO"
-                                   ((org-agenda-overriding-header "Unscheduled tasks:")
-                                    (org-agenda-todo-ignore-deadlines 'all)
-                                    (org-agenda-todo-ignore-scheduled 'all)))
-
-                             (agenda "" ((org-agenda-overriding-header "Upcoming week:")
-                                         (org-agenda-span 'week)
-                                         (org-agenda-start-day "+1d")
-                                         (org-agenda-start-on-weekday nil)
-                                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
-                                         ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
-                                         ))
-                             (todo "SHELVED"
-                                   ((org-agenda-overriding-header "Shelved tasks:")
-                                    (org-agenda-todo-ignore-deadlines 'all)
-                                    (org-agenda-todo-ignore-scheduled 'all)))
-                             ))
-                           ("s" "Super agenda"
-                            ((agenda "" ((org-super-agenda-groups
-                                          '((:discard (:tag "personal"))
-                                            (:order-multi (2 (:name "Email" :tag "email")
-                                                             (:name "Red tape" :tag "redtape")))
-                                            (:name "Today"  ; Optionally specify section name
-                                                  :time-grid t  ; Items that appear on the time grid
-                                                  :todo "TODO")
-                                            (:auto-todo t)
-                                            ))))
-                             (agenda "" ((org-agenda-overriding-header "Upcoming week:")
-                                         (org-agenda-span 'week)
-                                         (org-agenda-start-day "+1d")
-                                         (org-agenda-start-on-weekday nil)
-                                         (org-super-agenda-groups nil)))
-                                         
-                             (todo "ONGOING|WAITING|TODO|SHELVED"
-                                   ((org-agenda-overriding-header "Unscheduled tasks:")
-                                    (org-agenda-todo-ignore-deadlines 'all)
-                                    (org-super-agenda-groups
-                                     '((:discard (:tag "personal"))
-                                       (:todo "WAITING")
-                                       (:todo "ONGOING")
-                                       (:todo "TODO")
-                                       (:todo "SHELVED")))))
-                             ))))
-
+              (agenda "" ((org-agenda-overriding-header "Upcoming week:")
+                          (org-agenda-span 'week)
+                          (org-agenda-start-day "+1d")
+                          (org-agenda-start-on-weekday nil)
+                          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE")))
+                          ;;(org-agenda-prefix-format '((agenda . " %-12:c%?-12t %s%b ")))
+                                           ))
+              (todo "SHELVED"
+                    ((org-agenda-overriding-header "Shelved tasks:")
+                     (org-agenda-todo-ignore-deadlines 'all)
+                     (org-agenda-todo-ignore-scheduled 'all)))
+              ))))
 #+end_src
 
 **** Org super agenda
@@ -583,28 +608,31 @@ More updates and documentation coming soon.
 
 *** Google calendar integration
 #+begin_src emacs-lisp
-(use-package org-gcal
-  :straight t
-  :config
-  (setq org-gcal-client-id
-        (string-trim
-         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-id.gpg")))
-  (setq org-gcal-client-secret
-        (string-trim
-         (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg")))
-  (setq org-gcal-file-alist `(("asilata@gmail.com" .
-                               ,(concat org-default-directory "calendar.org"))
-                              ("es2hibml3t2m5le9nl83lq0boo@group.calendar.google.com" .
-                               ,(concat org-default-directory "algtop.org"))))
-  (setq org-gcal-up-days 7)
-  (setq org-gcal-down-days 7)
-  ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
-  )
+  ;; (use-package org-gcal
+  ;;   :straight t
+  ;;   :config
+  ;;   (setq org-gcal-client-id
+  ;;         (string-trim
+  ;;          (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-id.gpg")))
+  ;;   (setq org-gcal-client-secret
+  ;;         (string-trim
+  ;;          (shell-command-to-string "gpg2 -dq ~/.emacs.d/org-gcal/.org-gcal-client-secret.gpg")))
+  ;;   (setq org-gcal-file-alist `(("asilata@gmail.com" .
+  ;;                                ,(concat org-default-directory "calendar.org"))
+  ;;                               ("es2hibml3t2m5le9nl83lq0boo@group.calendar.google.com" .
+  ;;                                ,(concat org-default-directory "algtop.org"))))
+  ;;   (setq org-gcal-up-days 7)
+  ;;   (setq org-gcal-down-days 7)
+  ;;   ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch)))
+  ;;   )
 
-(setq calendar-latitude 149.13)
-(setq calendar-longitude -35.28)
-(setq calendar-location-name "Canberra")
+  (setq calendar-latitude 149.13)
+  (setq calendar-longitude -35.28)
+  (setq calendar-location-name "Canberra")
 #+end_src
+
+#+RESULTS:
+: Canberra
 
 *** Encryption
 #+begin_src emacs-lisp
@@ -1277,14 +1305,17 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
 
 ** Other goodies
 #+begin_src emacs-lisp
-(use-package which-key :straight t
-  :config
-  (which-key-mode 1))
+  (use-package which-key :straight t
+    :config
+    (which-key-mode 1))
 
-(use-package smart-mode-line
-  :straight t
-  :config
-  (progn (sml/setup)))
+  (use-package smart-mode-line
+    :straight t
+    :custom
+    (sml/name-width 40)
+    (sml/mode-width 'full)
+    :config
+    (progn (sml/setup)))
 #+end_src
 
 *** Key-chord mode
