@@ -1009,8 +1009,7 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 Currently I only use [[https://github.com/abo-abo/avy][avy]] out of all the packages in the ivy ecosystem.
 #+begin_src emacs-lisp
   (use-package avy
-    :straight t
-    :bind (("M-j" . avy-goto-char-timer)))
+    :straight t)
 
   ;; (use-package wgrep
   ;;   :straight t
@@ -1288,6 +1287,16 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
   (progn (sml/setup)))
 #+end_src
 
+*** Key-chord mode
+See [[https://github.com/emacsorphanage/key-chord][key-chord]]
+#+begin_src emacs-lisp
+  (use-package key-chord :straight t
+    :after avy org
+    :config
+    (key-chord-define-global "hh" 'avy-goto-char-timer)
+    (key-chord-mode 1)
+    )
+#+end_src
 
 * Global keybindings
 #+begin_src emacs-lisp
