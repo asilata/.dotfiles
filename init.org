@@ -1482,6 +1482,11 @@ The [[https://github.com/oantolin/math-delimiters][math-delimiters]] package for
     (with-eval-after-load 'cdlatex
       (define-key cdlatex-mode-map "$" nil)))
 #+end_src
+*** Lazytab
+See https://github.com/karthink/lazytab.
+#+begin_src emacs-lisp
+  (use-package lazytab :straight (:host github :repo "karthink/lazytab"))
+#+end_src
 ** Projects and jumping
 #+begin_src emacs-lisp
   (use-package counsel-projectile
