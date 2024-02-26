@@ -372,6 +372,11 @@ More updates and documentation coming soon.
   (setq org-attach-id-dir "~/Org/data")
 #+end_src
 
+*** Org-present
+See [[https://github.com/rlister/org-present][github repository for org-present]].
+#+begin_src emacs-lisp
+  (use-package org-present :straight t)
+#+end_src
 
 *** Global options for notes and refiling
 #+begin_src emacs-lisp
