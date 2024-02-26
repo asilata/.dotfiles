@@ -507,7 +507,7 @@ More updates and documentation coming soon.
                           (org-super-agenda-groups
                            '((:discard (:tag "personal"))
                              (:name "Important"
-                                    :priority "A"
+                                    :and (:priority "A" :not (:date today))
                                     :order 2)
                              (:order-multi (3 (:name "Email" :tag "email")
                                               (:name "Red tape" :tag "redtape")))
