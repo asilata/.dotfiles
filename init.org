@@ -1421,7 +1421,8 @@ See [[https://github.com/emacsorphanage/key-chord][key-chord]]
 * Programming
 ** Eglot
 #+begin_src emacs-lisp
-  (use-package eglot :straight t)
+  (use-package eglot :straight t
+    :hook (latex-mode . eglot-ensure))
 #+end_src
 
 ** LaTeX etc
