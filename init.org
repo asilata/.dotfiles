@@ -727,7 +727,7 @@ See the [[https://www.orgroam.com/][org-roam website]].
          ("p" "person" plain "%?"
           :target (file+head "People/${slug}.org" ,org-roam-common-head)
           :immediate-finish t)
-         ("r" "ref" plain "* Notes\n%?"
+         ("r" "ref" plain "* Notes\n** What are the main ingredients?\n** What is the main result?\n** What goes into the proof?\n%?"
           :target (file+head ,orb-file-name-format ,orb-common-head)
           :unnarrowed t)
          )))
