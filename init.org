@@ -373,6 +373,11 @@ More updates and documentation coming soon.
   (setq org-attach-id-dir "~/Org/data")
 #+end_src
 
+*** Org-present
+See [[https://github.com/rlister/org-present][github repository for org-present]].
+#+begin_src emacs-lisp
+  (use-package org-present :straight t)
+#+end_src
 
 *** Global options for notes and refiling
 #+begin_src emacs-lisp
@@ -1393,7 +1398,8 @@ See [[https://github.com/emacsorphanage/key-chord][key-chord]]
 * Programming
 ** Eglot
 #+begin_src emacs-lisp
-  (use-package eglot :straight t)
+  (use-package eglot :straight t
+    :hook (latex-mode . eglot-ensure))
 #+end_src
 
 ** LaTeX etc
@@ -1621,6 +1627,19 @@ Add support for sage in org-mode.
       (define-key org-mode-map (kbd "C-c x") 'ob-sagemath-execute-async)))
 #+end_src
 
+Docstring support
+#+begin_src emacs-lisp
+  (use-package poporg
+    :straight (:host github :repo "asilata/poporg")
+    :config
+    (defun ab/poporg-edit-set-major-mode ()
+      "Set the major mode of the poporg edit buffer. This function is intended to be called from within `poporg-edit-hook'. The variable `original-major-mode' is set locally by `poporg.el' before the `poporg-edit-hook' is run."
+      (if (and original-major-mode (eq original-major-mode 'sage-shell:sage-mode))
+            (rst-mode)
+          (org-mode)))
+    :custom
+    (poporg-edit-hook '(ab/poporg-edit-set-major-mode)))
+#+end_src
 *** Scratch
 #+begin_src emacs-lisp
 (use-package scratch
