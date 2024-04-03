@@ -1449,6 +1449,17 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
     (set-default 'preview-scale-function 2))
 #+end_src
 
+*** Latexmk setup
+Wrapper function to set the latexmk previewer to emacs. It reverts the buffer if already visiting the output pdf file, and otherwise displays it (in another window). See the [[file:latexmkrc][latexmkrc]] file for where it is used.
+#+begin_src emacs-lisp
+  (defun ab/pdf-preview (filename)
+    "Preview filename in its own buffer and revert the buffer."
+    (let ((buf (find-buffer-visiting filename)))
+      (progn 
+        (if buf (with-current-buffer buf (pdf-view-revert-buffer nil t)))
+        (display-buffer (or buf (find-file-noselect filename))))))
+#+end_src
+
 *** Reftex
 #+begin_src emacs-lisp
   (use-package reftex :straight t
