@@ -1294,8 +1294,8 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
   (use-package smart-mode-line
     :straight t
     :custom
-    (sml/name-width 40)
-    (sml/mode-width 'full)
+    (sml/name-width 10)
+    (sml/mode-width 20)
     :config
     (progn (sml/setup)))
 #+end_src
