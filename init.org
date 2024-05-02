@@ -1276,21 +1276,19 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
                    nil
                    (window-parameters (mode-line-format . none))))
     (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+
+    ;; Use embark-like help everywhere
+    (setq prefix-help-command #'embark-prefix-help-command)
     :custom
     (embark-indicators
      '(embark-minimal-indicator
        embark-highlight-indicator
        embark-isearch-highlight-indicator)
-     (prefix-help-command #'embark-prefix-help-command))
     )
 #+end_src
 
 ** Other goodies
 #+begin_src emacs-lisp
-  (use-package which-key :straight t
-    :config
-    (which-key-mode 1))
-
   (use-package smart-mode-line
     :straight t
     :custom
@@ -2037,3 +2035,4 @@ I don't use elfeed as much as I should these days.
   ;; byte-compile-warnings: (not free-vars callargs cl-functions)  
   ;; End:
 #+end_src
+
