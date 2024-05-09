@@ -86,15 +86,15 @@ Install exwm and load its configuration. The configuration is written below, and
 
 Code for better (?) buffer names.
 #+begin_src emacs-lisp
-(defun exwm-rename-buffer ()
-  (interactive)
-  (exwm-workspace-rename-buffer
-   (concat exwm-class-name ":"
-           (if (<= (length exwm-title) 50) exwm-title
-             (concat (substring exwm-title 0 49) "...")))))
+  (defun exwm-rename-buffer ()
+    (interactive)
+    (exwm-workspace-rename-buffer
+     (concat exwm-class-name ":"
+             (if (<= (length exwm-title) 50) exwm-title
+               (concat (substring exwm-title 0 49) "...")))))
 
-(add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
-(add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
+  (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
+  (add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
       #+end_src
 
 Useful keybindings.
