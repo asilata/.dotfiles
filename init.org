@@ -1284,12 +1284,12 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
      '(embark-minimal-indicator
        embark-highlight-indicator
        embark-isearch-highlight-indicator)
-    )
+    ))
 #+end_src
 
 ** Other goodies
-#+begin_src emacs-lisp
-  (use-package smart-mode-line
+#+begin_src emacs-lisp 
+ (use-package smart-mode-line
     :straight t
     :custom
     (sml/name-width 40)
