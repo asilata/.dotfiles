@@ -436,6 +436,32 @@ See [[https://github.com/rlister/org-present][github repository for org-present]
 (global-set-key (kbd "C-c c") 'org-capture)
 #+end_src
 
+*** Clock goodies
+Here are some custom functions for clocking (work in progress!). 
+#+begin_src emacs-lisp :results silent
+  (defun ab/insert-past-clock()
+    "Insert past clock into the current header"
+    (let* ((scheduled (org-element-property :scheduled (org-element-at-point)))
+           (start (org-get-scheduled-time (org-entry-get nil "SCHEDULED")))
+           (duration-in-minutes (ab/org-timestamp-range-duration-in-minutes scheduled)))
+      (if (and scheduled start (> duration-in-minutes 0))
+          (progn (org-clock-in nil start)
+                 (org-clock-out nil nil (time-add start (* 60 duration-in-minutes))))
+        )))
+
+  (defun ab/org-timestamp-range-duration-in-minutes (ts)
+     (if (member (org-element-property :type ts) '(active-range inactive-range))
+         (/ (time-subtract (org-timestamp-to-time ts 'end) (org-timestamp-to-time ts)) 60)
+       nil))
+
+  (add-hook 'org-after-todo-state-change-hook
+          (lambda ()
+            (when (string= org-state "DONE")
+              (save-excursion
+                (org-back-to-heading)
+                (ab/insert-past-clock)))))
+#+end_src
+
 **** Orca
 #+begin_src emacs-lisp
 (use-package orca
