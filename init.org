@@ -1761,7 +1761,8 @@ We create an association list containing user names and token files.
 
 We add the xoauth2 method to the supported methods.
 #+begin_src emacs-lisp
-  (add-to-list 'smtpmail-auth-supported 'xoauth2)
+  (with-eval-after-load 'smtpmail
+    (add-to-list 'smtpmail-auth-supported 'xoauth2))
 #+end_src
 
 But to make it meaningful, we need to add a corresponding handler function.
