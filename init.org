@@ -617,6 +617,13 @@ See [[https://github.com/rlister/org-present][github repository for org-present]
           ))
 #+end_src
 
+**** Org clock daytime
+See [[https://github.com/ArneBab/emacs-org-clock-daytime][emacs-org-clock-daytime]] repository.
+#+begin_src emacs-lisp
+  (use-package emacs-org-clock-daytime
+    :straight (:host github :repo "ArneBab/emacs-org-clock-daytime"))
+#+end_src
+
 *** Google calendar integration
 #+begin_src emacs-lisp
   ;; (use-package org-gcal
