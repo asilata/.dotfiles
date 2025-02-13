@@ -1890,8 +1890,11 @@ Finally, we tell smtpmail about the servers that require authentication.
 
 *** Indexing
 #+begin_src emacs-lisp
-(setq mu4e-index-cleanup t
-      mu4e-index-lazy-check nil)
+  (setq mu4e-index-cleanup t
+        mu4e-index-lazy-check nil)
+
+  (with-eval-after-load 'mu4e
+    (define-key mu4e-main-mode-map (kbd "u") 'mu4e-update-index))
 #+end_src
 
 *** General view settings
@@ -1949,7 +1952,8 @@ Finally, we tell smtpmail about the servers that require authentication.
           (:name "Mailing lists"
                  :query "flag:list AND (maildir:/ANU/INBOX OR maildir:/Gmail/INBOX)"
                  :key ?l)
-          (:name "Messages with images" :query "mime:image/*" :key ?p :hide t)))
+          (:name "Messages with images" :query "mime:image/*" :key ?p :hide t)
+          (:name "Queued messages" :query "(maildir:/queued-mail)" :key ?q)))
 #+end_src
 
 *** Custom functions
@@ -1986,7 +1990,8 @@ Finally, we tell smtpmail about the servers that require authentication.
   (setq mu4e-maildir-shortcuts
         '((:maildir "/ANU/INBOX" :key ?a)
           (:maildir "/Gmail/INBOX" :key ?g)
-          (:maildir "/MIT" :key ?m)))
+          (:maildir "/MIT" :key ?m)
+          (:maildir "/UChicago" :key ?c)))
 #+end_src
 
 *** Org mode integration
