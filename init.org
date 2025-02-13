@@ -2018,7 +2018,29 @@ Desktop notifications
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
   )
 #+end_src
+*** Queueing mail
+#+begin_src emacs-lisp
+  (setq smtpmail-queue-dir "~/Mail/queued-mail/cur")
+#+end_src
+*** Mail merge
+#+begin_src emacs-lisp
+  (defun ab/queue-message (to subject body &optional context)
+    "Queue a new message with the given TO, SUBJECT, and BODY fields. Given a context, compose the message in the given context. Otherwise, default to the ANU context."
+    (let ((smtpmail-queue-mail t)
+          (mu4e-compose-context-policy nil))
+      (mu4e-context-switch t (if context context "ANU"))
+      (compose-mail to subject)
+      (message-goto-body)
+      (insert body)
+      (message-send-and-exit)))
 
+  (defun ab/mail-merge (subject body-file recepients &optional context)
+    "Given a list of receipients, mail merge using the given subject and file containing the body text. The file containing the body text is expected to have one replacement string, which will be replaced by the name of the recepient. Each entry in the list of recepients is a list of the form (EMAIL NAME)."
+    (let ((body (f-read-text body-file)))
+      (mapc (lambda (lst)
+              (ab/queue-message (car lst) subject (format body (cadr lst)) context))
+            recepients)))
+#+end_src
 *** Endnotes
 
 ** GPG
