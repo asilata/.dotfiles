@@ -1791,7 +1791,7 @@ After a recent change, Office365 requires smtp to authenticate via xoauth2 to se
 The code in this section is adapted from [[https://github.com/UvA-FNWI/M365-IMAP/issues/3#issuecomment-1309706315][this comment on github]].
 
 The following function takes a username and token file and using the external command ~mutt_oauth2.py~ (see [[https://gitlab.com/muttmua/mutt/-/blob/master/contrib/mutt_oauth2.py.README][README]]), creates a base-64 encoded smtp token.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
   (defun b64-encoded-smtp-token (user tokenfile)
     "Encode access token according to https://tinyurl.com/2s6ymrv6"
     (let ((access-token
@@ -1802,20 +1802,20 @@ The following function takes a username and token file and using the external co
 #+end_src
 
 We create an association list containing user names and token files.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
   (defvar token-files
   '(("u1055856@anu.edu.au" . "~/.local/u1055856@anu.edu.au.tokens")
     ("asilata@gmail.com" . "~/.local/asilata@gmail.com.tokens")))
 #+end_src
 
 We add the xoauth2 method to the supported methods.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
   (with-eval-after-load 'smtpmail
     (add-to-list 'smtpmail-auth-supported 'xoauth2))
 #+end_src
 
 But to make it meaningful, we need to add a corresponding handler function.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
   (cl-defmethod smtpmail-try-auth-method
     (process (_mech (eql xoauth2)) user password)
     (when-let* ((user-tokenfile (assoc user token-files))
@@ -1825,11 +1825,11 @@ But to make it meaningful, we need to add a corresponding handler function.
 #+end_src
 
 Finally, we tell smtpmail about the servers that require authentication.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
   (setq smtpmail-servers-requiring-authorization "")
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-smtp-service 587
       message-kill-buffer-on-exit t)
