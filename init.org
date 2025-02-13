@@ -38,21 +38,19 @@ First, download and bootstrap straight as per the instructions [[https://github.
 #+begin_src emacs-lisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
+         (expand-file-name
+          "straight/repos/straight.el/bootstrap.el"
+          (or (bound-and-true-p straight-base-dir)
+              user-emacs-directory)))
+        (bootstrap-version 7))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
            'silent 'inhibit-cookies)
         (goto-char (point-max))
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
-#+end_src
-
-Install [[https://github.com/jwiegley/use-package][use-package]] if not installed.
-#+begin_src emacs-lisp
-(straight-use-package 'use-package)
 #+end_src
 
 * Window management
@@ -1076,6 +1074,24 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
   :straight t)
 #+end_src
 
+** Easydraw
+See [[https://github.com/misohena/el-easydraw][el-easydraw]].
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org
+    (require 'edraw-org)
+    (edraw-org-setup-default))
+  ;; When using the org-export-in-background option (when using the
+  ;; asynchronous export function), the following settings are
+  ;; required. This is because Emacs started in a separate process does
+  ;; not load org.el but only ox.el.
+  (with-eval-after-load "ox"
+    (require 'edraw-org)
+    (edraw-org-setup-exporter))
+    (use-package edraw-org
+      :straight (:host github :repo "misohena/el-easydraw")
+      :after org 
+      (edraw-org-setup-default))
+#+end_src
 * Minibuffer and search
 ** Ivy, etc
 Currently I only use [[https://github.com/abo-abo/avy][avy]] out of all the packages in the ivy ecosystem.
