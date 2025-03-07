@@ -66,13 +66,13 @@ Install exwm and load its configuration. The configuration is written below, and
   (use-package exwm
     :straight t
     :config
-    (require 'exwm-randr)
-    (setq exwm-randr-workspace-output-plist '(1 "HDMI-1"))
-    (add-hook 'exwm-randr-screen-change-hook
-              (defun ab/exwm-randr ()
-                (start-process-shell-command
-                 "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
-    (exwm-randr-enable)
+    ;;(require 'exwm-randr)
+    ;;(setq exwm-randr-workspace-output-plist '(1 "HDMI-1"))
+    ;; (add-hook 'exwm-randr-screen-change-hook
+    ;;           (defun ab/exwm-randr ()
+    ;;             (start-process-shell-command
+    ;;              "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
+    ;;(exwm-randr-enable)
     <<exwm-config>>
     (exwm-enable))
 #+end_src
@@ -160,7 +160,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "Zoom:chat"
             "\\*Calendar\\*"
             "\\*Agenda Commands\\*"
-            "Plasmashell"
+            "plasmashell"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
@@ -346,6 +346,16 @@ I used to use org-pdfview but apparently it is unmaintained. Replace with [[http
     (org-download-screenshot-method "gm import %s")
     (org-download-image-dir "assets/"))
 #+end_src
+
+*** Orgtbl-aggregate
+#+begin_src emacs-lisp
+  (use-package orgtbl-aggregate
+    :straight t
+    :after org
+    )
+#+end_src
+
+
 ** TODO Org-mode configuration
 :properties:
 :header-args:emacs-lisp: :noweb-ref org-mode-config :tangle no
@@ -1091,6 +1101,12 @@ See [[https://github.com/misohena/el-easydraw][el-easydraw]].
       :straight (:host github :repo "misohena/el-easydraw")
       :after org 
       (edraw-org-setup-default))
+#+end_src      
+
+** Beginend
+Go to the "logical beginning" of the file instead of the actual beginning. See the code [[https://github.com/DamienCassou/beginend][here]].
+#+begin_src emacs-lisp :result silent
+  (use-package beginend :straight t :config (beginend-global-mode))
 #+end_src
 * Minibuffer and search
 ** Ivy, etc
@@ -1664,10 +1680,19 @@ See https://github.com/karthink/lazytab.
               (orgtbl-mode 1))))
 #+end_src
 
+*** Ob-penrose
+Source code [[https://github.com/weavermarquez/ob-penrose][here]].
+#+begin_src emacs-lisp
+    (use-package ob-penrose :straight (:host github :repo "weavermarquez/ob-penrose")
+      :after org :defer t)
+#+end_src
+
+
 *** Ox-tufte
 #+begin_src emacs-lisp
 (use-package ox-tufte :straight t)
 #+end_src
+
 *** Sage
 #+begin_src emacs-lisp
 (use-package sage-shell-mode
