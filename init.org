@@ -1575,6 +1575,12 @@ See https://github.com/karthink/lazytab.
   :mode ("rc$"))
 #+end_src
 
+*** Cython
+#+begin_src emacs-lisp
+  (use-package cython-mode
+    :straight t)
+#+end_src
+
 *** Dokuwiki-mode
 #+begin_src emacs-lisp
 (use-package dokuwiki-mode
