@@ -1216,7 +1216,7 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
     (advice-add #'register-preview :override #'consult-register-window)
 
     ;; Optionally replace `completing-read-multiple' with an enhanced version.
-    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+    ;;(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
@@ -1430,15 +1430,15 @@ See [[https://github.com/emacsorphanage/key-chord][key-chord]]
 #+end_src
 * Completion
 #+begin_src emacs-lisp
-(use-package company
-  :straight t
-  :config
-  (global-company-mode 1))
+  (use-package company
+    :straight t
+    :config
+    (global-company-mode 1))
 
-(use-package company-prescient
-  :straight t
-  :config
-  (company-prescient-mode))
+  (use-package company-prescient
+    :straight t
+    :config
+    (company-prescient-mode))
 #+end_src
 
 * Git
