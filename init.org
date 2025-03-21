@@ -840,27 +840,6 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
 #+end_src
 
 
-*** Org-brain
-#+begin_src emacs-lisp
-(use-package org-brain
-  :straight t
-  :init
-  (setq org-brain-path (concat org-default-directory "Brain/"))
-  :config
-  (setq org-track-id-globally t)
-  (setq org-id-locations-file (concat user-emacs-directory ".org-id-locations"))
-  (push '("b" "Brain" plain (function org-brain-goto-end)
-          "* %i%?" :empty-lines 1)
-        org-capture-templates)
-  (setq org-brain-visualize-default-choices 'all)
-  (setq org-brain-title-max-length 12)
-  (setq org-brain-include-file-entries t
-        org-brain-file-entries-use-title t)
-  (setq org-brain-file-from-input-function
-        (lambda (x) (if (cdr x) (car x) (concat org-brain-path "default"))))
-  )
-#+end_src
-
 *** Links and frames
 #+begin_src emacs-lisp
   (setq org-link-frame-setup
@@ -2026,6 +2005,28 @@ Finally, we tell smtpmail about the servers that require authentication.
           (:maildir "/UChicago" :key ?c)))
 #+end_src
 
+*** Attachments
+Save all attachments without any prompts. The attachments are saved to the default attachment directory, which has been set to "/tmp/".
+The code is based on the snippets found on https://macowners.club/posts/update-mu4e-save-attachments-faster/.
+#+begin_src emacs-lisp :results silent
+  (defun ab/mu4e-save-all-attachments ()
+    "Save all attachments from the current mu4e view buffer to the default attachment directory (usually \"/tmp\").
+  Currently this applies to all mime parts that are \"attachment-like\". That is, those that have a filename associated to them."
+    (interactive)
+    (let* ((parts (mu4e-view-mime-parts))
+           (candidates (seq-map (lambda (fpart) (cons (plist-get fpart :filename) fpart))
+                                (seq-filter (lambda (part) (plist-get part :attachment-like)) parts)))
+           (candidates (or candidates (mu4e-warn "No attachments for this message.")))
+           (files (mapcar #'car candidates))
+           (default-directory mu4e-attachment-dir)
+           )
+      (seq-do (lambda (fname)
+                (let* ((part (cdr (assoc fname candidates)))
+                       (path (mu4e--uniquify-file-name
+                              (mu4e-join-paths default-directory (plist-get part :filename)))))
+                  (mm-save-part-to-file (plist-get part :handle) path)))
+              files)))
+#+end_src
 *** Org mode integration
 #+begin_src emacs-lisp
 (require 'mu4e-org)
