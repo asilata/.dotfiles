@@ -949,6 +949,7 @@ Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
 #+begin_src emacs-lisp
   (setq dired-listing-switches "-alh")
   (setq dired-mouse-drag-files t)
+  (setq dired-movement-style 'cycle)  
 
   (use-package dired-narrow
     :straight t
