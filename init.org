@@ -2026,6 +2026,24 @@ The code is based on the snippets found on https://macowners.club/posts/update-m
                               (mu4e-join-paths default-directory (plist-get part :filename)))))
                   (mm-save-part-to-file (plist-get part :handle) path)))
               files)))
+Attach the file in ~fpath~ to a selected headline from a selected or created org-roam node.
+#+begin_src emacs-lisp :results silent
+  (defun ab/org-attach-to-roam-node (fpath)
+    (interactive)
+    (progn (find-file fpath)
+           (org-roam-node-find)
+           (consult-org-heading)
+           (org-attach-attach fpath nil 'mv)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun ab/mu4e-org-attach-attachments ()
+    (interactive)
+    (let ((fpaths (ab/mu4e-save-all-attachments)))
+      (save-window-excursion
+        (seq-do #'ab/org-attach-to-roam-node fpaths))
+      (mu4e-view-mark-for-refile)
+      ))
 #+end_src
 *** Org mode integration
 #+begin_src emacs-lisp
