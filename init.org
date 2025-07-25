@@ -2020,12 +2020,15 @@ The code is based on the snippets found on https://macowners.club/posts/update-m
            (files (mapcar #'car candidates))
            (default-directory mu4e-attachment-dir)
            )
-      (seq-do (lambda (fname)
-                (let* ((part (cdr (assoc fname candidates)))
-                       (path (mu4e--uniquify-file-name
-                              (mu4e-join-paths default-directory (plist-get part :filename)))))
-                  (mm-save-part-to-file (plist-get part :handle) path)))
-              files)))
+      (seq-map (lambda (fname)
+                 (let* ((part (cdr (assoc fname candidates)))
+                        (path (mu4e--uniquify-file-name
+                               (mu4e-join-paths default-directory (plist-get part :filename)))))
+                   (mm-save-part-to-file (plist-get part :handle) path)
+                   path))
+               files)))
+#+end_src
+
 Attach the file in ~fpath~ to a selected headline from a selected or created org-roam node.
 #+begin_src emacs-lisp :results silent
   (defun ab/org-attach-to-roam-node (fpath)
