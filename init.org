@@ -2009,23 +2009,24 @@ Finally, we tell smtpmail about the servers that require authentication.
 Save all attachments without any prompts. The attachments are saved to the default attachment directory, which has been set to "/tmp/".
 The code is based on the snippets found on https://macowners.club/posts/update-mu4e-save-attachments-faster/.
 #+begin_src emacs-lisp :results silent
-    (defun ab/mu4e-save-all-attachments ()
-      "Save all attachments from the current mu4e view buffer to the default attachment directory (usually \"/tmp\").
-    Currently this applies to all mime parts that are \"attachment-like\". That is, those that have a filename associated to them."
-      (interactive)
-      (let* ((parts (mu4e-view-mime-parts))
-             (candidates (seq-map (lambda (fpart) (cons (plist-get fpart :filename) fpart))
-                                  (seq-filter (lambda (part) (plist-get part :attachment-like)) parts)))
-             (candidates (or candidates (mu4e-warn "No attachments for this message.")))
-             (files (mapcar #'car candidates))
-             (default-directory mu4e-attachment-dir)
-             )
-        (seq-do (lambda (fname)
-                  (let* ((part (cdr (assoc fname candidates)))
-                         (path (mu4e--uniquify-file-name
-                                (mu4e-join-paths default-directory (plist-get part :filename)))))
-                    (mm-save-part-to-file (plist-get part :handle) path)))
-                files)))
+  (defun ab/mu4e-save-all-attachments ()
+    "Save all attachments from the current mu4e view buffer to the default attachment directory (usually \"/tmp\").
+  Currently this applies to all mime parts that are \"attachment-like\". That is, those that have a filename associated to them."
+    (interactive)
+    (let* ((parts (mu4e-view-mime-parts))
+           (candidates (seq-map (lambda (fpart) (cons (plist-get fpart :filename) fpart))
+                                (seq-filter (lambda (part) (plist-get part :attachment-like)) parts)))
+           (candidates (or candidates (mu4e-warn "No attachments for this message.")))
+           (files (mapcar #'car candidates))
+           (default-directory mu4e-attachment-dir)
+           )
+      (seq-map (lambda (fname)
+                (let* ((part (cdr (assoc fname candidates)))
+                       (path (mu4e--uniquify-file-name
+                              (mu4e-join-paths default-directory (plist-get part :filename)))))
+                  (mm-save-part-to-file (plist-get part :handle) path)
+  		path))
+               files)))
 #+end_src
 Attach the file in ~fpath~ to a selected headline from a selected or created org-roam node.
 #+begin_src emacs-lisp :results silent
