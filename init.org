@@ -934,6 +934,7 @@ Goodies for [[https://www.emacswiki.org/emacs/DiredMode][dired]].
 #+begin_src emacs-lisp
   (setq dired-listing-switches "-alh")
   (setq dired-mouse-drag-files t)
+  (setq dired-movement-style 'cycle)  
 
   (use-package dired-narrow
     :straight t
@@ -1200,7 +1201,7 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
     (advice-add #'register-preview :override #'consult-register-window)
 
     ;; Optionally replace `completing-read-multiple' with an enhanced version.
-    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+    ;;(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
@@ -1414,15 +1415,15 @@ See [[https://github.com/emacsorphanage/key-chord][key-chord]]
 #+end_src
 * Completion
 #+begin_src emacs-lisp
-(use-package company
-  :straight t
-  :config
-  (global-company-mode 1))
+  (use-package company
+    :straight t
+    :config
+    (global-company-mode 1))
 
-(use-package company-prescient
-  :straight t
-  :config
-  (company-prescient-mode))
+  (use-package company-prescient
+    :straight t
+    :config
+    (company-prescient-mode))
 #+end_src
 
 * Git
@@ -2042,12 +2043,32 @@ The code is based on the snippets found on https://macowners.club/posts/update-m
            (files (mapcar #'car candidates))
            (default-directory mu4e-attachment-dir)
            )
-      (seq-do (lambda (fname)
+      (seq-map (lambda (fname)
                 (let* ((part (cdr (assoc fname candidates)))
                        (path (mu4e--uniquify-file-name
                               (mu4e-join-paths default-directory (plist-get part :filename)))))
-                  (mm-save-part-to-file (plist-get part :handle) path)))
-              files)))
+                  (mm-save-part-to-file (plist-get part :handle) path)
+  		path))
+               files)))
+#+end_src
+Attach the file in ~fpath~ to a selected headline from a selected or created org-roam node.
+#+begin_src emacs-lisp :results silent
+  (defun ab/org-attach-to-roam-node (fpath)
+    (interactive)
+    (progn (find-file fpath)
+           (org-roam-node-find)
+           (ignore-errors (consult-org-heading))
+           (org-attach-attach fpath nil 'mv)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun ab/mu4e-org-attach-attachments ()
+    (interactive)
+    (let ((fpaths (ab/mu4e-save-all-attachments)))
+      (save-window-excursion
+        (seq-do #'ab/org-attach-to-roam-node fpaths))
+      (mu4e-view-mark-for-refile)
+      ))
 #+end_src
 *** Org mode integration
 #+begin_src emacs-lisp
