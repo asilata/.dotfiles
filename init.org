@@ -118,6 +118,12 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
   :straight t)
 #+end_src
 
+Manually set plasmashell as an unmanaged window, otherwise EXWM thinks it is a regular window.
+#+begin_src emacs-lisp
+  (setq exwm-manage-configurations
+        '(((string= exwm-instance-name "plasmashell") managed nil)))
+#+end_src
+
 ** Ace-window
 [[https://github.com/abo-abo/ace-window][Ace-window]] is good for navigating between windows quickly, as well as switching windows.
 #+begin_src emacs-lisp
@@ -160,7 +166,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "Zoom:chat"
             "\\*Calendar\\*"
             "\\*Agenda Commands\\*"
-            "plasmashell"
+            ;;"plasmashell"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
@@ -1066,20 +1072,20 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 ** Easydraw
 See [[https://github.com/misohena/el-easydraw][el-easydraw]].
 #+begin_src emacs-lisp
-  (with-eval-after-load 'org
-    (require 'edraw-org)
-    (edraw-org-setup-default))
-  ;; When using the org-export-in-background option (when using the
-  ;; asynchronous export function), the following settings are
-  ;; required. This is because Emacs started in a separate process does
-  ;; not load org.el but only ox.el.
-  (with-eval-after-load "ox"
-    (require 'edraw-org)
-    (edraw-org-setup-exporter))
-    (use-package edraw-org
-      :straight (:host github :repo "misohena/el-easydraw")
-      :after org 
-      (edraw-org-setup-default))
+  ;; (with-eval-after-load 'org
+  ;;   (require 'edraw-org)
+  ;;   (edraw-org-setup-default))
+  ;; ;; When using the org-export-in-background option (when using the
+  ;; ;; asynchronous export function), the following settings are
+  ;; ;; required. This is because Emacs started in a separate process does
+  ;; ;; not load org.el but only ox.el.
+  ;; (with-eval-after-load "ox"
+  ;;   (require 'edraw-org)
+  ;;   (edraw-org-setup-exporter))
+  ;;   (use-package edraw-org
+  ;;     :straight (:host github :repo "misohena/el-easydraw")
+  ;;     :after org 
+  ;;     (edraw-org-setup-default))
 #+end_src      
 
 ** Beginend
@@ -1515,6 +1521,7 @@ Wrapper function to set the latexmk previewer to emacs. It reverts the buffer if
     (cdlatex-takeover-parenthesis nil)
     (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
     (cdlatex-math-modify-alist '((?b "\\mathbb" nil t nil nil)
+                                 (?l "\\mathbf" nil t nil nil)
                                  (?f "\\mathfrak" "\\frak" t nil nil)
                                  (?o "\\operatorname" nil t nil nil)
                                  (?s "\\mathscr" "\\textscr" t nil nil))))
@@ -1760,6 +1767,22 @@ Docstring support
   :straight t)
 #+end_src
 
+*** Yankpad
+#+begin_src emacs-lisp
+  (use-package yankpad
+  :ensure t
+  :defer 10
+  :init
+  (setq yankpad-file "~/Org/yankpad.org")
+  :config
+  ;;(bind-key "<f7>" 'yankpad-map)
+  ;;(bind-key "<f12>" 'yankpad-expand)
+  ;; If you want to complete snippets using completion-preview, corfu-mode or company-mode
+  ;;(add-to-list 'completion-at-point-functions #'yankpad-capf)
+  ;; If you want to expand snippets with hippie-expand
+  ;;(add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
+  )
+#+end_src
 *** Yasnippet
 #+begin_src emacs-lisp
 (use-package yasnippet
@@ -2090,7 +2113,7 @@ I don't use elfeed as much as I should these days.
     (require 'elfeed-link)
     (use-package elfeed-org :straight t)
     (elfeed-org)
-    (setq rmh-elfeed-org-files '("~/.elfeed/elfeed.org"))
+    (setq rmh-elfeed-org-files '("~/Org/elfeed.org"))
     (setq elfeed-search-title-max-width 1000)
     (setq elfeed-use-curl nil))
 #+end_src
