@@ -783,27 +783,33 @@ See the [[https://www.orgroam.com/][org-roam website]].
          ("r" "ref" plain "* Notes\n** What are the main ingredients?\n** What is the main result?\n** What goes into the proof?\n%?"
           :target (file+head ,orb-file-name-format ,orb-common-head)
           :unnarrowed t)
+         ("i" "inbox entry" entry
+          "* ${title}\n:properties:\n:id: %(org-id-new)\n:end:\n%?"
+          :target (node "INBOX")
+          :prepend t
+          :unnarrowed t
+          :immediate-finish t)
          )))
-  (org-roam-dailies-directory "Dailies/")
-  (org-roam-dailies-capture-templates
-   (let* ((daily-title-format "%<%Y-%m-%d>")
-          (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
-     `(("d" "daily" entry "* %?"
-        :if-new (file+head ,daily-title-format ,daily-front-matter)
-        :olp ("Notes"))
-       ("c" "calculation" entry "* %?"
-        :if-new (file+head ,daily-title-format ,daily-front-matter)
-        :olp ("Calculations"))
-       ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
-        :if-new (file+head ,daily-title-format ,daily-front-matter)        
-        :olp ("Meetings")
-        :clock-in t :clock-resume t))))
-  (org-roam-tag-sources '(prop all-directories))
-  :config
-  (org-roam-db-autosync-mode)
-  (require 'org-roam-protocol)
-  :init
-  (setq org-roam-v2-ack t))
+    (org-roam-dailies-directory "Dailies/")
+    (org-roam-dailies-capture-templates
+     (let* ((daily-title-format "%<%Y-%m-%d>")
+            (daily-front-matter (concat "#+title: " daily-title-format "\n#+created: %U\n")))
+       `(("d" "daily" entry "* %?"
+          :if-new (file+head ,daily-title-format ,daily-front-matter)
+          :olp ("Notes"))
+         ("c" "calculation" entry "* %?"
+          :if-new (file+head ,daily-title-format ,daily-front-matter)
+          :olp ("Calculations"))
+         ("m" "meeting" entry "* MEETING :meeting\n  - with :: %^{Meeting with}\n  %? "
+          :if-new (file+head ,daily-title-format ,daily-front-matter)        
+          :olp ("Meetings")
+          :clock-in t :clock-resume t))))
+    (org-roam-tag-sources '(prop all-directories))
+    :config
+    (org-roam-db-autosync-mode)
+    (require 'org-roam-protocol)
+    :init
+    (setq org-roam-v2-ack t))
 #+end_src
 
 **** org-roam-ui
