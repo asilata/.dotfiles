@@ -1344,6 +1344,7 @@ See [[https://github.com/emacsorphanage/key-chord][key-chord]]
     :after avy org
     :config
     (key-chord-define-global "hh" 'avy-goto-char-timer)
+    (key-chord-define-global "xx" 'dabbrev-expand)
     (key-chord-mode 1)
     )
 #+end_src
@@ -1509,6 +1510,7 @@ Wrapper function to set the latexmk previewer to emacs. It reverts the buffer if
     (cdlatex-takeover-parenthesis nil)
     (cdlatex-math-symbol-alist '((?> ("\\to" "\\Longrightarrow"))))
     (cdlatex-math-modify-alist '((?b "\\mathbb" nil t nil nil)
+                                 (?l "\\mathbf" nil t nil nil)                                 
                                  (?f "\\mathfrak" "\\frak" t nil nil)
                                  (?o "\\operatorname" nil t nil nil)
                                  (?s "\\mathscr" "\\textscr" t nil nil))))
@@ -2041,6 +2043,7 @@ Attach the file in ~fpath~ to a selected headline from a selected or created org
       (mu4e-view-mark-for-refile)
       ))
 #+end_src
+
 *** Org mode integration
 #+begin_src emacs-lisp
 (require 'mu4e-org)
@@ -2096,6 +2099,19 @@ Desktop notifications
   (setq epg-pinentry-mode 'loopback)
 #+end_src
 
+** Consult-mu
+#+begin_src emacs-lisp :results silent
+  (use-package consult-mu
+    :straight (:host github :repo "armindarvish/consult-mu")
+    :after (mu4e consult)
+    :custom
+    (consult-mu-mark-previewed-as-read t)
+    (consult-mu-preview-key "M-c")
+    :config
+    (require 'consult-mu-embark)
+    (require 'consult-mu-contacts "~/.emacs.d/straight/repos/consult-mu/extras/consult-mu-contacts.el")
+    )
+#+end_src
 * Elfeed
 I don't use elfeed as much as I should these days.
 #+begin_src emacs-lisp

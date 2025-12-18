@@ -5,6 +5,7 @@ IMAPAccount Gmail
 Host imap.gmail.com
 User asilata@gmail.com
 PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk '/machine imap.gmail.com login/ {print $NF}'"
+#PassCmd "mutt_oauth2.py ~/.local/asilata@gmail.com.tokens"
 AuthMechs LOGIN
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
