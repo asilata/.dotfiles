@@ -118,6 +118,13 @@ Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit te
   :straight t)
 #+end_src
 
+Make plasmashell unmanaged.
+#+begin_src emacs-lisp :results silent
+  (setq exwm-manage-configurations
+        '(((string= exwm-instance-name "plasmashell")
+           managed nil)))
+#+end_src
+
 ** Ace-window
 [[https://github.com/abo-abo/ace-window][Ace-window]] is good for navigating between windows quickly, as well as switching windows.
 #+begin_src emacs-lisp
@@ -160,7 +167,7 @@ Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows a
             "Zoom:chat"
             "\\*Calendar\\*"
             "\\*Agenda Commands\\*"
-            "plasmashell"
+            ;;"plasmashell"
             ))
     (popper-mode +1)
     (popper-echo-mode +1))
