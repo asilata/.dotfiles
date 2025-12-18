@@ -1071,25 +1071,6 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
   :straight t)
 #+end_src
 
-** Easydraw
-See [[https://github.com/misohena/el-easydraw][el-easydraw]].
-#+begin_src emacs-lisp
-  (with-eval-after-load 'org
-    (require 'edraw-org)
-    (edraw-org-setup-default))
-  ;; When using the org-export-in-background option (when using the
-  ;; asynchronous export function), the following settings are
-  ;; required. This is because Emacs started in a separate process does
-  ;; not load org.el but only ox.el.
-  (with-eval-after-load "ox"
-    (require 'edraw-org)
-    (edraw-org-setup-exporter))
-    (use-package edraw-org
-      :straight (:host github :repo "misohena/el-easydraw")
-      :after org 
-      (edraw-org-setup-default))
-#+end_src      
-
 ** Beginend
 Go to the "logical beginning" of the file instead of the actual beginning. See the code [[https://github.com/DamienCassou/beginend][here]].
 #+begin_src emacs-lisp :result silent
@@ -1371,7 +1352,6 @@ See [[https://github.com/emacsorphanage/key-chord][key-chord]]
   (global-set-key [C-home]      'beginning-of-buffer)
   (global-set-key [C-end]       'end-of-buffer)
   (global-set-key (kbd "C-;")   'toggle-comment-line-or-region)
-  ;; (global-set-key (kbd "C-x C-j") 'jekyll-new-post)
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+end_src
 
