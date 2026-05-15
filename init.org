@@ -9,8 +9,9 @@
 * Initial boilerplate
 Define values for the top-level emacs directory (~.emacs.d~), as well as the subdirectories for optional packages and machine-local configuration.
 #+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t -*-
   (require 'cl-lib)
-  
+
   (unless (boundp 'user-emacs-directory)
     (defvar user-emacs-directory "~/.emacs.d/"
       "Root directory of the emacs configuration."))
@@ -53,224 +54,52 @@ First, download and bootstrap straight as per the instructions [[https://github.
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
-* Window management
-** EXWM
-I use [[https://github.com/ch11ng/exwm][exwm]] as my window manager.
-Begin by starting the emacs server.
-#+begin_src emacs-lisp
-  (unless (and (fboundp 'server-running-p) (server-running-p)) (server-start))
-#+end_src
-
-Install exwm and load its configuration. The configuration is written below, and shows up in place of ~<<exwm-config>>~.
-#+begin_src emacs-lisp :noweb no-export
-  (use-package exwm
-    :straight t
-    :config
-    ;;(require 'exwm-randr)
-    ;;(setq exwm-randr-workspace-output-plist '(1 "HDMI-1"))
-    ;; (add-hook 'exwm-randr-screen-change-hook
-    ;;           (defun ab/exwm-randr ()
-    ;;             (start-process-shell-command
-    ;;              "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
-    ;;(exwm-randr-enable)
-    <<exwm-config>>
-    (exwm-enable))
-#+end_src
-
-*** EXWM configuration
-:properties:
-:header-args:emacs-lisp: :noweb-ref exwm-config :tangle no
-:end:
-
-Code for better (?) buffer names.
-#+begin_src emacs-lisp
-  (defun exwm-rename-buffer ()
-    (interactive)
-    (exwm-workspace-rename-buffer
-     (concat exwm-class-name ":"
-             (if (<= (length exwm-title) 50) exwm-title
-               (concat (substring exwm-title 0 49) "...")))))
-
-  (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
-  (add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
-      #+end_src
-
-Useful keybindings.
-      #+begin_src emacs-lisp
-(setq exwm-input-global-keys
-      `(
-        ;; 's-q': Reset (to line-mode).
-        ([?\s-q] . exwm-reset)
-        ;; 's-w': Switch workspace.
-        ([?\s-w] . exwm-workspace-switch)
-        ;; 's-r': Launch application.
-        ([?\s-r] . (lambda (command)
-                     (interactive (list (read-shell-command "$ ")))
-                     (start-process-shell-command command nil command)))
-        ([?\s-f] . flip-window)))
-
-(push '?\s-n exwm-input-prefix-keys)
-(push '?\s-p exwm-input-prefix-keys)
-#+end_src
-Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit text blocks from other programs in emacs.
-#+begin_src emacs-lisp
-(use-package exwm-edit
-  :straight t)
-#+end_src
-
-Manually set plasmashell as an unmanaged window, otherwise EXWM thinks it is a regular window.
-#+begin_src emacs-lisp
-  (setq exwm-manage-configurations
-        '(((string= exwm-instance-name "plasmashell") managed nil)))
-#+end_src
-
-** Ace-window
-[[https://github.com/abo-abo/ace-window][Ace-window]] is good for navigating between windows quickly, as well as switching windows.
-#+begin_src emacs-lisp
-  (use-package ace-window
-    :straight t
-    :bind (("C-x o" . ace-window))
-    :custom
-    (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
-    (aw-minibuffer-flag t)
-    (ace-window-display-mode t)
-    :custom-face
-    (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
-    )
-#+end_src
-
-** Buffer actions, etc
-Work in progress, following some ideas from [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][Mastering Emacs' post]].
-#+begin_src emacs-lisp
-  (setq switch-to-buffer-obey-display-actions t)
-#+end_src
-
-** Popper
-Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows as "popups".
-#+begin_src emacs-lisp
-  (use-package popper
-    :straight t
-    :bind (("C-`" . popper-toggle-latest)
-           ("M-`" . popper-cycle)
-           ("C-M-`" . popper-toggle-type))
-    :init
-    (setq popper-reference-buffers
-          '("\\*Messages\\*"
-            "Output\\*$"
-            "\\*Apropos\\*"
-            ("\\*Async Shell Command\\*" . hide)
-            help-mode
-            compilation-mode
-            "magit-log"
-            ("magit-diff" . hide)
-            "Zoom:chat"
-            "\\*Calendar\\*"
-            "\\*Agenda Commands\\*"
-            ;;"plasmashell"
-            ))
-    (popper-mode +1)
-    (popper-echo-mode +1))
-#+end_src
-
-** Miscellaneous
-Function to jump to the other window. Currently not used much.
-#+begin_src emacs-lisp
-(defun flip-window ()
-  (interactive)
-  (let ((win (get-mru-window t t t)))
-    (if win
-        (progn
-          (select-frame-set-input-focus (window-frame win))
-          (select-window win))
-      (mode-line-other-buffer))))
-#+end_src
-
-Use tab-bar-mode, and display the project name in the tab bar.
-#+begin_src emacs-lisp
-(defun ab/tab-bar-name ()
-    (let ((project-name (projectile-project-name))
-          (old-name (tab-bar-tab-name-current-with-count)))
-      (if (string= "-" project-name)
-          old-name
-        (concat project-name ": " old-name))))
-
-(use-package tab-bar-mode
-  :bind (("s-n" . tab-next)
-         ("s-p" . tab-previous))
-  :config
-  (setq tab-bar-tab-name-function 'ab/tab-bar-name))
-#+end_src
-
-* Buffer customizations
-Remove all bells and whistles. This code is /old/, from back when I first started seriously customising emacs. I might revisit this at some point.
-#+begin_src emacs-lisp
-  (setq inhibit-startup-screen t)
-  (setq initial-scratch-message nil)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  (blink-cursor-mode -1)
-  (line-number-mode 1)
-  (column-number-mode 1)
-  (size-indication-mode 1)
-  (setq fill-column 90)
-  (fset 'yes-or-no-p 'y-or-n-p)
-  (setq visible-bell t)
-  
-  (if (fboundp 'fringe-mode) (fringe-mode 4))
-  (setq scroll-margin 0
-        scroll-conservatively 100000
-        scroll-preserve-screen-position 1)
-  (setq frame-title-format
-        '("" invocation-name " - " (:eval (if (buffer-file-name)
-                                              (abbreviate-file-name (buffer-file-name))
-                                            (buffer-name))
-                                          "%b")))
-#+end_src
-
-Auto-revert buffers from files.
-#+begin_src emacs-lisp
-  (setq global-auto-revert-mode 1)
-  (setq auto-revert-interval 3600)
-#+end_src
-
-Uniquify buffer names.
-#+begin_src emacs-lisp
-(use-package uniquify
-  :config
-  (setq uniquify-buffer-name-style 'forward
-        uniquify-separator "/"
-        uniquify-after-kill-buffer-p t ; rename after killing uniquified
-        uniquify-ignore-buffers-re "^\\*" ; don't mess with special buffers
-        )
-  )
-#+end_src
-
-** iBuffer mode
-Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterable list of all open buffers. Similar to dired.
-#+begin_src emacs-lisp
-(use-package ibuffer
-  :bind (("C-x C-b" . ibuffer)))
-#+end_src
-
-** Explain pauses
-Use [[https://github.com/lastquestion/explain-pause-mode][explain-pause-mode]] to explain slowness in emacs.
-#+begin_src emacs-lisp
-  (use-package explain-pause-mode
-    :straight t
-    :config
-    (explain-pause-mode))
-#+end_src
-
 * Org-mode
 Install [[https://orgmode.org/][org-mode]].
 The configuration is written in the next section, and shows up in place of ~<<org-mode-config>>~ in the snippet below.
+# #+begin_src emacs-lisp :noweb no-export
+#   (use-package org
+#     :after counsel
+#     :straight t
+#     :bind (("C-c a" . org-agenda)
+#            (:map org-mode-map
+#                  ("C-c C-j" . consult-org-heading)))
+#     :config
+#     <<org-mode-config>>
+#     (add-hook 'org-mode-hook
+#               (lambda ()
+#                 (visual-line-mode 1)
+#                 (org-cdlatex-mode 1)))
+#     (setq org-use-speed-commands t))
+# #+end_src
+
 #+begin_src emacs-lisp :noweb no-export
   (use-package org
-    :after counsel
-    :straight t
+    :straight `(:host nil
+  		    :repo "https://git.tecosaur.net/tec/org-mode.git"
+                      :branch "dev"
+                      :remote "tecosaur"
+  		    :files (:defaults "etc")
+  		    :build t
+  		    :pre-build
+  		    (with-temp-file "org-version.el"
+  		      (require 'lisp-mnt)
+  		      (let ((version
+  			     (with-temp-buffer
+  			       (insert-file-contents "lisp/org.el")
+  			       (lm-header "version")))
+  			    (git-version
+  			     (string-trim
+  			      (with-temp-buffer
+  				(call-process "git" nil t nil "rev-parse" "--short" "HEAD")
+  				(buffer-string)))))
+  			(insert
+  			 (format "(defun org-release () \"The release version of Org.\" %S)\n" version)
+  			 (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
+  			 "(provide 'org-version)\n")))
+  		    :pin nil)
     :bind (("C-c a" . org-agenda)
-           (:map org-mode-map
+  	 (:map org-mode-map
                  ("C-c C-j" . consult-org-heading)))
     :config
     <<org-mode-config>>
@@ -660,8 +489,8 @@ Here are some custom functions for clocking (work in progress!).
 **** Org clock daytime
 See [[https://github.com/ArneBab/emacs-org-clock-daytime][emacs-org-clock-daytime]] repository.
 #+begin_src emacs-lisp
-  (use-package emacs-org-clock-daytime
-    :straight (:host github :repo "ArneBab/emacs-org-clock-daytime"))
+  ;; (use-package emacs-org-clock-daytime
+  ;;   :straight (:host github :repo "ArneBab/emacs-org-clock-daytime"))
 #+end_src
 
 *** Google calendar integration
@@ -765,11 +594,7 @@ See the [[https://www.orgroam.com/][org-roam website]].
     (org-roam-capture-templates
      (let* ((org-roam-file-name-format "%<%Y%m%d%H%M%S>-${slug}.org")
             (org-roam-common-head "#+title: ${title}\n#+created: %U\n")
-            (org-roam-notes-head "\n* Comments\n\n* References\n\n")
-            (orb-title-format "${title} (${author})")
-            (orb-file-name-format "Bibnotes/${citekey}.org")
-            (orb-front-matter "#+created: %U\n\n")
-            (orb-common-head (concat "#+title: " orb-title-format "\n" orb-front-matter)))
+            (org-roam-notes-head "\n* Comments\n\n* References\n\n"))
        `(("d" "default" plain "* Notes\n%?"
           :target (file+head ,org-roam-file-name-format ,(concat org-roam-common-head org-roam-notes-head))
           :unnarrowed t)
@@ -780,7 +605,10 @@ See the [[https://www.orgroam.com/][org-roam website]].
           :target (file+head "People/${slug}.org" ,org-roam-common-head)
           :immediate-finish t)
          ("r" "ref" plain "* Notes\n** What are the main ingredients?\n** What is the main result?\n** What goes into the proof?\n%?"
-          :target (file+head ,orb-file-name-format ,orb-common-head)
+          :target
+          (file+head
+           "Bibnotes/${citar-citekey}.org"
+           "#+title: ${note-title}\n#+created: %U\n\n")
           :unnarrowed t)
          ("i" "inbox entry" entry
           "* ${title}\n:properties:\n:id: %(org-id-new)\n:end:\n%?"
@@ -828,13 +656,13 @@ See the [[https://www.orgroam.com/][org-roam website]].
 **** org-roam-bibtex
 See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-bibtex]] and [[https://github.com/org-roam/org-roam-bibtex/blob/master/doc/orb-manual.org][the manual]].
 #+begin_src emacs-lisp
-  (use-package org-roam-bibtex
-    :after org-roam ivy-bibtex
-    :straight t
-    :bind (:map org-mode-map
-                (("C-c n a" . orb-note-actions)))
-    :custom
-    (org-roam-bibtex-mode 1))
+  ;; (use-package org-roam-bibtex
+  ;;   :after org-roam ivy-bibtex
+  ;;   :straight t
+  ;;   :bind (:map org-mode-map
+  ;;               (("C-c n a" . orb-note-actions)))
+  ;;   :custom
+  ;;   (org-roam-bibtex-mode 1))
 #+end_src
   
 **** deft
@@ -894,6 +722,222 @@ See the git repository: [[https://github.com/org-roam/org-roam-bibtex][org-roam-
       (load org-private-settings)))
 #+end_src
 
+
+* Window management
+** EXWM
+I use [[https://github.com/ch11ng/exwm][exwm]] as my window manager.
+Begin by starting the emacs server.
+#+begin_src emacs-lisp
+;;  (unless (and (fboundp 'server-running-p) (server-running-p)) (server-start)) 
+#+end_src
+
+Install exwm and load its configuration. The configuration is written below, and shows up in place of ~<<exwm-config>>~.
+#+begin_src emacs-lisp :noweb no-export
+  (use-package exwm
+    :straight t
+    :config
+    ;;(require 'exwm-randr)
+    ;;(setq exwm-randr-workspace-output-plist '(1 "HDMI-1"))
+    ;; (add-hook 'exwm-randr-screen-change-hook
+    ;;           (defun ab/exwm-randr ()
+    ;;             (start-process-shell-command
+    ;;              "xrandr" nil "xrandr --output eDP-1 --output HDMI-1")))
+    ;;(exwm-randr-enable)
+    <<exwm-config>>
+    (exwm-wm-mode)
+    )
+#+end_src
+
+*** EXWM configuration
+:properties:
+:header-args:emacs-lisp: :noweb-ref exwm-config :tangle no
+:end:
+
+Code for better (?) buffer names.
+#+begin_src emacs-lisp
+  (defun exwm-rename-buffer ()
+    (interactive)
+    (exwm-workspace-rename-buffer
+     (concat exwm-class-name ":"
+             (if (<= (length exwm-title) 50) exwm-title
+               (concat (substring exwm-title 0 49) "...")))))
+
+  (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
+  (add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
+      #+end_src
+
+Useful keybindings.
+      #+begin_src emacs-lisp :results silent
+        (setq exwm-input-global-keys
+              `(
+                ;; 's-q': Reset (to line-mode).
+                ([?\s-q] . exwm-reset)
+                ;; 's-w': Switch workspace.
+                ([?\s-w] . exwm-workspace-switch)
+                ;; 's-r': Launch application.
+                ([?\s-r] . (lambda (command)
+                             (interactive (list (read-shell-command "$ ")))
+                             (start-process-shell-command command nil command)))
+                ([?\s-f] . flip-window)
+                ([s-left] . windmove-left)
+                ([s-right] . windmove-right)
+                ([s-up] . windmove-up)                
+                )
+              )
+
+        (push '?\s-n exwm-input-prefix-keys)
+        (push '?\s-p exwm-input-prefix-keys)
+#+end_src
+
+Install [[https://github.com/agzam/exwm-edit][exwm-edit]] so that we can edit text blocks from other programs in emacs.
+#+begin_src emacs-lisp
+(use-package exwm-edit
+  :straight t)
+#+end_src
+
+Manually set plasmashell as an unmanaged window, otherwise EXWM thinks it is a regular window.
+#+begin_src emacs-lisp
+  (setq exwm-manage-configurations
+        '(((string= exwm-instance-name "plasmashell") managed nil)))
+#+end_src
+
+** Ace-window
+[[https://github.com/abo-abo/ace-window][Ace-window]] is good for navigating between windows quickly, as well as switching windows.
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :straight t
+    :bind (("C-x o" . ace-window))
+    :custom
+    (aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s ?i ?d))
+    (aw-minibuffer-flag t)
+    (ace-window-display-mode t)
+    :custom-face
+    (aw-leading-char-face ((t (:inherit font-lock-keyword-face :bold t :height 3.0))))
+    )
+#+end_src
+
+** Buffer actions, etc
+Work in progress, following some ideas from [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][Mastering Emacs' post]].
+#+begin_src emacs-lisp
+  (setq switch-to-buffer-obey-display-actions t)
+#+end_src
+
+** Popper
+Use [[https://github.com/karthink/popper][popper]] to manage ephemeral windows as "popups".
+#+begin_src emacs-lisp
+  (use-package popper
+    :straight t
+    :bind (("C-`" . popper-toggle-latest)
+           ("M-`" . popper-cycle)
+           ("C-M-`" . popper-toggle-type))
+    :init
+    (setq popper-reference-buffers
+          '("\\*Messages\\*"
+            "Output\\*$"
+            "\\*Apropos\\*"
+            ("\\*Async Shell Command\\*" . hide)
+            help-mode
+            compilation-mode
+            "magit-log"
+            ("magit-diff" . hide)
+            "Zoom:chat"
+            "\\*Calendar\\*"
+            "\\*Agenda Commands\\*"
+            ;;"plasmashell"
+            ))
+    (popper-mode +1)
+    (popper-echo-mode +1))
+#+end_src
+
+** Miscellaneous
+Function to jump to the other window. Currently not used much.
+#+begin_src emacs-lisp
+(defun flip-window ()
+  (interactive)
+  (let ((win (get-mru-window t t t)))
+    (if win
+        (progn
+          (select-frame-set-input-focus (window-frame win))
+          (select-window win))
+      (mode-line-other-buffer))))
+#+end_src
+
+Use tab-bar-mode, and display the project name in the tab bar.
+#+begin_src emacs-lisp
+(defun ab/tab-bar-name ()
+    (let ((project-name (projectile-project-name))
+          (old-name (tab-bar-tab-name-current-with-count)))
+      (if (string= "-" project-name)
+          old-name
+        (concat project-name ": " old-name))))
+
+(use-package tab-bar-mode
+  :bind (("s-n" . tab-next)
+         ("s-p" . tab-previous))
+  :config
+  (setq tab-bar-tab-name-function 'ab/tab-bar-name))
+#+end_src
+
+* Buffer customizations
+Remove all bells and whistles. This code is /old/, from back when I first started seriously customising emacs. I might revisit this at some point.
+#+begin_src emacs-lisp
+  (setq inhibit-startup-screen t)
+  (setq initial-scratch-message nil)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (blink-cursor-mode -1)
+  (line-number-mode 1)
+  (column-number-mode 1)
+  (size-indication-mode 1)
+  (setq fill-column 90)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (setq visible-bell t)
+  
+  (if (fboundp 'fringe-mode) (fringe-mode 4))
+  (setq scroll-margin 0
+        scroll-conservatively 100000
+        scroll-preserve-screen-position 1)
+  (setq frame-title-format
+        '("" invocation-name " - " (:eval (if (buffer-file-name)
+                                              (abbreviate-file-name (buffer-file-name))
+                                            (buffer-name))
+                                          "%b")))
+#+end_src
+
+Auto-revert buffers from files.
+#+begin_src emacs-lisp
+  (setq global-auto-revert-mode 1)
+  (setq auto-revert-interval 3600)
+#+end_src
+
+Uniquify buffer names.
+#+begin_src emacs-lisp
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward
+        uniquify-separator "/"
+        uniquify-after-kill-buffer-p t ; rename after killing uniquified
+        uniquify-ignore-buffers-re "^\\*" ; don't mess with special buffers
+        )
+  )
+#+end_src
+
+** iBuffer mode
+Use [[https://www.emacswiki.org/emacs/IbufferMode][ibuffer]] to show a filterable list of all open buffers. Similar to dired.
+#+begin_src emacs-lisp
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer)))
+#+end_src
+
+** Explain pauses
+Use [[https://github.com/lastquestion/explain-pause-mode][explain-pause-mode]] to explain slowness in emacs.
+#+begin_src emacs-lisp
+  (use-package explain-pause-mode
+    :straight t
+    :config
+    (explain-pause-mode))
+#+end_src
 
 * Colour themes and prettification
 ** Zenburn
@@ -1078,7 +1122,7 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 
 ** Beginend
 Go to the "logical beginning" of the file instead of the actual beginning. See the code [[https://github.com/DamienCassou/beginend][here]].
-#+begin_src emacs-lisp :result silent
+#+begin_src emacs-lisp :results silent
   (use-package beginend :straight t :config (beginend-global-mode))
 #+end_src
 * Minibuffer and search
@@ -1093,19 +1137,6 @@ Currently I only use [[https://github.com/abo-abo/avy][avy]] out of all the pack
   ;;   :after ivy)
 #+end_src
 
-** Selectrum
-#+begin_src emacs-lisp
-  ;; (use-package selectrum
-  ;;   :straight t
-  ;;   :config
-  ;;   (use-package selectrum-prescient :straight t)
-  ;;   :custom
-  ;;   (selectrum-prescient-mode +1)
-  ;;   (prescient-persist-mode +1)
-  ;;   :init
-  ;;   (selectrum-mode +1))
-#+end_src
-
 ** Vertico
 #+begin_src emacs-lisp
   (use-package vertico
@@ -1115,6 +1146,37 @@ Currently I only use [[https://github.com/abo-abo/avy][avy]] out of all the pack
     :config
     (vertico-multiform-mode))
 #+end_src
+
+** Prescient
+#+begin_src emacs-lisp
+  (use-package vertico-prescient
+    :straight t
+    :config
+    ;; After installing the package
+    (vertico-prescient-mode 1)
+
+    ;; Configure `prescient.el' filtering to your liking.
+    (setq prescient-filter-method '(literal initialism prefix regexp)
+          prescient-use-char-folding t
+          prescient-use-case-folding 'smart
+          prescient-sort-full-matches-first t ; Works well with `initialism'.
+          prescient-sort-length-enable t)
+
+    ;; Save recency and frequency rankings to disk, which let them become better
+    ;; over time.
+    (prescient-persist-mode 1))
+#+end_src
+
+** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :straight t
+    :custom
+    (completion-styles '(orderless))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
 
 ** Consult
 At the moment this is taken straight from the [[https://github.com/minad/consult][consult readme example]]. Will be tweaked later.
@@ -1210,7 +1272,7 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
      :preview-key '(:debounce 0.2 any)
      consult-ripgrep consult-git-grep consult-grep
      consult-bookmark consult-recent-file consult-xref
-     consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+     consult-source-recent-file consult-source-project-recent-file consult-source-bookmark
      :preview-key "M-.")
 
     ;; Optionally configure the narrowing key.
@@ -1238,6 +1300,12 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
   )
 
 #+end_src
+*** Embark-consult
+#+begin_src emacs-lisp
+  (use-package embark-consult
+    :straight t
+    :after (embark consult))
+#+end_src
 
 *** Consult reftex
 #+begin_src emacs-lisp
@@ -1252,14 +1320,31 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
     :bind (("C-c b" . citar-insert-citation)
            :map minibuffer-local-map
            ("M-b" . citar-insert-preset))
-    :config
-    (use-package citar-embark
-      :straight t
-      :after citar embark
-      :no-require
-      :config (citar-embark-mode))
     :custom
-    (citar-bibliography '("~/Bibliography/math.bib")))
+    (citar-bibliography '("~/Bibliography/math.bib"))
+    (citar-library-paths '("~/Papers/"))
+    (citar-notes-paths '("~/Org/Roam/Bibnotes/"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)    
+    (org-cite-activate-processor 'citar)
+    )
+
+  (use-package citar-embark
+    :straight t
+    :after (citar embark)
+    :no-require
+    :custom
+    (citar-at-point-function 'embark-act)
+    :config (citar-embark-mode))
+
+  (use-package citar-org-roam
+    :straight t
+    :after (citar org-roam)
+    :custom
+    (citar-org-roam-note-title-template "${title} (${author})")
+    (citar-org-roam-subdir "Bibnotes/")
+    (citar-org-roam-capture-template-key "r")
+    :config (citar-org-roam-mode))
 #+end_src
 
 *** Consult dir
@@ -1271,34 +1356,6 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
            ("C-x C-d" . consult-dir)
            ("C-x C-j" . consult-dir-jump-file)))
 #+end_src
-** Marginalia
-#+begin_src emacs-lisp
-  (use-package marginalia
-    :straight t
-    :bind (("M-A" . marginalia-cycle)
-           :map minibuffer-local-map
-           ("M-A" . marginalia-cycle))
-    :init
-    (marginalia-mode))
-#+end_src
-
-** Orderless
-#+begin_src emacs-lisp
-  (use-package orderless
-    :straight t
-    :custom
-    (completion-styles '(orderless))
-    (completion-category-defaults nil)
-    (completion-category-overrides '((file (styles partial-completion)))))
-#+end_src
-
-** Savehist
-#+begin_src emacs-lisp
-  (use-package savehist
-    :straight t
-    :init
-    (savehist-mode))
-#+end_src
 ** Embark
 #+begin_src emacs-lisp
   (use-package embark
@@ -1308,7 +1365,6 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
      ("M-." . embark-dwim)
      ("C-h B" . embark-bindings))
     :config
-    (use-package embark-consult :straight t)
     (add-to-list 'display-buffer-alist
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
@@ -1325,6 +1381,24 @@ At the moment this is taken straight from the [[https://github.com/minad/consult
     ))
 #+end_src
 
+** Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :straight t
+    :bind (("M-A" . marginalia-cycle)
+           :map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+#+end_src
+
+** Savehist
+#+begin_src emacs-lisp
+  (use-package savehist
+    :straight t
+    :init
+    (savehist-mode))
+#+end_src
 ** Other goodies
 #+begin_src emacs-lisp 
  (use-package smart-mode-line
@@ -1449,24 +1523,24 @@ I am also using [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibte
      (point-min) (point-max)
      "bibtool -r ~/Bibliography/rules.rsc" t t "*Messages*"))
 
-  (use-package bibretrieve
-    :straight (:host github :repo "asilata/bibretrieve")
-    :config
-    (add-hook
-     'bibretrieve-pre-write-bib-items-hook
-     'ab/normalise-bib))
+  ;; (use-package bibretrieve
+  ;;   :straight (:host github :repo "asilata/bibretrieve")
+  ;;   :config
+  ;;   (add-hook
+  ;;    'bibretrieve-pre-write-bib-items-hook
+  ;;    'ab/normalise-bib))
 
-  (use-package ivy-bibtex
-    :straight t
-    :config
-    (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
-                                  (t . ivy--regex-plus)))
-    (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
-    (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
-    (setq bibtex-completion-library-path '("~/Papers"))
-    (ivy-set-display-transformer
-     'org-ref-ivy-insert-cite-link
-     'ivy-bibtex-display-transformer))
+  ;; (use-package ivy-bibtex
+  ;;   :straight t
+  ;;   :config
+  ;;   (setq ivy-re-builders-alist '((ivy-bibtex . ivy--regex-ignore-order)
+  ;;                                 (t . ivy--regex-plus)))
+  ;;   (setq bibtex-completion-notes-path "~/Org/Roam/Bibnotes")
+  ;;   (setq bibtex-completion-bibliography '("~/Bibliography/math.bib"))
+  ;;   (setq bibtex-completion-library-path '("~/Papers"))
+  ;;   (ivy-set-display-transformer
+  ;;    'org-ref-ivy-insert-cite-link
+  ;;    'ivy-bibtex-display-transformer))
 #+end_src
 
 *** Auctex
@@ -1551,11 +1625,11 @@ See https://github.com/karthink/lazytab.
 #+end_src
 ** Projects and jumping
 #+begin_src emacs-lisp
-  (use-package counsel-projectile
-    :straight t
-    :config
-    (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
-    (counsel-projectile-mode 1))
+  ;; (use-package counsel-projectile
+  ;;   :straight t
+  ;;   :config
+  ;;   (define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
+  ;;   (counsel-projectile-mode 1))
 #+end_src
 
 ** Assorted packages
@@ -1758,7 +1832,7 @@ Docstring support
 *** Yankpad
 #+begin_src emacs-lisp
   (use-package yankpad
-  :ensure t
+  :straight t
   :defer 10
   :init
   (setq yankpad-file "~/Org/yankpad.org")
