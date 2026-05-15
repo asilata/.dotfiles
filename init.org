@@ -562,14 +562,14 @@ Source code editing setup.
 
 *** Org ref
 #+begin_src emacs-lisp
-(use-package org-ref
-  :straight t
-  :config
-  (setq
-   org-ref-default-bibliography '("~/Bibliography/math.bib")
-   org-ref-pdf-directory "~/Papers/"
-   org-ref-completion-library 'org-ref-ivy-cite
-   org-ref-notes-function 'org-ref-notes-function-many-files))
+  ;; (use-package org-ref
+  ;;   :straight t
+  ;;   :config
+  ;;   (setq
+  ;;    org-ref-default-bibliography '("~/Bibliography/math.bib")
+  ;;    org-ref-pdf-directory "~/Papers/"
+  ;;    org-ref-completion-library 'org-ref-ivy-cite
+  ;;    org-ref-notes-function 'org-ref-notes-function-many-files))
 #+end_src
 
 *** Org-cite
@@ -1072,12 +1072,6 @@ Use [[https://github.com/Malabarba/beacon][beacon-mode]] to show where the curso
 (setq ispell-program-name "aspell"
       ispell-extra-args '("--sug-mode=ultra"))
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." )
-#+end_src
-
-** Objed
-#+begin_src emacs-lisp
-(use-package objed
-  :straight t)
 #+end_src
 
 ** Multiple cursors
